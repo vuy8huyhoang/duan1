@@ -19,28 +19,51 @@ export const GET = async (request: Request) => {
 
     const query = `
     SELECT 
-      id_favorite_music,
-      id_music,
-      last_update
-    FROM FavoriteMusic
+      fm.id_favorite_music,
+      fm.last_update,
+      ${Parser.queryObject([
+        "'id_music', m.id_music",
+        "'name', m.name",
+        "'slug', m.slug",
+        "'total_duration', m.total_duration",
+        "'publish_time', m.publish_time",
+        "'release_date', m.release_date",
+        "'last_update', m.last_update",
+        "'membership_permission', m.membership_permission",
+        "'is_show', m.is_show",
+      ])} as music
+    FROM FavoriteMusic fm
+    LEFT JOIN
+      Music m 
+        on m.id_music = fm.id_music
+        ${role === "admin" ? "" : "AND m.is_show = 1"}
     WHERE TRUE
-      AND id_user = '${id_user}'
-      ${id_music !== undefined ? `AND id_music = '${id_music}'` : ""}
+      AND fm.id_user = '${id_user}'
+      ${id_music !== undefined ? `AND fm.id_music = '${id_music}'` : ""}
       ${
         id_favorite_music !== undefined
-          ? `AND id_favorite_music = '${id_favorite_music}'`
+          ? `AND fm.id_favorite_music = '${id_favorite_music}'`
           : ""
       }
-      ${last_update !== undefined ? `AND last_update = '${last_update}'` : ""}
+      ${
+        last_update !== undefined ? `AND fm.last_update = '${last_update}'` : ""
+      }
 
       ${limit !== undefined ? ` LIMIT ${limit}` : ""}
       ${offset !== undefined ? ` OFFSET ${offset}` : ""}
     `;
 
+    return objectResponse(query);
+
     const [favoriteMusic]: Array<any> = await connection.query(
       query,
       queryParams
     );
+    Parser.convertJson(favoriteMusic as Array<any>, "music");
+    // favoriteMusic.forEach((item: any, index: number) => {
+    //   item.music = Parser.removeNullObjects(item.music);
+    //   if (item.music.length !== 0) item.music = item.music[0];
+    // });
     return objectResponse({
       data: favoriteMusic,
     });
