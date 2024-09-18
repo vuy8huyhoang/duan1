@@ -7,16 +7,12 @@ import { getCurrentUser } from "@/utils/Get";
 
 export const PATCH = async (request: Request) => {
   try {
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     const body = await request.json();
-    const { oldPassword = "", newPassword = "" } = body;
+    const { oldPassword, newPassword } = body;
 
-    // Check required
-    Checker.checkRequired(newPassword, oldPassword);
-
-    // Check password format
-    Checker.checkPassword(newPassword);
-    Checker.checkPassword(oldPassword);
+    Checker.checkPassword(newPassword, true);
+    Checker.checkPassword(oldPassword, true);
 
     // Compare new and old
     if (newPassword === oldPassword)
@@ -35,7 +31,7 @@ export const PATCH = async (request: Request) => {
 
       return objectResponse("Change password successfully", 200);
     } else {
-      throwCustomError("Wrong old password", 400);
+      throwCustomError("Wrong password", 400);
     }
   } catch (error) {
     return getServerErrorMsg(error);

@@ -37,10 +37,7 @@ export const POST = async (req: Request) => {
         // .setExpirationTime("24h")
         .sign(secretToken as any);
 
-      return objectResponse(
-        { accessToken: accessToken, message: "Success" },
-        200
-      );
+      return objectResponse({ accessToken: accessToken }, 200);
     } else {
       return objectResponse({ message: "Invalid credentials" }, 401);
     }

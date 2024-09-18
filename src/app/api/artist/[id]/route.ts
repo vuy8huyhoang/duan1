@@ -11,31 +11,26 @@ export const GET = async (request: Request, context: any) => {
     const currentUser = await getCurrentUser(request, false);
     const role = currentUser.role;
     const queryParams: any[] = [];
-    let query = "";
 
-    if (role === "admin") {
-      query += `SELECT * FROM Artist WHERE id_artist = '${id}'`;
-    } else {
-      query += `
-        SELECT 
-          id_artist,
-          name,
-          description,
-          slug,
-          url_cover,
-          birthday,
-          country,
-          gender,
-          created_at,
-          last_update
-        FROM Artist
-        WHERE is_show = 1
-        AND id_artist = '${id}'
-      `;
-    }
+    const query = `
+    SELECT 
+    a.id_artist,
+    a.name,
+    a.slug,
+    a.url_cover,
+    a.created_at,
+    a.last_update,
+      COUNT(f.id_follow) AS followers
+    FROM Artist a
+    LEFT JOIN Follow f ON a.id_artist = f.id_artist
+    WHERE TRUE
+    ${role === "admin" ? "" : "AND a.is_show = 1"}
+    AND a.id_artist = '${id}'
+    GROUP BY a.id_artist
+    `;
 
     const [artist]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: artist });
+    return objectResponse({ data: artist[0] });
   } catch (error) {
     return getServerErrorMsg(error);
   }

@@ -5,57 +5,6 @@ import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { objectResponse } from "@/utils/Response";
 import Parser from "@/utils/Parser";
 
-export const GET = async (request: Request, context: any) => {
-  try {
-    const { params } = context;
-    const { id } = params;
-    const currentUser = await getCurrentUser(request, false);
-    const role = currentUser.role;
-    const queryParams: any[] = [];
-
-    const query = `
-    SELECT 
-      al.id_album,
-      al.name,
-      al.slug,
-      al.url_cover,
-      al.release_date,
-      al.publish_date,
-      al.created_at,
-      al.last_update,
-      al.is_show,
-      ${Parser.queryArray(
-        Parser.queryObject([
-          "'id_artist', ar.id_artist",
-          "'name', ar.name",
-          "'slug', ar.slug",
-          "'url_cover', ar.url_cover",
-          "'created_at', ar.created_at",
-          "'last_update', ar.last_update",
-          "'is_show', ar.is_show",
-        ])
-      )} AS artists
-    FROM Album al
-    LEFT JOIN 
-      Artist ar ON ar.id_artist = al.id_artist ${
-        role === "admin" ? "" : " AND ar.is_show = 1"
-      }
-    WHERE TRUE
-      ${role === "admin" ? "" : "AND al.is_show = 1"}
-      AND al.id_album = '${id}'
-    `;
-
-    const [album]: Array<any> = await connection.query(query, queryParams);
-    Parser.convertJson(album as Array<any>, "artists");
-    album.forEach((item: any, index: number) => {
-      item.artists = Parser.removeNullObjects(item.artists);
-    });
-    return objectResponse({ data: album[0] });
-  } catch (error) {
-    return getServerErrorMsg(error);
-  }
-};
-
 export const PATCH = async (request: Request, context: any) => {
   try {
     const body = await request.json();

@@ -4,41 +4,41 @@ import { getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
+import Parser from "@/utils/Parser";
 
 export const GET = async (request: Request) => {
   try {
     const params = getQueryParams(request);
-    const currentUser = await getCurrentUser(request, false);
+    const currentUser = await getCurrentUser(request, true);
     const role = currentUser.role;
-    const { limit, offset, id_type, name, slug, created_at, is_show }: any =
-      params;
+    const { limit, offset, start_date, end_date, msg, type }: any = params;
     const queryParams: any[] = [];
+
+    const id_user = currentUser.id_user;
+    if (role !== "admin" && currentUser.id_user !== id_user)
+      throwCustomError("Not enough permission", 401);
 
     const query = `
     SELECT 
-      id_type,
-      name,
-      slug,
-      created_at,
-      is_show
-    FROM Type
+      n.id_notification,
+      n.msg,
+      n.type,
+      n.status,
+      n.created_at
+    FROM Notification n
     WHERE TRUE
-    ${role === "admin" ? "" : "AND is_show = 1"}
-    
-    ${(id_type !== undefined && `AND id_type LIKE '%${id_type}%'`) || ""}
-    ${(name !== undefined && `AND name LIKE '%${name}%'`) || ""}
-    ${(slug !== undefined && `AND slug LIKE '%${slug}%'`) || ""}
-    ${
-      (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
-      ""
-    }
-    ${(is_show !== undefined && `AND is_show LIKE '%${is_show}%'`) || ""}
-
-    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
-    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+      ${(id_user !== undefined && `AND n.id_user = '${id_user}'`) || ""}
+      ${(msg !== undefined && `AND n.msg LIKE '%${msg}%'`) || ""}
+      ${(type !== undefined && `AND n.type LIKE '%${type}%'`) || ""}
+      ${start_date !== undefined ? `AND n.created_at >= '${start_date}'` : ""}
+      ${end_date !== undefined ? `AND n.created_at <= '${end_date}'` : ""}
+      
+      ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+      ${offset !== undefined ? ` OFFSET ${offset}` : ""}
     `;
 
     const [typeList]: Array<any> = await connection.query(query, queryParams);
+
     return objectResponse({ data: typeList });
   } catch (error) {
     return getServerErrorMsg(error);

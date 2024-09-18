@@ -10,83 +10,37 @@ export const GET = async (request: Request) => {
     const params = getQueryParams(request);
     const currentUser = await getCurrentUser(request, false);
     const role = currentUser.role;
-    const {
-      limit,
-      offset,
-      birthday,
-      country,
-      gender,
-      slug,
-      name,
-      is_show,
-    }: any = params;
+    const { limit, offset, id_artist, slug, name, is_show }: any = params;
     const queryParams: any[] = [];
-    let query = "";
 
-    if (role === "admin") {
-      query += `SELECT * FROM Artist`;
-    } else {
-      query += `
-        SELECT 
-          id_artist,
-          name,
-          description,
-          slug,
-          url_cover,
-          birthday,
-          country,
-          gender,
-          created_at,
-          last_update
-        FROM Artist
-        WHERE is_show = 1
-      `;
-    }
+    const query = `
+    SELECT 
+      a.id_artist,
+      a.name,
+      a.slug,
+      a.url_cover,
+      a.created_at,
+      a.last_update,
+      a.is_show,
+      COUNT(f.id_follow) AS followers
+    FROM Artist a
+    LEFT JOIN Follow f ON a.id_artist = f.id_artist
+    WHERE TRUE
+    ${role === "admin" ? "" : "AND is_show = 1"}
 
-    // Add filtering conditions if provided
-    const filters: string[] = [];
-    if (birthday) {
-      filters.push("birthday = ?");
-      queryParams.push(birthday);
+    ${
+      (id_artist !== undefined && `AND a.id_artist LIKE '%${id_artist}%'`) || ""
     }
-    if (country) {
-      filters.push("country = ?");
-      queryParams.push(country);
+    ${(slug !== undefined && `AND a.slug LIKE '%${slug}%'`) || ""}
+    ${(name !== undefined && `AND a.name LIKE '%${name}%'`) || ""}
+    ${(is_show !== undefined && `AND a.is_show LIKE '%${is_show}%'`) || ""}
+    GROUP BY a.id_artist
+    ${
+      limit !== undefined || offset !== undefined ? " ORDER BY a.id_artist" : ""
     }
-    if (gender) {
-      filters.push("gender = ?");
-      queryParams.push(gender);
-    }
-    if (slug) {
-      filters.push("slug = ?");
-      queryParams.push(slug);
-    }
-    if (name) {
-      filters.push("name = ?");
-      queryParams.push(name);
-    }
-    if (is_show) {
-      filters.push("is_show = ?");
-      queryParams.push(is_show);
-    }
-
-    if (filters.length > 0) {
-      query += ` AND ${filters.join(" AND ")}`;
-    }
-
-    // Add limit and offset only if provided
-    if (limit !== undefined || offset !== undefined) {
-      query += ` ORDER BY id_artist`; // Ensure there's an ORDER BY clause
-      if (limit !== undefined) {
-        query += ` LIMIT ?`;
-        queryParams.push(parseInt(limit, 10)); // Convert limit to integer
-      }
-      if (offset !== undefined) {
-        query += ` OFFSET ?`;
-        queryParams.push(parseInt(offset, 10)); // Convert offset to integer
-      }
-    }
-
+    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+    `;
     const [artistList]: Array<any> = await connection.query(query, queryParams);
     return objectResponse({ data: artistList });
   } catch (error) {

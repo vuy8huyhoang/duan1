@@ -4,38 +4,55 @@ import { getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
+import Parser from "@/utils/Parser";
 
 export const GET = async (request: Request) => {
   try {
     const params = getQueryParams(request);
-    const currentUser = await getCurrentUser(request, false);
+    const currentUser = await getCurrentUser(request, true);
     const role = currentUser.role;
-    const { limit, offset, id_type, name, slug, created_at, is_show }: any =
-      params;
+    const {
+      limit,
+      offset,
+      id_music_history,
+      id_music,
+      play_duration,
+      start_date,
+      end_date,
+    }: any = params;
     const queryParams: any[] = [];
+
+    // Check permisstion
+    const id_user = currentUser.id_user;
+    if (role !== "admin" && currentUser.id_user !== id_user)
+      throwCustomError("Not enough permission", 401);
 
     const query = `
     SELECT 
-      id_type,
-      name,
-      slug,
-      created_at,
-      is_show
-    FROM Type
+      mh.id_music_history,
+      mh.play_duration,
+      mh.created_at,
+      mh.id_music
+    FROM MusicHistory mh
     WHERE TRUE
-    ${role === "admin" ? "" : "AND is_show = 1"}
-    
-    ${(id_type !== undefined && `AND id_type LIKE '%${id_type}%'`) || ""}
-    ${(name !== undefined && `AND name LIKE '%${name}%'`) || ""}
-    ${(slug !== undefined && `AND slug LIKE '%${slug}%'`) || ""}
-    ${
-      (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
-      ""
-    }
-    ${(is_show !== undefined && `AND is_show LIKE '%${is_show}%'`) || ""}
+        
+      ${
+        (id_music_history !== undefined &&
+          `AND id_music_history LIKE '%${id_music_history}%'`) ||
+        ""
+      }
+      ${(id_user !== undefined && `AND id_user LIKE '%${id_user}%'`) || ""}
+      ${(id_music !== undefined && `AND id_music LIKE '%${id_music}%'`) || ""}
+      ${
+        (play_duration !== undefined &&
+          `AND id_music_history LIKE '%${id_music_history}%'`) ||
+        ""
+      }
+      ${start_date !== undefined ? `AND mh.created_at >= '${start_date}'` : ""}
+      ${end_date !== undefined ? `AND mh.created_at <= '${end_date}'` : ""}
 
-    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
-    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+      ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+      ${offset !== undefined ? ` OFFSET ${offset}` : ""}
     `;
 
     const [typeList]: Array<any> = await connection.query(query, queryParams);

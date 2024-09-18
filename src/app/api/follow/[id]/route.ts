@@ -15,42 +15,30 @@ export const GET = async (request: Request, context: any) => {
 
     const query = `
     SELECT 
-      al.id_album,
-      al.name,
-      al.slug,
-      al.url_cover,
-      al.release_date,
-      al.publish_date,
-      al.created_at,
-      al.last_update,
-      al.is_show,
-      ${Parser.queryArray(
-        Parser.queryObject([
-          "'id_artist', ar.id_artist",
-          "'name', ar.name",
-          "'slug', ar.slug",
-          "'url_cover', ar.url_cover",
-          "'created_at', ar.created_at",
-          "'last_update', ar.last_update",
-          "'is_show', ar.is_show",
-        ])
-      )} AS artists
-    FROM Album al
+      f.id_follow,
+      f.id_user,
+      f.created_at,
+      ${Parser.queryObject([
+        "'id_user', u.id_user",
+        "'id_user', u.id_user",
+        "'id_user', u.id_user",
+      ])} AS user
+    FROM Follow f
     LEFT JOIN 
-      Artist ar ON ar.id_artist = al.id_artist ${
-        role === "admin" ? "" : " AND ar.is_show = 1"
-      }
+      User u on u.id_user = f.id_user 
     WHERE TRUE
-      ${role === "admin" ? "" : "AND al.is_show = 1"}
-      AND al.id_album = '${id}'
+      AND f.id_follow = '${id}'
     `;
 
-    const [album]: Array<any> = await connection.query(query, queryParams);
-    Parser.convertJson(album as Array<any>, "artists");
-    album.forEach((item: any, index: number) => {
-      item.artists = Parser.removeNullObjects(item.artists);
-    });
-    return objectResponse({ data: album[0] });
+    const [follow]: Array<any> = await connection.query(query, queryParams);
+    if (role !== "admin" && follow[0]!.id_user !== currentUser.id_user) {
+      throwCustomError("Not enough permission", 401);
+    }
+
+    delete follow[0]?.id_user;
+
+    Parser.convertJson(follow as Array<any>, "user");
+    return objectResponse({ data: follow[0] });
   } catch (error) {
     return getServerErrorMsg(error);
   }

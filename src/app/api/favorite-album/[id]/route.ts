@@ -9,48 +9,33 @@ export const GET = async (request: Request, context: any) => {
   try {
     const { params } = context;
     const { id } = params;
-    const currentUser = await getCurrentUser(request, false);
+    const currentUser = await getCurrentUser(request, true);
     const role = currentUser.role;
     const queryParams: any[] = [];
 
     const query = `
     SELECT 
-      al.id_album,
-      al.name,
-      al.slug,
-      al.url_cover,
-      al.release_date,
-      al.publish_date,
-      al.created_at,
-      al.last_update,
-      al.is_show,
-      ${Parser.queryArray(
-        Parser.queryObject([
-          "'id_artist', ar.id_artist",
-          "'name', ar.name",
-          "'slug', ar.slug",
-          "'url_cover', ar.url_cover",
-          "'created_at', ar.created_at",
-          "'last_update', ar.last_update",
-          "'is_show', ar.is_show",
-        ])
-      )} AS artists
-    FROM Album al
-    LEFT JOIN 
-      Artist ar ON ar.id_artist = al.id_artist ${
-        role === "admin" ? "" : " AND ar.is_show = 1"
-      }
+      fm.id_favorite_music,
+      fm.id_user,
+      fm.id_music,
+      fm.last_update
+    FROM FavoriteMusic fm
     WHERE TRUE
-      ${role === "admin" ? "" : "AND al.is_show = 1"}
-      AND al.id_album = '${id}'
+      AND fm.id_favorite_music = '${id}' 
     `;
 
-    const [album]: Array<any> = await connection.query(query, queryParams);
-    Parser.convertJson(album as Array<any>, "artists");
-    album.forEach((item: any, index: number) => {
-      item.artists = Parser.removeNullObjects(item.artists);
-    });
-    return objectResponse({ data: album[0] });
+    const [favoriteMusic]: Array<any> = await connection.query(
+      query,
+      queryParams
+    );
+
+    if (role !== "admin" && favoriteMusic[0]!.id_user !== currentUser.id_user) {
+      throwCustomError("Not enough permission", 401);
+    }
+
+    delete favoriteMusic[0]?.id_user;
+
+    return objectResponse({ data: favoriteMusic[0] });
   } catch (error) {
     return getServerErrorMsg(error);
   }

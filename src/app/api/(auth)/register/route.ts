@@ -9,28 +9,19 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
     const {
-      first_name = "",
-      last_name = "",
-      middle_name = "",
+      fullname = "",
       email = "",
       password = "",
     }: {
-      first_name: string;
-      last_name: string;
-      middle_name: string;
+      fullname: string;
       email: string;
       password: string;
     } = body;
 
-    // Check required
-    Checker.checkRequired(first_name, last_name, email, password);
-
     // Validation
-    Checker.checkString(first_name);
-    Checker.checkString(middle_name);
-    Checker.checkString(last_name);
-    Checker.checkPassword(password);
-    Checker.checkEmail(email);
+    Checker.checkString(fullname, true);
+    Checker.checkPassword(password, true);
+    Checker.checkEmail(email, true);
 
     // Check existing user
     const [users]: Array<any> = await connection.query(
@@ -43,15 +34,9 @@ export const POST = async (req: Request) => {
       const hashedPassword = await bcrypt.hash(password, 12);
 
       // Add new user to DB
-      const query = `insert into User(id_user, first_name, middle_name, last_name, email, password) value (?, ?, ?, ?, ?, ?)`;
-      const queryFields = [
-        newId,
-        first_name,
-        middle_name,
-        last_name,
-        email,
-        hashedPassword,
-      ];
+      const query = `insert into User(id_user, fullname, email, password) value (?, ?, ?, ?)`;
+
+      const queryFields = [newId, fullname, email, hashedPassword];
       await connection.query(query, queryFields);
 
       return objectResponse({ message: "Add user successfully" }, 201);

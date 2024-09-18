@@ -7,49 +7,84 @@ import { getCurrentUser } from "@/utils/Get";
 
 export const PATCH = async (request: Request) => {
   try {
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     const body = await request.json();
     const {
-      first_name,
-      middle_name,
-      last_name,
-      avatar_path,
+      fullname,
+      url_avatar,
       phone,
       gender,
       age,
+      birthday,
+      country,
+      is_banned,
     } = body;
 
-    // Check required
-    Checker.checkRequired(first_name, last_name);
-
     // Check password format
-    Checker.checkString(first_name);
-    Checker.checkString(middle_name);
-    Checker.checkString(last_name);
-    Checker.checkString(avatar_path);
+    Checker.checkString(fullname);
+    Checker.checkString(url_avatar);
+    Checker.checkString(url_avatar);
+    Checker.checkIncluded(gender, ["male", "female"]);
     Checker.checkPhoneNumber(phone);
-    Checker.checkGender(gender);
     Checker.checkInteger(age);
+    Checker.checkDate(birthday);
+    Checker.checkString(country);
+    Checker.checkIncluded(is_banned, [0, 1]);
 
-    // Update DB
-    const updateData = [
-      first_name,
-      middle_name,
-      last_name,
-      avatar_path,
-      phone,
-      gender,
-      age,
-    ];
-    const query = `UPDATE User SET ${[
-      "first_name",
-      "middle_name",
-      "last_name",
-      "avatar_path",
-      "phone",
-      "gender",
-      "age",
-    ].join(" = ?, ")} = ? WHERE id_user = ?`;
+    const fieldsToUpdate = [];
+    const updateData = [];
+
+    if (fullname) {
+      fieldsToUpdate.push("fullname = ?");
+      updateData.push(fullname);
+    }
+
+    if (url_avatar) {
+      fieldsToUpdate.push("url_avatar = ?");
+      updateData.push(url_avatar);
+    }
+
+    if (phone) {
+      fieldsToUpdate.push("phone = ?");
+      updateData.push(phone);
+    }
+
+    if (gender) {
+      fieldsToUpdate.push("gender = ?");
+      updateData.push(gender);
+    }
+
+    if (age) {
+      fieldsToUpdate.push("age = ?");
+      updateData.push(age);
+    }
+
+    if (birthday) {
+      fieldsToUpdate.push("birthday = ?");
+      updateData.push(birthday);
+    }
+
+    if (country) {
+      fieldsToUpdate.push("country = ?");
+      updateData.push(country);
+    }
+
+    if (is_banned !== undefined) {
+      fieldsToUpdate.push("is_banned = ?");
+      updateData.push(is_banned);
+    }
+
+    if (fieldsToUpdate.length === 0) {
+      return throwCustomError("No fields provided for update", 400);
+    }
+
+    // Construct the SQL query
+    const query = `
+      UPDATE User
+      SET ${fieldsToUpdate.join(", ")}
+      WHERE id_user = ?`;
+
+    // Execute the query
     await connection.query(query, [...updateData, currentUser.id_user]);
 
     return objectResponse(

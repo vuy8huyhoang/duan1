@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
+import Parser from "@/utils/Parser";
+import { getVariableName } from "@/utils/String";
 
 export const GET = async (request: Request) => {
   try {
@@ -19,107 +21,120 @@ export const GET = async (request: Request) => {
       publish_time,
       release_date,
       is_show,
+      description,
+      id_type,
+      id_artist,
     }: any = params;
     const queryParams: any[] = [];
-    let query = "";
 
-    if (role === "admin") {
-      query += `
-      SELECT 
-        m.*,
-        COUNT(mh.id_music_history) AS total_views
-      FROM Music m
-      LEFT JOIN MusicHistory mh ON m.id_music = mh.id_music
-      GROUP BY m.id_music;
-      `;
-    } else if (role === "membership") {
-      query += `
-      SELECT 
-        m.id_music,
-        m.name,
-        m.slug,
-        m.url_path,
-        m.description,
-        m.total_duration,
-        m.publish_time,
-        m.release_date,
-        m.created_at,
-        m.last_update,
-        COUNT(mh.id_music_history) AS total_views
-      FROM Music m
-      LEFT JOIN MusicHistory mh ON m.id_music = mh.id_music
-      WHERE m.is_show = 1
-      GROUP BY m.id_music;
-      `;
-    } else {
-      query += `
-      SELECT 
-        m.id_music,
-        m.name,
-        m.slug,
-        CASE 
-          WHEN m.membership_permission = 1 THEN m.url_path
-          ELSE NULL
-        END AS url_path,
-        m.description,
-        m.total_duration,
-        m.publish_time,
-        m.release_date,
-        m.created_at,
-        m.last_update,
-        COUNT(mh.id_music_history) AS total_views
-      FROM Music m
-      LEFT JOIN MusicHistory mh ON mh.id_music = m.id_music
-      WHERE m.is_show = 1
-      GROUP BY m.id_music;
-      `;
-    }
-
-    // Add filtering conditions if provided
-    const filters: string[] = [];
-    if (name) {
-      filters.push("name = ?");
-      queryParams.push(name);
-    }
-    if (slug) {
-      filters.push("slug = ?");
-      queryParams.push(slug);
-    }
-    if (total_duration) {
-      filters.push("total_duration = ?");
-      queryParams.push(total_duration);
-    }
-    if (publish_time) {
-      filters.push("publish_time = ?");
-      queryParams.push(publish_time);
-    }
-    if (release_date) {
-      filters.push("release_date = ?");
-      queryParams.push(release_date);
-    }
-    if (is_show) {
-      filters.push("is_show = ?");
-      queryParams.push(is_show);
-    }
-
-    if (filters.length > 0) {
-      query += ` AND ${filters.join(" AND ")}`;
-    }
-
-    // Add limit and offset only if provided
-    if (limit !== undefined || offset !== undefined) {
-      query += ` ORDER BY id_music`; // Ensure there's an ORDER BY clause
-      if (limit !== undefined) {
-        query += ` LIMIT ?`;
-        queryParams.push(parseInt(limit, 10)); // Convert limit to integer
+    const query = `
+    SELECT 
+      m.id_music,
+      m.name,
+      m.slug,
+      ${
+        role === "user"
+          ? "m.url_path"
+          : `
+      CASE 
+        WHEN m.membership_permission = 1 THEN m.url_path
+        ELSE NULL
+      END AS url_path`
+      },
+      m.total_duration,
+      m.publish_time,
+      m.release_date,
+      m.created_at,
+      m.last_update,
+      m.membership_permission,
+      m.is_show,
+      ${Parser.queryArray(
+        Parser.queryObject([
+          "'id_artist', a.id_artist",
+          "'name', a.name",
+          "'slug', a.slug",
+          "'url_cover', a.url_cover",
+          "'created_at', a.created_at",
+          "'last_update', a.last_update",
+          "'is_show', a.is_show",
+        ])
+      )} AS artists,
+      ${Parser.queryArray(
+        Parser.queryObject([
+          "'id_type', ty.id_type",
+          "'name', ty.name",
+          "'slug', ty.slug",
+          "'created_at', ty.created_at",
+          "'is_show', ty.is_show",
+        ])
+      )} AS types,
+      ${Parser.queryArray(
+        Parser.queryObject([
+          "'id_lyrics', l.id_lyrics",
+          "'txt', l.lyrics",
+          "'start_time', l.start_time",
+          "'end_time', l.end_time",
+        ])
+      )} AS lyrics
+    FROM 
+      Music m
+    LEFT JOIN 
+      MusicArtistDetail mad ON mad.id_music = m.id_music
+    LEFT JOIN   
+      Artist a ON a.id_artist = mad.id_artist ${
+        role === "admin" ? "" : " AND a.is_show = 1"
       }
-      if (offset !== undefined) {
-        query += ` OFFSET ?`;
-        queryParams.push(parseInt(offset, 10)); // Convert offset to integer
+    LEFT JOIN 
+      MusicTypeDetail mtd ON mtd.id_music = m.id_music
+    LEFT JOIN 
+      Type ty ON ty.id_type = mtd.id_type ${
+        role === "admin" ? "" : " AND ty.is_show = 1"
       }
+    LEFT JOIN 
+      Lyrics l ON l.id_music = m.id_music
+    WHERE TRUE
+    ${role === "admin" ? "" : "AND m.is_show = 1"}
+
+    ${(id_type !== undefined && `AND ty.id_type LIKE '%${id_type}%'`) || ""}
+    ${
+      (id_artist !== undefined && `AND a.id_artist LIKE '%${id_artist}%'`) || ""
     }
+    ${(name !== undefined && `AND m.name LIKE '%${name}%'`) || ""}
+    ${(slug !== undefined && `AND m.slug LIKE '%${slug}%'`) || ""}
+    ${
+      (description !== undefined &&
+        `AND m.description LIKE '%${description}%'`) ||
+      ""
+    }
+    ${
+      (total_duration !== undefined &&
+        `AND m.total_duration LIKE '%${total_duration}%'`) ||
+      ""
+    }
+    ${
+      (publish_time !== undefined &&
+        `AND m.publish_time LIKE '%${publish_time}%'`) ||
+      ""
+    }
+    ${
+      (release_date !== undefined &&
+        `AND m.release_date LIKE '%${release_date}%'`) ||
+      ""
+    }
+    ${(is_show !== undefined && `AND m.is_show LIKE '%${is_show}%'`) || ""}
+    GROUP BY m.id_music
+    ${limit !== undefined || offset !== undefined ? " ORDER BY m.id_music" : ""}
+    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+    `;
 
     const [musicList]: Array<any> = await connection.query(query, queryParams);
+    Parser.convertJson(musicList as Array<any>, "artists", "types", "lyrics");
+    musicList.forEach((item: any, index: number) => {
+      item.artists = Parser.removeNullObjects(item.artists);
+      item.types = Parser.removeNullObjects(item.types);
+      item.lyrics = Parser.removeNullObjects(item.lyrics);
+    });
     return objectResponse({ data: musicList });
   } catch (error) {
     return getServerErrorMsg(error);

@@ -11,27 +11,22 @@ export const GET = async (request: Request, context: any) => {
     const currentUser = await getCurrentUser(request, false);
     const role = currentUser.role;
     const queryParams: any[] = [];
-    let query = "";
 
-    if (role === "admin") {
-      query += `SELECT * FROM Type WHERE is_type = '${id}'`;
-    } else {
-      query += `
-        SELECT 
-          id_type,
-          name,
-          slug,
-          description,
-          created_at,
-          is_show
-        FROM Type
-        WHERE is_show = 1
-        AND id_type = '${id}'
-      `;
-    }
+    const query = `
+    SELECT 
+      id_type,
+      name,
+      slug,
+      created_at,
+      is_show
+    FROM Type
+    WHERE TRUE
+    AND id_type = '${id}'
+    ${role === "admin" ? "" : "AND is_show = 1"}
+    `;
 
     const [type]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: type });
+    return objectResponse({ data: type[0] });
   } catch (error) {
     return getServerErrorMsg(error);
   }

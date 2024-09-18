@@ -4,42 +4,48 @@ import { getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
+import Parser from "@/utils/Parser";
 
 export const GET = async (request: Request) => {
   try {
     const params = getQueryParams(request);
-    const currentUser = await getCurrentUser(request, false);
+    const { limit, offset, id_artist, start_date, end_date }: any = params;
+    let currentUser;
+    if (id_artist === undefined) {
+      currentUser = await getCurrentUser(request, true);
+    } else currentUser = await getCurrentUser(request, false);
     const role = currentUser.role;
-    const { limit, offset, id_type, name, slug, created_at, is_show }: any =
-      params;
     const queryParams: any[] = [];
+
+    const id_user = currentUser.id_user;
+    Checker.checkDate(start_date);
+    Checker.checkDate(end_date);
 
     const query = `
     SELECT 
-      id_type,
-      name,
-      slug,
-      created_at,
-      is_show
-    FROM Type
+      f.id_follow,
+      f.created_at,
+      ${Parser.queryObject([
+        "'id_user', u.id_user",
+        "'id_user', u.id_user",
+        "'id_user', u.id_user",
+      ])} AS user
+    FROM Follow f
+    LEFT JOIN 
+      User u on u.id_user = f.id_user 
     WHERE TRUE
-    ${role === "admin" ? "" : "AND is_show = 1"}
-    
-    ${(id_type !== undefined && `AND id_type LIKE '%${id_type}%'`) || ""}
-    ${(name !== undefined && `AND name LIKE '%${name}%'`) || ""}
-    ${(slug !== undefined && `AND slug LIKE '%${slug}%'`) || ""}
-    ${
-      (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
-      ""
-    }
-    ${(is_show !== undefined && `AND is_show LIKE '%${is_show}%'`) || ""}
+      ${id_artist !== undefined ? `AND f.id_artist = '${id_artist}'` : ""}
+      ${id_user !== undefined ? `AND f.id_user = '${id_user}'` : ""}
+      ${start_date !== undefined ? `AND f.created_at >= '${start_date}'` : ""}
+      ${end_date !== undefined ? `AND f.created_at <= '${end_date}'` : ""}
 
-    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
-    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+      ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+      ${offset !== undefined ? ` OFFSET ${offset}` : ""}
     `;
 
-    const [typeList]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: typeList });
+    const [followList]: Array<any> = await connection.query(query, queryParams);
+    Parser.convertJson(followList as Array<any>, "user");
+    return objectResponse({ data: followList });
   } catch (error) {
     return getServerErrorMsg(error);
   }

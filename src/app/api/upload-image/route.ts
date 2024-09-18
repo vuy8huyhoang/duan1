@@ -11,6 +11,20 @@ export const POST = async (req: Request, res: Response) => {
       throw new Error("No file uploaded or file is invalid.");
     }
 
+    // Define allowed MIME types
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
+
+    // Check if the file type is allowed
+    if (!allowedMimeTypes.includes(file.type)) {
+      throw new Error("File type not allowed.");
+    }
+
     // Convert file stream to a buffer
     const buffer = Buffer.from(await file.arrayBuffer());
 

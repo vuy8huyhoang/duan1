@@ -9,80 +9,54 @@ import Parser from "@/utils/Parser";
 export const GET = async (request: Request) => {
   try {
     const params = getQueryParams(request);
-    const currentUser = await getCurrentUser(request, false);
+    const currentUser = await getCurrentUser(request, true);
     const role = currentUser.role;
     const {
       limit,
       offset,
-      id_album,
-      id_artist,
+      id_playlist,
       name,
-      slug,
-      url_cover,
-      release_date,
-      publish_date,
       description,
-      last_update,
+      url_cover,
+      created_type,
       created_at,
-      is_show,
+      last_update,
     }: any = params;
     const queryParams: any[] = [];
+    const id_user = currentUser.id_user;
 
     const query = `
     SELECT 
-      al.id_album,
-      al.name,
-      al.slug,
-      al.url_cover,
-      al.release_date,
-      al.publish_date,
-      al.created_at,
-      al.last_update,
-      al.is_show,
-      ${Parser.queryArray(
-        Parser.queryObject([
-          "'id_artist', ar.id_artist",
-          "'name', ar.name",
-          "'slug', ar.slug",
-          "'url_cover', ar.url_cover",
-          "'created_at', ar.created_at",
-          "'last_update', ar.last_update",
-          "'is_show', ar.is_show",
-        ])
-      )} AS artists
-    FROM Album al
-    LEFT JOIN 
-      Artist ar ON ar.id_artist = al.id_artist ${
-        role === "admin" ? "" : " AND ar.is_show = 1"
-      }
+      id_playlist,
+      name,
+      url_cover,
+      created_type,
+      created_at,
+      last_update
+    FROM Playlist
     WHERE TRUE
-      ${role === "admin" ? "" : "AND al.is_show = 1"}
-        
+      AND id_user = '${id_user}'
       ${
-        (id_album !== undefined && `AND al.id_album LIKE '%${id_album}%'`) || ""
-      }
-      ${
-        (id_artist !== undefined && `AND al.id_artist LIKE '%${id_artist}%'`) ||
+        (id_playlist !== undefined &&
+          `AND id_playlist LIKE '%${id_playlist}%'`) ||
         ""
       }
       ${(name !== undefined && `AND name LIKE '%${name}%'`) || ""}
-      ${(slug !== undefined && `AND slug LIKE '%${slug}%'`) || ""}
-      ${
-        (url_cover !== undefined && `AND url_cover LIKE '%${url_cover}%'`) || ""
-      }
       ${
         (description !== undefined &&
           `AND description LIKE '%${description}%'`) ||
         ""
       }
       ${
-        (release_date !== undefined &&
-          `AND release_date LIKE '%${release_date}%'`) ||
+        (url_cover !== undefined && `AND url_cover LIKE '%${url_cover}%'`) || ""
+      }
+      ${
+        (created_type !== undefined &&
+          `AND created_type LIKE '%${created_type}%'`) ||
         ""
       }
       ${
-        (publish_date !== undefined &&
-          `AND publish_date LIKE '%${publish_date}%'`) ||
+        (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
         ""
       }
       ${
@@ -90,22 +64,12 @@ export const GET = async (request: Request) => {
           `AND last_update LIKE '%${last_update}%'`) ||
         ""
       }
-      ${
-        (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
-        ""
-      }
-      ${(is_show !== undefined && `AND is_show LIKE '%${is_show}%'`) || ""}
-
       ${limit !== undefined ? ` LIMIT ${limit}` : ""}
       ${offset !== undefined ? ` OFFSET ${offset}` : ""}
     `;
 
-    const [albumList]: Array<any> = await connection.query(query, queryParams);
-    Parser.convertJson(albumList as Array<any>, "artists");
-    albumList.forEach((item: any, index: number) => {
-      item.artists = Parser.removeNullObjects(item.artists);
-    });
-    return objectResponse({ data: albumList });
+    const [typeList]: Array<any> = await connection.query(query, queryParams);
+    return objectResponse({ data: typeList });
   } catch (error) {
     return getServerErrorMsg(error);
   }

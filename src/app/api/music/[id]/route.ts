@@ -3,6 +3,7 @@ import Checker from "@/utils/Checker";
 import { getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { objectResponse } from "@/utils/Response";
+import Parser from "@/utils/Parser";
 
 export const GET = async (request: Request, context: any) => {
   try {
@@ -11,65 +12,83 @@ export const GET = async (request: Request, context: any) => {
     const currentUser = await getCurrentUser(request, false);
     const role = currentUser.role;
     const queryParams: any[] = [];
-    let query = "";
-
-    if (role === "admin") {
-      query += `
-      SELECT 
-        m.*,
-        COUNT(mh.id_music_history) AS total_views
-      FROM Music m
-      LEFT JOIN MusicHistory mh ON m.id_music = mh.id_music
-      AND m.id_music = '${id}'
-      GROUP BY m.id_music;
-      `;
-    } else if (role === "membership") {
-      query += `
-        SELECT 
-          m.id_music,
-          m.name,
-          m.slug,
-          m.url_path,
-          m.description,
-          m.total_duration,
-          m.publish_time,
-          m.release_date,
-          m.created_at,
-          m.last_update,
-          COUNT(mh.id_music_history) AS total_views
-        FROM Music m
-        LEFT JOIN MusicHistory mh ON m.id_music = mh.id_music
-        WHERE m.is_show = 1
-        AND m.id_music = '${id}'
-        GROUP BY m.id_music;
-      `;
-    } else {
-      query += `
-      SELECT 
-        m.id_music,
-        m.name,
-        m.slug,
-        CASE 
-          WHEN m.membership_permission = 1 THEN m.url_path
-          ELSE NULL
-        END AS url_path,
-        m.description,
-        m.total_duration,
-        m.publish_time,
-        m.release_date,
-        m.created_at,
-        m.last_update,
-        COUNT(mh.id) AS total_views
-      FROM Music m
-      LEFT JOIN MusicHistory mh ON mh.id_music = m.id_music
-      WHERE m.is_show = 1
-      AND m.id_music = '${id}'
-      GROUP BY m.id_music;
-  `;
-    }
+    let query = `
+    SELECT 
+      m.id_music,
+      m.name,
+      m.slug,
+      ${
+        role === "user"
+          ? "m.url_path"
+          : `
+      CASE 
+        WHEN m.membership_permission = 1 THEN m.url_path
+        ELSE NULL
+      END AS url_path`
+      },
+      m.total_duration,
+      m.publish_time,
+      m.release_date,
+      m.created_at,
+      m.last_update,
+      m.membership_permission,
+      m.is_show,
+      ${Parser.queryArray(
+        Parser.queryObject([
+          "'id_artist', a.id_artist",
+          "'name', a.name",
+          "'slug', a.slug",
+          "'url_cover', a.url_cover",
+          "'created_at', a.created_at",
+          "'last_update', a.last_update",
+          "'is_show', a.is_show",
+        ])
+      )} AS artists,
+      ${Parser.queryArray(
+        Parser.queryObject([
+          "'id_type', ty.id_type",
+          "'name', ty.name",
+          "'slug', ty.slug",
+          "'created_at', ty.created_at",
+          "'is_show', ty.is_show",
+        ])
+      )} AS types,
+      ${Parser.queryArray(
+        Parser.queryObject([
+          "'id_lyrics', l.id_lyrics",
+          "'txt', l.lyrics",
+          "'start_time', l.start_time",
+          "'end_time', l.end_time",
+        ])
+      )} AS lyrics
+    FROM 
+      Music m
+    LEFT JOIN 
+      MusicArtistDetail mad ON mad.id_music = m.id_music
+    LEFT JOIN   
+      Artist a ON a.id_artist = mad.id_artist
+    LEFT JOIN 
+      MusicTypeDetail mtd ON mtd.id_music = m.id_music
+    LEFT JOIN 
+      Type ty ON ty.id_type = mtd.id_type
+    LEFT JOIN 
+      Lyrics l ON l.id_music = m.id_music
+    WHERE TRUE
+    ${role === "admin" ? "" : "AND m.is_show = 1"}
+    AND m.id_music = '${id}'
+    GROUP BY m.id_music
+    `;
 
     const [music]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: music });
+
+    Parser.convertJson(music as Array<any>, "artists", "types", "lyrics");
+    music.forEach((item: any, index: number) => {
+      item.artists = Parser.removeNullObjects(item.artists);
+      item.types = Parser.removeNullObjects(item.types);
+      item.lyrics = Parser.removeNullObjects(item.lyrics);
+    });
+
+    return objectResponse({ data: music[0] });
   } catch (error) {
     return getServerErrorMsg(error);
   }

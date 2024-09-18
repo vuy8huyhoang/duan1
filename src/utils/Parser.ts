@@ -9,9 +9,9 @@ export default class Parser {
 
   static queryArray(str: string): string {
     return `
-    CONCAT('[', GROUP_CONCAT(
-      ${str}
-    SEPARATOR ','), ']')
+    IFNULL(CONCAT('[', GROUP_CONCAT(
+      DISTINCT ${str}
+    SEPARATOR ','), ']'), '[]')
     `;
   }
 
@@ -35,4 +35,11 @@ export default class Parser {
       return result;
     }, {} as Record<string, any>);
   };
+
+  static removeNullObjects(array: any[]) {
+    return array.filter((obj) => {
+      // Kiểm tra nếu tất cả thuộc tính của đối tượng là null
+      return !Object.values(obj).every((value) => value === null);
+    });
+  }
 }

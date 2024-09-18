@@ -9,10 +9,10 @@ export const getUserbyId = async (idUser: string) => {
         u.fullname,
         u.role,
         u.email,
+        u.password,
         u.url_avatar,
         u.phone,
         u.gender,
-        u.age,
         u.id_google,
         u.is_banned,
         u.last_update,
@@ -58,4 +58,8 @@ export const getCurrentUser = async (
   } else {
     return user;
   }
+};
+
+export const getRandomVerifyEmailCode = () => {
+  return Math.floor(100000 + Math.random() * 900000);
 };

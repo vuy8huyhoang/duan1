@@ -4,42 +4,46 @@ import { getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
+import Parser from "@/utils/Parser";
 
 export const GET = async (request: Request) => {
   try {
     const params = getQueryParams(request);
-    const currentUser = await getCurrentUser(request, false);
+    const currentUser = await getCurrentUser(request, true);
     const role = currentUser.role;
-    const { limit, offset, id_type, name, slug, created_at, is_show }: any =
+    const { limit, offset, id_music, last_update, id_favorite_music }: any =
       params;
     const queryParams: any[] = [];
 
+    const id_user = currentUser.id_user;
+
     const query = `
     SELECT 
-      id_type,
-      name,
-      slug,
-      created_at,
-      is_show
-    FROM Type
+      id_favorite_music,
+      id_music,
+      last_update
+    FROM FavoriteMusic
     WHERE TRUE
-    ${role === "admin" ? "" : "AND is_show = 1"}
-    
-    ${(id_type !== undefined && `AND id_type LIKE '%${id_type}%'`) || ""}
-    ${(name !== undefined && `AND name LIKE '%${name}%'`) || ""}
-    ${(slug !== undefined && `AND slug LIKE '%${slug}%'`) || ""}
-    ${
-      (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
-      ""
-    }
-    ${(is_show !== undefined && `AND is_show LIKE '%${is_show}%'`) || ""}
+      AND id_user = '${id_user}'
+      ${id_music !== undefined ? `AND id_music = '${id_music}'` : ""}
+      ${
+        id_favorite_music !== undefined
+          ? `AND id_favorite_music = '${id_favorite_music}'`
+          : ""
+      }
+      ${last_update !== undefined ? `AND last_update = '${last_update}'` : ""}
 
-    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
-    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+      ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+      ${offset !== undefined ? ` OFFSET ${offset}` : ""}
     `;
 
-    const [typeList]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: typeList });
+    const [favoriteMusic]: Array<any> = await connection.query(
+      query,
+      queryParams
+    );
+    return objectResponse({
+      data: favoriteMusic,
+    });
   } catch (error) {
     return getServerErrorMsg(error);
   }

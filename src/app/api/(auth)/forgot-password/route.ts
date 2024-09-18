@@ -2,30 +2,15 @@ import connection from "@/lib/connection";
 import transporter from "@/lib/transporter";
 import Checker from "@/utils/Checker";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
+import { getCurrentUser } from "@/utils/Get";
 import { objectResponse } from "@/utils/Response";
 import crypto from "crypto";
 import { headers } from "next/headers";
 
 export const POST = async (req: Request) => {
   try {
-    const body = await req.json();
-    const { email = "" } = body;
-
-    // Check missing
-    Checker.checkRequired(email);
-
-    // Validate
-    Checker.checkEmail(email);
-
-    // Check existing user and get user
-    const [users]: Array<any> = await connection.query(
-      "SELECT * FROM User WHERE email = ?",
-      [email]
-    );
-    if (users.length === 0) {
-      throwCustomError("User not found", 400);
-    }
-    const user = users[0];
+    const currentUser = await getCurrentUser(req, true);
+    const email = currentUser.email;
 
     // Create crypto code
     const resetToken = crypto.randomBytes(32).toString("hex");
@@ -33,8 +18,8 @@ export const POST = async (req: Request) => {
 
     // Update DB
     await connection.query(
-      "UPDATE User SET token_reset = ?, expired_token_reset = ? WHERE id_user = ?",
-      [resetToken, tokenExpireTime, user.id_user]
+      "UPDATE User SET reset_token = ?, reset_token_expired = ? WHERE email = ?",
+      [resetToken, tokenExpireTime, email]
     );
 
     const url = headers().get("host") || "";
@@ -43,8 +28,8 @@ export const POST = async (req: Request) => {
     // Send email
     await transporter.sendMail({
       to: email,
-      subject: "Password Reset Request",
-      text: `You requested a password reset. Click the link below to reset your password:\n\n${resetLink}`,
+      subject: "Reset Your Password",
+      text: `We received a request to reset your password. If you made this request, please click the link below to reset your password. If you did not request a password reset, please ignore this email or contact our support team if you have any concerns.\n\nReset link: ${resetLink}`,
     });
 
     // Trả về phản hồi thành công
