@@ -1,16 +1,17 @@
 import axiosLib from "axios";
 
-const base = "http://localhost:3000";
+const base = "https://jsonplaceholder.typicode.com";
 // const base = "https://vercel.tuananh1.id.vn";
 
 // Tạo một axios của axios
 const axios = axiosLib.create({
-  baseURL: base + "/api", // URL gốc của API
+  baseURL: base, // URL gốc của API
+  // baseURL: base + "/api", // URL gốc của API
 });
 
 // Thêm một request interceptor để gắn accessToken vào header của mỗi yêu cầu
 axios.interceptors.request.use(
-  (config) => {
+  (config: any) => {
     // const accessToken = localStorage.getItem("accessToken");
     const accessToken =
       "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6InUyIiwiZXhwIjoxNzYwNTQzMDEzfQ.-rk8KHiVACAVJXe6OOG_winL7vr1nQTmk2VdLbUMlwo";
@@ -19,7 +20,7 @@ axios.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  (error: any) => {
     // Xử lý lỗi nếu có trong quá trình cấu hình yêu cầu
     return Promise.reject(error);
   }
@@ -34,7 +35,7 @@ axios.interceptors.response.use(
       status: response.status,
     };
   },
-  (error) => {
+  (error: any) => {
     if (error.response) {
       // Server trả về phản hồi với status không nằm trong khoảng 2xx
       console.error(`Error Status: ${error.response.status}`);

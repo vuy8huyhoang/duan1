@@ -8,7 +8,7 @@ const RightSidebar = () => {
                 <div className="program-list">
                     <div className="program">
                         <img src="https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg" alt="Live Program" className="live-image" />
-                        
+
                         <div className="program-info">
                             <span className="live-label">ĐANG PHÁT</span>
                             <p>16:44 - 17:51</p>

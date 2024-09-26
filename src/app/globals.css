@@ -215,8 +215,7 @@ input[type="text"] {
 }
 
 .action-buttons .upgrade,
-.action-buttons .download,
-.action-buttons .settings {
+.action-buttons .download {
   background-color: #6c63ff;
   color: #fff;
   border: none;
@@ -225,7 +224,16 @@ input[type="text"] {
   margin-right: 10px;
   cursor: pointer;
 }
-
+.action-buttons .settings{
+  font-size: 22px;
+  background-color: #6c63ff;
+    color: #fff;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
 .action-buttons .profile img {
   width: 40px;
   height: 40px;
@@ -302,8 +310,7 @@ input[type="text"] {
   font-size: 12px;
   color: #bbb;
 }
-
-/* styles/body.css */
+/*css body*/
 .main-content {
   display: flex;
   flex-direction: column;
@@ -360,7 +367,6 @@ input[type="text"] {
   background-color: #6c63ff;
 }
 /* css musicplayerbar*/
-/* styles/music-player-bar.css */
 .music-player-bar {
   display: flex;
   justify-content: space-between;
@@ -449,3 +455,127 @@ input[type="text"] {
 .schedule-btn:hover {
   background-color: #5a53e0;
 }
+/* css phần new release */
+.new-releases {
+  margin-top: 20px;
+  color: #fff;
+}
+
+.new-releases h2 {
+  font-size: 24px;
+}
+
+.tabs {
+  display: flex;
+  gap: 15px;
+  margin: 10px 0;
+}
+
+.tab {
+  background-color: #3a3a3a;
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background-color: #6c63ff;
+}
+
+.new-releases-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.song-list {
+  display: grid;
+  grid-template-columns: 33% 34% 33%;
+  gap: 15px;
+}
+
+.song-item {
+  display: flex;
+  background-color: #2b2b2b;
+  border-radius: 10px;
+  padding: 10px;
+  width: 350px;
+  align-items: center;
+}
+
+.song-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+
+.song-info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.song-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #ccc;
+}
+
+.premium-label {
+  background-color: #ffb347;
+  color: black;
+  padding: 2px 5px;
+  font-size: 10px;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+/* css phần chill */
+.chill-section {
+  margin-top: 20px;
+  color: #fff;
+}
+
+.chill-section h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.chill-content {
+  display:grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
+.chill-item {
+  background-color: #2b2b2b;
+  border-radius: 12px;
+  width: 240px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chill-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.chill-img {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.chill-info h4 {
+  margin: 10px 0 5px;
+  font-size: 16px;
+  color: #fff;
+}
+
+.chill-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #b0b0b0;
+}
+
