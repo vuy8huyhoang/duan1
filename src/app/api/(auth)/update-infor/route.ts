@@ -34,37 +34,37 @@ export const PATCH = async (request: Request) => {
     const fieldsToUpdate = [];
     const updateData = [];
 
-    if (fullname) {
+    if (fullname !== undefined) {
       fieldsToUpdate.push("fullname = ?");
       updateData.push(fullname);
     }
 
-    if (url_avatar) {
+    if (url_avatar !== undefined) {
       fieldsToUpdate.push("url_avatar = ?");
       updateData.push(url_avatar);
     }
 
-    if (phone) {
+    if (phone !== undefined) {
       fieldsToUpdate.push("phone = ?");
       updateData.push(phone);
     }
 
-    if (gender) {
+    if (gender !== undefined) {
       fieldsToUpdate.push("gender = ?");
       updateData.push(gender);
     }
 
-    if (age) {
+    if (age !== undefined) {
       fieldsToUpdate.push("age = ?");
       updateData.push(age);
     }
 
-    if (birthday) {
+    if (birthday !== undefined) {
       fieldsToUpdate.push("birthday = ?");
       updateData.push(birthday);
     }
 
-    if (country) {
+    if (country !== undefined) {
       fieldsToUpdate.push("country = ?");
       updateData.push(country);
     }

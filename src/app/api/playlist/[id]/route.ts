@@ -37,23 +37,23 @@ export const PATCH = async (request: Request, context: any) => {
     const querySet = [];
     const queryParams = [];
 
-    if (name) {
+    if (name !== undefined) {
       querySet.push("name = ?");
       queryParams.push(name);
     }
-    if (description) {
+    if (description !== undefined) {
       querySet.push("description = ?");
       queryParams.push(description);
     }
-    if (slug) {
+    if (slug !== undefined) {
       querySet.push("slug = ?");
       queryParams.push(slug);
     }
-    if (description) {
+    if (description !== undefined) {
       querySet.push("description = ?");
       queryParams.push(description);
     }
-    if (is_show) {
+    if (is_show !== undefined) {
       querySet.push("is_show = ?");
       queryParams.push(is_show);
     }

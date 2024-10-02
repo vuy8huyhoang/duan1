@@ -51,3 +51,41 @@ export const POST = async (req: Request, res: Response) => {
     return getServerErrorMsg(e);
   }
 };
+
+export const DELETE = async (req: Request, res: Response) => {
+  try {
+    const { url } = await req.json(); // Assume the request body contains the URL of the image to be deleted
+
+    if (!url) {
+      throw new Error("No URL provided.");
+    }
+
+    // Extract public_id using regex
+    const regex = /\/([^\/]+)\/([^\/]+)$/;
+    const matches = url.match(regex);
+
+    if (!matches || matches.length < 3) {
+      throw new Error("No public_id could be extracted from the URL.");
+    }
+
+    const public_id = `${matches[2]}`.replace(
+      /\.(jpg|jpeg|png|gif|mp4|webm|mp3)$/i,
+      ""
+    ); // Combine the version and public ID
+
+    // Delete the image from Cloudinary
+    const result = await cloudinary.v2.uploader.destroy(public_id, {
+      resource_type: "image",
+    });
+
+    if (result.result === "ok") {
+      return objectResponse({
+        message: "Image deleted successfully",
+      });
+    } else {
+      throw new Error("Failed to delete the image.");
+    }
+  } catch (e) {
+    return getServerErrorMsg(e);
+  }
+};

@@ -17,17 +17,9 @@ export const getUserbyId = async (idUser: string) => {
         u.is_banned,
         u.last_update,
         u.created_at,
-        CASE
-            WHEN u.role = 'admin' THEN 'admin'
-            WHEN u.role = 'user' AND pm.id_membership IS NOT NULL AND NOW() BETWEEN pm.start_date AND pm.end_date AND pm.payment_status = 'paid' THEN 'membership'
-            WHEN u.role = 'user' THEN 'user'
-        END AS role
+        u.role
     FROM
         User u
-    LEFT JOIN
-        Membership pm ON u.id_user = pm.id_user
-        AND NOW() BETWEEN pm.start_date AND pm.end_date
-        AND pm.payment_status = 'paid'
     WHERE u.id_user = ?;
     `,
     [idUser]
@@ -49,7 +41,7 @@ export const getCurrentUser = async (
 
   if (isRequired) {
     if (!userId || user === "User not found")
-      throwCustomError("Token not found ", 400);
+      throwCustomError("Token not found", 401);
     if (user === "Cannot verify authentication")
       throwCustomError("Login failed", 403);
     if (typeof user === "string")
@@ -62,4 +54,33 @@ export const getCurrentUser = async (
 
 export const getRandomVerifyEmailCode = () => {
   return Math.floor(100000 + Math.random() * 900000);
+};
+
+export const getByRole = (role: string | null, columnField = "is_show") => {
+  return role === "admin" ? "" : `AND ${columnField} = 1`;
+};
+
+export const getByLike = (field: any, columnName: string) => {
+  return (field !== undefined && `AND ${columnName} LIKE '%${field}%'`) || "";
+};
+
+export const getByEqual = (field: any, columnName: string) => {
+  return (field !== undefined && `AND ${columnName} = '${field}'`) || "";
+};
+
+export const getByLimitOffset = (
+  limit: any,
+  offset: any,
+  orderField: string,
+  orderType: string = "DESC"
+) => {
+  return `
+  ${
+    limit !== undefined || offset !== undefined
+      ? ` ORDER BY ${orderField} ${orderType}`
+      : ""
+  }
+  ${limit !== undefined ? ` LIMIT ${limit}` : ""}
+  ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+  `;
 };

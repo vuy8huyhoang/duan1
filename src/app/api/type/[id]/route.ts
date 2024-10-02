@@ -48,40 +48,46 @@ export const PATCH = async (request: Request, context: any) => {
     Checker.checkIncluded(is_show, [0, 1]);
 
     // Check permission
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     if (currentUser?.role !== "admin")
       throwCustomError("Not enough permission", 403);
 
     // Check unique slug if slug is provided
     if (slug) {
       const [slugList]: Array<any> = await connection.query(
-        "select id_type from Type where slug = ?",
+        `select id_type from Type where slug = ? and id_user <> ${currentUser.id_user}`,
         [slug, id_type]
       );
       if (slugList.length !== 0) throwCustomError("Slug is already exist", 400);
     }
 
+    // Check music exist
+    const [typeList]: any[] = await connection.query(
+      "select id_type from Type where id_type = '" + id_type + "'"
+    );
+    if (typeList.length === 0) throwCustomError("Type not found", 400);
+
     // Update DB
     const querySet = [];
     const queryParams = [];
 
-    if (name) {
+    if (name !== undefined) {
       querySet.push("name = ?");
       queryParams.push(name);
     }
-    if (description) {
+    if (description !== undefined) {
       querySet.push("description = ?");
       queryParams.push(description);
     }
-    if (slug) {
+    if (slug !== undefined) {
       querySet.push("slug = ?");
       queryParams.push(slug);
     }
-    if (description) {
+    if (description !== undefined) {
       querySet.push("description = ?");
       queryParams.push(description);
     }
-    if (is_show) {
+    if (is_show !== undefined) {
       querySet.push("is_show = ?");
       queryParams.push(is_show);
     }
@@ -95,6 +101,10 @@ export const PATCH = async (request: Request, context: any) => {
       `update Type set ${querySet.join(", ")} where id_type = ?`,
       queryParams
     );
+
+    if (result.affectedRows === 0) {
+      throwCustomError("Type not found", 404);
+    }
 
     return objectResponse({ success: "Updated successfully" }, 200);
   } catch (error) {
@@ -111,7 +121,7 @@ export const DELETE = async (request: Request, context: any) => {
     Checker.checkString(id, true);
 
     // Check permission
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     if (currentUser?.role !== "admin")
       throwCustomError("Not enough permission", 403);
 

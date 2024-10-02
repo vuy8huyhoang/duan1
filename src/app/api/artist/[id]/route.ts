@@ -20,7 +20,7 @@ export const GET = async (request: Request, context: any) => {
     a.url_cover,
     a.created_at,
     a.last_update,
-      COUNT(f.id_follow) AS followers
+      COUNT(f.id_user) AS followers
     FROM Artist a
     LEFT JOIN Follow f ON a.id_artist = f.id_artist
     WHERE TRUE
@@ -30,7 +30,7 @@ export const GET = async (request: Request, context: any) => {
     `;
 
     const [artist]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: artist[0] });
+    return objectResponse({ data: artist[0] }, 200);
   } catch (error) {
     return getServerErrorMsg(error);
   }
@@ -39,28 +39,15 @@ export const GET = async (request: Request, context: any) => {
 export const PATCH = async (request: Request, context: any) => {
   try {
     const body = await request.json();
-    const {
-      name,
-      description,
-      slug,
-      url_cover,
-      birthday,
-      country,
-      gender,
-      is_show,
-    } = body;
+    const { name, slug, url_cover, is_show } = body;
     const { params } = context;
     const { id } = params;
     const id_artist = id;
 
     // Validation
     Checker.checkString(name);
-    Checker.checkString(description);
     Checker.checkString(slug);
     Checker.checkString(url_cover);
-    Checker.checkDate(birthday);
-    Checker.checkString(country);
-    Checker.checkIncluded(gender, ["male", "female"]);
     Checker.checkIncluded(is_show, [0, 1]);
 
     // Check permission
@@ -71,43 +58,33 @@ export const PATCH = async (request: Request, context: any) => {
     // Check unique slug if slug is provided
     if (slug) {
       const [slugList]: Array<any> = await connection.query(
-        "select id_artist from Artist where slug = ?",
-        [slug, id_artist]
+        `select id_artist from Artist where slug = ? and id_user <> '${currentUser.id_user}'`,
+        [slug]
       );
-      if (slugList.length !== 0) throwCustomError("Slug is already exist", 400);
+      if (slugList.length !== 0) throwCustomError("Slug is already exist", 409);
     }
+
+    // Check Artist exist
+    const [artistList]: any[] = await connection.query(
+      "select id_artist from Artist where id_Artist = '" + id_artist + "'"
+    );
+    if (artistList.length === 0) throwCustomError("Artist not found", 400);
 
     // Update DB
     const querySet = [];
     const queryParams = [];
 
-    if (name) {
+    if (name !== undefined) {
       querySet.push("name = ?");
       queryParams.push(name);
     }
-    if (description) {
-      querySet.push("description = ?");
-      queryParams.push(description);
-    }
-    if (slug) {
+    if (slug !== undefined) {
       querySet.push("slug = ?");
       queryParams.push(slug);
     }
-    if (url_cover) {
+    if (url_cover !== undefined) {
       querySet.push("url_cover = ?");
       queryParams.push(url_cover);
-    }
-    if (birthday) {
-      querySet.push("birthday = ?");
-      queryParams.push(birthday);
-    }
-    if (country) {
-      querySet.push("country = ?");
-      queryParams.push(country);
-    }
-    if (gender) {
-      querySet.push("gender = ?");
-      queryParams.push(gender);
     }
     if (is_show !== undefined) {
       querySet.push("is_show = ?");
@@ -124,7 +101,11 @@ export const PATCH = async (request: Request, context: any) => {
       queryParams
     );
 
-    return objectResponse({ success: "Updated successfully" }, 200);
+    if (result.affectedRows === 0) {
+      throwCustomError("Artist not found", 404);
+    }
+
+    return objectResponse({ message: "Updated successfully" }, 200);
   } catch (error) {
     return getServerErrorMsg(error);
   }

@@ -1,6 +1,6 @@
 import connection from "@/lib/connection";
 import Checker from "@/utils/Checker";
-import { getCurrentUser } from "@/utils/Get";
+import { getByRole, getCurrentUser } from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { objectResponse } from "@/utils/Response";
 import Parser from "@/utils/Parser";
@@ -9,6 +9,7 @@ export const GET = async (request: Request, context: any) => {
   try {
     const { params } = context;
     const { id } = params;
+    const id_music = id;
     const currentUser = await getCurrentUser(request, false);
     const role = currentUser.role;
     const queryParams: any[] = [];
@@ -17,21 +18,14 @@ export const GET = async (request: Request, context: any) => {
       m.id_music,
       m.name,
       m.slug,
-      ${
-        role === "user"
-          ? "m.url_path"
-          : `
-      CASE 
-        WHEN m.membership_permission = 1 THEN m.url_path
-        ELSE NULL
-      END AS url_path`
-      },
+      m.url_path,
+      m.url_cover,
       m.total_duration,
-      m.publish_time,
+      m.producer,
+      m.composer,
       m.release_date,
       m.created_at,
       m.last_update,
-      m.membership_permission,
       m.is_show,
       ${Parser.queryArray(
         Parser.queryObject([
@@ -74,8 +68,8 @@ export const GET = async (request: Request, context: any) => {
     LEFT JOIN 
       Lyrics l ON l.id_music = m.id_music
     WHERE TRUE
-    ${role === "admin" ? "" : "AND m.is_show = 1"}
-    AND m.id_music = '${id}'
+    AND m.id_music = '${id_music}'
+    ${getByRole(role, "m.is_show")}
     GROUP BY m.id_music
     `;
 
@@ -101,23 +95,28 @@ export const PATCH = async (request: Request, context: any) => {
       name,
       slug,
       url_path,
-      description,
+      url_cover,
       total_duration,
-      publish_time,
+      producer,
+      composer,
       release_date,
       is_show,
+      artists = [],
+      types = [],
+      lyrics = [],
     } = body;
     const { params } = context;
     const { id } = params;
     const id_music = id;
 
     // Validation
-    Checker.checkString(name);
-    Checker.checkString(description);
+    Checker.checkString(name, true);
     Checker.checkString(slug);
     Checker.checkString(url_path);
+    Checker.checkString(url_cover);
     Checker.checkInteger(total_duration);
-    Checker.checkDate(publish_time);
+    Checker.checkString(producer);
+    Checker.checkString(composer);
     Checker.checkDate(release_date);
     Checker.checkIncluded(is_show, [0, 1]);
 
@@ -129,43 +128,87 @@ export const PATCH = async (request: Request, context: any) => {
     // Check unique slug if slug is provided
     if (slug) {
       const [slugList]: Array<any> = await connection.query(
-        "select id_music from Music where slug = ?",
+        `select id_music from Music where slug = ? and id_user <> '${currentUser.id_user}'`,
         [slug, id_music]
       );
-      if (slugList.length !== 0) throwCustomError("Slug is already exist", 400);
+      if (slugList.length !== 0) throwCustomError("Slug is already exist", 409);
+    }
+
+    // Check music exist
+    const [musicList]: any[] = await connection.query(
+      "select id_music from Music where id_music = '" + id_music + "'"
+    );
+    if (musicList.length === 0) throwCustomError("Music not found", 400);
+
+    // Update artist
+    if (artists.length > 0) {
+      const [artistList]: any[] = await connection.query(
+        `select id_artist 
+        from Artist 
+        where 
+        (${artists
+          .map((artist: string) => {
+            return `id_artist = '${artist}'`;
+          })
+          .join(" OR ")})`
+      );
+      if (artistList.length !== artists.length) {
+        throwCustomError("Artist list error", 400);
+      }
+    }
+
+    // Update type
+    if (types.length > 0) {
+      const [typeList]: any[] = await connection.query(
+        `select id_type 
+        from Type 
+        where
+        ${types
+          .map((type: string) => {
+            return `id_type = '${type}'`;
+          })
+          .join(" OR ")}`
+      );
+      if (typeList.length !== types.length) {
+        throwCustomError("Type list error", 400);
+      }
     }
 
     // Update DB
     const querySet = [];
     const queryParams = [];
 
-    if (name) {
+    if (name !== undefined) {
       querySet.push("name = ?");
       queryParams.push(name);
     }
-    if (description) {
-      querySet.push("description = ?");
-      queryParams.push(description);
-    }
-    if (slug) {
+    if (slug !== undefined) {
       querySet.push("slug = ?");
       queryParams.push(slug);
     }
-    if (url_path) {
+    if (url_path !== undefined) {
       querySet.push("url_path = ?");
       queryParams.push(url_path);
     }
-    if (total_duration) {
+    if (url_cover !== undefined) {
+      querySet.push("url_cover = ?");
+      queryParams.push(url_cover);
+    }
+    if (total_duration !== undefined) {
       querySet.push("total_duration = ?");
       queryParams.push(total_duration);
     }
-    if (release_date) {
+    if (producer !== undefined) {
+      querySet.push("producer = ?");
+      queryParams.push(producer);
+    }
+    if (composer !== undefined) {
+      querySet.push("composer = ?");
+      queryParams.push(composer);
+    }
+    if (release_date !== undefined) {
       querySet.push("release_date = ?");
       queryParams.push(release_date);
-    }
-    if (publish_time) {
-      querySet.push("publish_time = ?");
-      queryParams.push(publish_time);
     }
     if (is_show !== undefined) {
       querySet.push("is_show = ?");
@@ -180,6 +223,50 @@ export const PATCH = async (request: Request, context: any) => {
     const [result]: Array<any> = await connection.query(
       `update Music set ${querySet.join(", ")} where id_music = ?`,
       queryParams
+    );
+
+    // Delete old data
+    await connection.query("delete from Lyrics where id_music = ?", id_music);
+    await connection.query(
+      "delete from MusicTypeDetail where id_music = ?",
+      id_music
+    );
+    await connection.query(
+      "delete from MusicArtistDetail where id_music = ?",
+      id_music
+    );
+
+    // Add artists
+    await Promise.all(
+      artists.map(async (artist: string) => {
+        await connection.query(
+          `insert into MusicArtistDetail (id_artist, id_music) 
+          values (?, ?)`,
+          [artist, id_music]
+        );
+      })
+    );
+
+    // Add types
+    await Promise.all(
+      types.map(async (type: string) => {
+        await connection.query(
+          `insert into MusicTypeDetail (id_type, id_music) 
+          values (?, ?)`,
+          [type, id_music]
+        );
+      })
+    );
+
+    // Add lyrics
+    await Promise.all(
+      lyrics.map(async (lyric: any) => {
+        await connection.query(
+          `insert into Lyrics (id_music, lyrics, start_time, end_time) 
+          values (?, ?, ?, ?)`,
+          [id_music, lyric.lyrics, lyric.start_time, lyric.end_time]
+        );
+      })
     );
 
     return objectResponse({ success: "Updated successfully" }, 200);

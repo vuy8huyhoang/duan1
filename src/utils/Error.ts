@@ -13,10 +13,7 @@ export const throwCustomError = (msg: string, status: number = 500): never => {
 
 export const getServerErrorMsg = (e: any) => {
   if (e instanceof CustomError) {
-    return objectResponse(
-      { message: "Contact admin if see this error", error: e.message },
-      e.statusCode
-    );
+    return objectResponse({ error: e.message }, e.statusCode);
   } else if (e instanceof Error) {
     return objectResponse(
       { message: "Contact admin if see this error", error: e.message },

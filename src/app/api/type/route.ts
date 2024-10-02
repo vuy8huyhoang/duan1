@@ -1,6 +1,12 @@
 import connection from "@/lib/connection";
 import Checker from "@/utils/Checker";
-import { getCurrentUser } from "@/utils/Get";
+import {
+  getByEqual,
+  getByLike,
+  getByLimitOffset,
+  getByRole,
+  getCurrentUser,
+} from "@/utils/Get";
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
@@ -23,23 +29,18 @@ export const GET = async (request: Request) => {
       is_show
     FROM Type
     WHERE TRUE
-    ${role === "admin" ? "" : "AND is_show = 1"}
+    ${getByRole(role, "is_show")}
     
-    ${(id_type !== undefined && `AND id_type LIKE '%${id_type}%'`) || ""}
-    ${(name !== undefined && `AND name LIKE '%${name}%'`) || ""}
-    ${(slug !== undefined && `AND slug LIKE '%${slug}%'`) || ""}
-    ${
-      (created_at !== undefined && `AND created_at LIKE '%${created_at}%'`) ||
-      ""
-    }
-    ${(is_show !== undefined && `AND is_show LIKE '%${is_show}%'`) || ""}
+    ${getByEqual(id_type, "id_type")}
+    ${getByLike(name, "name")}
+    ${getByLike(slug, "slug")}
+    ${getByEqual(is_show, "is_show")}
 
-    ${limit !== undefined ? ` LIMIT ${limit}` : ""}
-    ${offset !== undefined ? ` OFFSET ${offset}` : ""}
+    ${getByLimitOffset(limit, offset, "created_at")}
     `;
 
     const [typeList]: Array<any> = await connection.query(query, queryParams);
-    return objectResponse({ data: typeList });
+    return objectResponse({ data: typeList }, 200);
   } catch (error) {
     return getServerErrorMsg(error);
   }
@@ -48,17 +49,15 @@ export const GET = async (request: Request) => {
 export const POST = async (request: Request) => {
   try {
     const body = await request.json();
-    const { name, slug, description, is_show } = body;
+    const { name, slug, is_show = 1 } = body;
 
     // Validation
     Checker.checkString(name, true);
     Checker.checkString(slug);
-    Checker.checkString(description);
-    Checker.checkString(slug);
     Checker.checkIncluded(is_show, [0, 1]);
 
     // Check permission
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     if (currentUser?.role !== "admin")
       throwCustomError("Not enough permission", 403);
 
@@ -68,7 +67,7 @@ export const POST = async (request: Request) => {
         "select id_type from Type where slug = ?",
         [slug]
       );
-      if (slugList.length !== 0) throwCustomError("Slug is already exist", 400);
+      if (slugList.length !== 0) throwCustomError("Slug is already exist", 409);
     }
 
     // Check slug not empty
@@ -80,16 +79,15 @@ export const POST = async (request: Request) => {
       `
       insert into Type
         (
-          id_type
+          id_type,
           name,
           slug,
-          description,
           is_show
         )  
       values 
-        (?, ?, ?, ?, ?)
+        (?, ?, ?, ?)
       `,
-      [newId, name, slug, description, is_show]
+      [newId, name, slug, is_show]
     );
 
     return objectResponse({ newID: newId });
