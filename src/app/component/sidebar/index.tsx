@@ -1,3 +1,5 @@
+import Login from "../login";
+
 const Sidebar = () => {
     return (
         <aside className="sidebar">
@@ -15,7 +17,8 @@ const Sidebar = () => {
                 </ul>
             </nav>
             <div className="upgrade">
-                <button>Nâng Cấp Tài Khoản</button>
+                <a href="">Nâng Cấp Tài Khoản</a>
+                <Login></Login>
             </div>
         </aside>
     );

@@ -1,6 +1,6 @@
 import axiosLib from "axios";
 
-const base = "https://jsonplaceholder.typicode.com";
+const base = "http://localhost:3000/api/";
 // const base = "https://vercel.tuananh1.id.vn";
 
 // Tạo một axios của axios
@@ -12,9 +12,9 @@ const axios = axiosLib.create({
 // Thêm một request interceptor để gắn accessToken vào header của mỗi yêu cầu
 axios.interceptors.request.use(
   (config: any) => {
-    // const accessToken = localStorage.getItem("accessToken");
-    const accessToken =
-      "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6InUyIiwiZXhwIjoxNzYwNTQzMDEzfQ.-rk8KHiVACAVJXe6OOG_winL7vr1nQTmk2VdLbUMlwo";
+    const accessToken = localStorage.getItem("accessToken");
+    // const accessToken =
+    //   "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6InUyIiwiZXhwIjoxNzYwNTQzMDEzfQ.-rk8KHiVACAVJXe6OOG_winL7vr1nQTmk2VdLbUMlwo";
     if (accessToken) {
       config.headers["token"] = accessToken; // Gắn accessToken vào header với tên 'token'
     }
