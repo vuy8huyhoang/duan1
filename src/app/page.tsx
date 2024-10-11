@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <div>
       <Header />
-      <h1>Welcome to My Next.js App</h1>
+      <h1>Welcome to My Next.js app</h1>
     </div>
   );
 }
