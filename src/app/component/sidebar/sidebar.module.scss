@@ -1,5 +1,131 @@
-.sidebar{
+/* sidebar.module.scss */
+
+.sidebar {
     width: 240px;
+    background-color: #231B2E;
     height: 720px;
-    background-color: aqua;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+
+.logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.menu,
+.submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    color: #B3B3B3;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.menuItem a {
+    font-family: inter;
+    font-weight: medium;
+    font-size: 13px;
+    color: #666276;
+    text-decoration: none;
+}
+
+.menuItem svg {
+    width: 20px;
+    height: 20px;
+
+
+}
+
+.menuItem:hover {
+    color: #fff;
+}
+
+.active {
+    color: #fff;
+}
+
+.createPlaylist {
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.createPlaylist button {
+    background-color: rgba(#666276, 0);
+    color: rgba(#666276, 1);
+    border: 1px solid rgba(#666276, 0.3);
+    border-radius: 15px;
+    color: #fff;
+    padding: 10px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    transition: background-color 0.3s;
+}
+
+.createPlaylist button svg {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+}
+
+.createPlaylist button:hover {
+    background-color: #474764;
+}
+.csvg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.active {
+    background-color: rgba(#FFFFFF, 0.05);
+    border-right: 2px solid #407DC6;
+
+    path {
+        stroke: #ffffff;
+        border-width: 1.5px;
+    }
+
+    a {
+        color: #FFFFFF;
+    }
+
+    /* Highlight background color */
+}
+
+/* Right border effect for the active item */
+.active::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 4px;
+    /* Width of the border */
+    height: 100%;
+
+    background-color: #4A90E2;
+    /* Border color */
 }
