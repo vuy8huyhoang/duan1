@@ -1,9 +1,7 @@
 const Sidebar = () => {
     return (
         <aside className="sidebar">
-            <div className="logo">
-                <img src="https://static-zmp3.zmdcdn.me/skins/common/logo600.png" alt="Zing MP3 Logo" />
-            </div>
+            
             <nav className="nav-menu">
                 <ul>
                     <li><a href="#">Thư Viện</a></li>
