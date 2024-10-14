@@ -1,9 +1,12 @@
 /* sidebar.module.scss */
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 .sidebar {
-    width: 240px;
-    background-color: #231B2E;
+    width:240px;
     height: 720px;
+    position: fixed; // Để sidebar cố định
+    top: 0; // Vị trí từ trên cùng
+    left: 0; // Vị trí từ bên trái
+    background-color: #231B2E;
     display: flex;
     flex-direction: column;
     color: #fff;
@@ -72,7 +75,7 @@
     background-color: rgba(#666276, 0);
     color: rgba(#666276, 1);
     border: 1px solid rgba(#666276, 0.3);
-    border-radius: 15px;
+    border-radius: 20px;
     color: #fff;
     padding: 10px 10px;
     cursor: pointer;
@@ -116,16 +119,3 @@
     /* Highlight background color */
 }
 
-/* Right border effect for the active item */
-.active::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 4px;
-    /* Width of the border */
-    height: 100%;
-
-    background-color: #4A90E2;
-    /* Border color */
-}
