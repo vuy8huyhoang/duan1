@@ -31,7 +31,10 @@ export default function Layout({ children }: any) {
         <div className="container">
           <Sidebar />
           <Header />
-          {children}
+          <div className="contain">
+
+            {children}
+            </div>
         </div>
       </body>
     </html>
