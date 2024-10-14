@@ -4,6 +4,7 @@ import Sidebar from './component/sidebar';
 import "./globals.css"
 import axios from '@/lib/axios';
 import Header from './component/header/Header';
+import Home from './component/home/page';
 
 export default function Layout({ children }: any) {
 
@@ -15,7 +16,7 @@ export default function Layout({ children }: any) {
     <html lang="en">
       <head>
         <title>Groove</title>
-        
+
         <meta name="description" content="Soundy website description" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <link rel="icon" href="../favicon.ico" /> */}
@@ -28,8 +29,9 @@ export default function Layout({ children }: any) {
       //  onClick={onClickBodyHandle}
       >
         <div className="container">
-            <Sidebar />
-            <Header/>
+          <Sidebar />
+          <Header />
+          {children}
         </div>
       </body>
     </html>

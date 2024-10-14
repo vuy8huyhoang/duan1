@@ -1,0 +1,97 @@
+.contentwrapper {
+    width: 100%;
+    margin-top: 100px;
+    margin-left: 250px;
+    /* Đẩy phần nội dung chính sang phải theo độ rộng của sidebar */
+    padding: 20px;
+    box-sizing: border-box;
+    /* Đảm bảo padding được tính đúng */
+}
+
+/* Title Styles */
+.title {
+    text-align: left;
+    margin-bottom: 40px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Album List */
+.albumList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+/* Individual Album Card */
+.albumCard {
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    width: 30%;
+    height: 240px;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+}
+.albumCard img{
+    height: 240px;
+}
+
+.albumCard:hover {
+    transform: scale(1.05);
+}
+
+/* Album Cover Image */
+.albumCover {
+    width: 380px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* Album Name */
+.albumName {
+    font-size: 1.8rem;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #fff;
+}
+
+/* Artist Name */
+.artistName {
+    font-size: 1.3rem;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+/* Music List */
+.musicList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding-top: 10px;
+}
+
+.musicListItem {
+    background: #383838;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.musicListItem:hover {
+    background-color: #505050;
+}
+
+.musicTitle {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.musicArtist {
+    font-size: 1rem;
+    color: #ccc;
+}

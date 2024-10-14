@@ -1,11 +1,11 @@
-import Header from "./component/header/Header";
-export default function HomePage() {
-  console.log(111);
+"use client"
 
+import Home from './component/home/page'; // Import the Home component
+
+export default function HomePage() {
   return (
     <div>
-      <Header />
-      <h1>Welcome to My Next.js app</h1>
+      <Home />  
     </div>
   );
 }
