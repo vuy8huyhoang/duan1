@@ -1,0 +1,41 @@
+.zingHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(18, 18, 18,0.9); // Nền đen
+    backdrop-filter: blur(6px) ;
+    padding: 10px 20px;
+    color: white;
+    height: 60px;
+    width: 100%;
+  }
+  
+  .headerLeft i, .headerRight i {
+    font-size: 20px;
+    color: #ccc; // Màu xám cho icon
+    cursor: pointer;
+  }
+  
+  .headerCenter input {
+    width: 400px;
+    max-width: 100%;
+    padding: 8px 12px;
+    background-color: #333; // Nền của input
+    border: none;
+    border-radius: 20px;
+    color: #ccc; // Màu chữ
+  }
+  
+  .headerCenter input::placeholder {
+    color: #666;
+  }
+  
+  .headerRight {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .headerLeft i {
+    margin-right: 15px;
+  }
+  
