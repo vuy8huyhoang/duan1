@@ -1,6 +1,6 @@
 /* sidebar.module.scss */
 .sidebar {
-    width:240px;
+    width: 240px;
     height: 720px;
     position: fixed; // Để sidebar cố định
     top: 0; // Vị trí từ trên cùng
@@ -12,6 +12,10 @@
     color: #fff;
 }
 
+.sidebar__hidden {
+    opacity: 0;
+    position: relative;
+}
 
 .logo {
     display: flex;
@@ -96,7 +100,8 @@
 .createPlaylist button:hover {
     background-color: #474764;
 }
-.csvg{
+
+.csvg {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -118,4 +123,3 @@
 
     /* Highlight background color */
 }
-

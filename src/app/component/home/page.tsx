@@ -32,7 +32,6 @@ export default function Home() {
 
     return (
         <div className={styles.contentwrapper}>
-            <h1 className={styles.title}>Nghe gần đây</h1>
             <div className={styles.albumList}>
                 {albumData.map((album) => (
                     <div key={album.id_album} className={styles.albumCard}>
