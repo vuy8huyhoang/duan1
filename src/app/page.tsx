@@ -4,8 +4,6 @@ import Home from './component/home/page'; // Import the Home component
 
 export default function HomePage() {
   return (
-    <div>
       <Home />  
-    </div>
   );
 }
