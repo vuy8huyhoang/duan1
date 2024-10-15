@@ -28,28 +28,42 @@ export default function ListAlbum() {
         fetchAlbumData();
     }, []);
 
-    return (<>
-        <div className={style.headerSection}>
+    return (
+        <>
+            <div className={style.headerSection}>
                 <h2>Chill</h2>
                 <div className={style.all}>
-
                     <a href="#" className={style.viewAllButton}>Tất cả</a>
                     <ReactSVG className={style.csvg} src="/all.svg" />
                 </div>
             </div>
-        <div className={style.albumGrid}>
-            
-            {loading ? (
-                <p>Đang tải album...</p>
-            ) : (
-                albumData.map((album) => (
-                    <div key={album.id_album} className={style.albumCard}>
-                        <img src={album.url_cover} alt={album.name} className={style.albumCover} />
-                        <a className={style.albumTitle}>{ album.name}</a>
-                    </div>
-                ))
-            )}
-        </div>
-    </>
+
+            <div className={style.albumGrid}>
+                {loading ? (
+                    <p>Đang tải album...</p>
+                ) : (
+                    albumData.map((album) => (
+                        <div key={album.id_album} className={style.albumCard}>
+                            <div className={style.albumWrapper}>
+                                <img src={album.url_cover} alt={album.name} className={style.albumCover} />
+                                <div className={style.overlay}>
+                                    <button className={style.likeButton}>
+                                        <ReactSVG src="/heart.svg" />
+                                    </button>
+                                    <button className={style.playButton}>
+                                        <ReactSVG src="/play.svg" />
+                                    </button>
+                                    
+                                    <button className={style.moreButton}>
+                                        <ReactSVG src="/more.svg" />
+                                    </button>
+                                </div>
+                            </div>
+                            <a className={style.albumTitle}>{album.name}</a>
+                        </div>
+                    ))
+                )}
+            </div>
+        </>
     );
 }
