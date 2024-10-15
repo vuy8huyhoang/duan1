@@ -3,6 +3,7 @@
 import styles from './home.module.scss'; 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import ListMusic from '../listmusic';
 
 interface Album {
     id_album: string;
@@ -18,8 +19,7 @@ export default function Home() {
         const fetchAlbumData = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/album');
-                setAlbumData(response.data.data.slice(0, 3));  // Fetch only 3 albums
-                console.log(albumData);
+                setAlbumData(response.data.data.slice(0, 3));  
             } catch (error) {
                 console.error('Lỗi fetch album', error);
             } finally {
@@ -30,7 +30,7 @@ export default function Home() {
         fetchAlbumData();
     }, []);
 
-    return (
+    return (<>
         <div className={styles.contentwrapper}>
             <div className={styles.albumList}>
                 {albumData.map((album) => (
@@ -39,6 +39,10 @@ export default function Home() {
                     </div>
                 ))}
             </div>
+            
+            
         </div>
+        <ListMusic/>
+    </>
     );
 }

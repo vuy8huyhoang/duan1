@@ -1,10 +1,10 @@
 /* sidebar.module.scss */
 .sidebar {
     width: 240px;
-    height: 720px;
-    position: fixed; // Để sidebar cố định
-    top: 0; // Vị trí từ trên cùng
-    left: 0; // Vị trí từ bên trái
+    height: 100%;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
     z-index: 1000;
     background-color: #231B2E;
     display: flex;
