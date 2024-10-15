@@ -87,6 +87,7 @@ export default function GrooveChartPage() {
                         <img src={music.url_cover} alt={music.name} className={styles.musicCover} />
                         <h5 className="card-title text-success">{music.name} <br /></h5>
                         <div className={styles.moreOptions}>...</div>
+                        jyfutfyhtfutfuyfvuiygviug
                     </div>
                     
                 ))}
