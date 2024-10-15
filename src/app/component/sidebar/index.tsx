@@ -14,7 +14,7 @@ export default function Sidebar() {
     return (
         <div className={styles.sidebar}>
             <div className={styles.logo}>
-                <img src="/logo.svg" alt="Groove Logo" />
+                <a href="/"><img src="/logo.svg" alt="Groove Logo" /></a>
             </div>
             <ul className={styles.menu}>
                 <li
@@ -36,7 +36,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('#groovechart')}
                 >
                     <ReactSVG className={styles.csvg} src="/Vector (1).svg" />
-                    <a href="#">#groovechart</a>
+                    <a href="/groovechart">#groovechart</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'BXH Nhạc Mới' ? styles.active : ''}`}
