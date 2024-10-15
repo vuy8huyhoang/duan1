@@ -52,7 +52,7 @@ CREATE TABLE User (
     is_banned TINYINT(1) DEFAULT 0,
     id_google varchar(255),
     reset_token VARCHAR(255),
-    reset_token_expired float
+    reset_token_expired bigint(20)
 );
 
 CREATE TABLE Artist (
@@ -2622,11 +2622,11 @@ values
 -- Add album    
 INSERT INTO Album (id_album, name, slug, url_cover, id_artist)
 VALUES
-    ('al0001', 'M-TP Ambition', 'mtp-ambition', 'http://res.cloudinary.com/dmiaubxsm/image/upload/v1727401111/alambition.jpg', 'a0001'),
-    ('al0002', 'Tâm 9', 'tam-9', 'http://res.cloudinary.com/dmiaubxsm/image/upload/v1727401222/tam9.jpg', 'a0002'),
-    ('al0003', 'V', 'v-album', 'http://res.cloudinary.com/dmiaubxsm/image/upload/v1727401333/valbum.jpg', 'a0032'),
-    ('al0004', '25', '25-album', 'http://res.cloudinary.com/dmiaubxsm/image/upload/v1727401444/25album.jpg', 'a0033'),
-    ('al0005', 'Purpose', 'purpose', 'http://res.cloudinary.com/dmiaubxsm/image/upload/v1727401555/purpose.jpg', 'a0034');
+    ('al0001', 'M-TP Ambition', 'mtp-ambition', 'https://i1.sndcdn.com/artworks-000157846189-57coq1-t500x500.jpg', 'a0001'),
+    ('al0002', 'Tâm 9', 'tam-9', 'https://upload.wikimedia.org/wikipedia/vi/f/f5/Tam9mytam.jpeg', 'a0002'),
+    ('al0003', 'V', 'v-album', 'https://i.pinimg.com/originals/4a/b4/b2/4ab4b286b798109963ca6daa77ada53e.jpg', 'a0032'),
+    ('al0004', '25', '25-album', 'https://i.scdn.co/image/ab67616d0000b27347ce408fb4926d69da6713c2', 'a0033'),
+    ('al0005', 'Purpose', 'purpose', 'https://images.genius.com/cff977262de4bf712a530580d27c7412.1000x1000x1.jpg', 'a0034');
 
 -- Add MusicAlbum
 INSERT INTO MusicAlbumDetail (id_music, id_album)

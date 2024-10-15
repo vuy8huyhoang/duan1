@@ -1,13 +1,9 @@
 .contentwrapper {
     width: 100%;
-    
-    /* Đẩy phần nội dung chính sang phải theo độ rộng của sidebar */
-    padding: 20px;
+    padding: 40px;
     box-sizing: border-box;
-    /* Đảm bảo padding được tính đúng */
 }
 
-/* Title Styles */
 .title {
     text-align: left;
     margin-bottom: 40px;
@@ -21,13 +17,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    padding: 0 20px;
 }
 
-/* Individual Album Card */
 .albumCard {
     border-radius: 10px;
-    padding: 20px;
     text-align: center;
     color: #fff;
     width: 30%;
@@ -43,14 +36,12 @@
     transform: scale(1.05);
 }
 
-/* Album Cover Image */
 .albumCover {
-    width: 450px;
+    width: 490px;
     border-radius: 10px;
     margin-bottom: 15px;
 }
 
-/* Album Name */
 .albumName {
     font-size: 1.8rem;
     margin: 10px 0;
@@ -58,14 +49,12 @@
     color: #fff;
 }
 
-/* Artist Name */
 .artistName {
     font-size: 1.3rem;
     color: #ccc;
     margin-bottom: 15px;
 }
 
-/* Music List */
 .musicList {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
