@@ -1,0 +1,29 @@
+.container {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .listItem {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+  
