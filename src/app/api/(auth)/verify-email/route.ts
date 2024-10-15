@@ -6,7 +6,7 @@ import { objectResponse } from "@/utils/Response";
 
 export const POST = async (req: Request) => {
   try {
-    const currentUser = await getCurrentUser(req, true);
+    const currentUser = await getCurrentUser(req, false);
     const body = await req.json();
     let { email, code } = body;
     let returnData;
