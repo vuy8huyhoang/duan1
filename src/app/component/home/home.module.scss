@@ -24,12 +24,13 @@
     text-align: center;
     color: #fff;
     width: 30%;
-    height: 240px;
+    height: 220px;
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
 }
 .albumCard img{
-    height: 240px;
+    width: 100%;
+
 }
 
 .albumCard:hover {
