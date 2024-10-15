@@ -2,9 +2,7 @@
 import Sidebar from './component/sidebar';
 
 import "./globals.css"
-import axios from '@/lib/axios';
 import Header from './component/header/Header';
-import type from './type/page';
 export default function Layout({ children }: any) {
 
   // axios.get("/posts").then((r: any) => {

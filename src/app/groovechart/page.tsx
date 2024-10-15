@@ -42,7 +42,8 @@
 "use client";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './style.module.scss'
+import styles from './style.module.scss';
+import GrooveChart from '../component/chartgroove/page';
 interface Music {
     id_music: string;
     name: string;
@@ -57,7 +58,7 @@ export default function GrooveChartPage() {
         const fetchMusicData = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/music');
-                setMusicData(response.data.data.slice(0, 3));  // Fetch only 3 albums
+                setMusicData(response.data.data.slice(0, 8));  // Fetch only 3 albums
                 console.log(musicData);
             } catch (error) {
                 console.error('Lỗi fetch album', error);
@@ -71,14 +72,20 @@ export default function GrooveChartPage() {
 
     return (
         <div className={styles.contentwrapper}>
-            <h1 className={styles.title}>Nghe gần đây</h1>
+
+            <h1 className={styles.title}>#Groovechart</h1>
+            <GrooveChart/>
+            <div>
+                <img src="" alt="" />
+            </div>
             <div className={styles.musicList}>
-                {musicData.map((music) => (
+                {musicData.map((music,index) => (
                     
                     <div key={music.id_music} className={styles.musicCard}>
-                         <h5 className="card-title text-success">{music.name} <br /></h5>
+                         <span className={styles.index}>{index + 1}.</span>
                         <img src={music.url_cover} alt={music.name} className={styles.musicCover} />
-                       
+                        <h5 className="card-title text-success">{music.name} <br /></h5>
+                        <div className={styles.moreOptions}>...</div>
                     </div>
                     
                 ))}
