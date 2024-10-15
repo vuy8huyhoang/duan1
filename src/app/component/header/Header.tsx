@@ -6,9 +6,10 @@ const Header: React.FC = () => {
     <header className={styles.zingHeader}>
       <div className={styles.headerLeft}>
         <i className="fa fa-arrow-left"></i>
+        <i className="fa fa-arrow-right"></i>
       </div>
       <div className={styles.headerRight}>
-      <i className="fa fa-arrow-right"></i>
+      
       </div>
       <div className={styles.headerCenter}>
         <input type="text" placeholder="Tìm kiếm bài hát, tác giả..." />
