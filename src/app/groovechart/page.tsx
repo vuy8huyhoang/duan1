@@ -44,7 +44,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './style.module.scss';
-import GrooveChart from '../component/chartgroove/page';
 interface Music {
     id_music: string;
     name: string;
@@ -59,7 +58,7 @@ export default function GrooveChartPage() {
         const fetchMusicData = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/music');
-                setMusicData(response.data.data.slice(0, 8));  // Fetch only 3 albums
+                setMusicData(response.data.data.slice(0, 8));  
                 console.log(musicData);
             } catch (error) {
                 console.error('Lỗi fetch album', error);
@@ -75,7 +74,6 @@ export default function GrooveChartPage() {
         <div className={styles.contentwrapper}>
 
             <h1 className={styles.title}>#Groovechart</h1>
-            <GrooveChart/>
             <div>
                 <img src="" alt="" />
             </div>
