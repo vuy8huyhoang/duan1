@@ -17,7 +17,6 @@ const TypePage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/type");
-        console.log("API Response:", response); 
         setTypes(response.data.data ); 
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -33,9 +32,9 @@ const TypePage = () => {
       <ul className={styles.list}>
   {types && types.length > 0 ? (
     types.map((type) => (
-      <li key={type.id_type} className={styles.listItem}>
-        {type.name} (Slug: {type.slug}, Created At: {type.created_at})
-      </li>
+      <div key={type.id_type} className={styles.listItem}>
+        {type.name}
+      </div>
     ))
   ) : (
     <p>Không có dữ liệu</p>
