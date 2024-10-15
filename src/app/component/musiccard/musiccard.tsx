@@ -1,3 +1,4 @@
+"use client";
 import styles from './MusicCard.module.scss'; // Import the corresponding styles
 
 interface MusicCardProps {
