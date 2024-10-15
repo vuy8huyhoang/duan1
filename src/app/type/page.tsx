@@ -19,9 +19,9 @@ const TypePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("type");
+        const response = await axios.get("/type");
         console.log("API Response:", response); 
-        setTypes(response.data); 
+        setTypes(response.data.data); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
