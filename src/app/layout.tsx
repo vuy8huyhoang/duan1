@@ -1,6 +1,5 @@
 "use client"
 import Sidebar from './component/sidebar';
-
 import "./globals.css"
 import Header from './component/header/Header';
 export default function Layout({ children }: any) {
@@ -32,6 +31,7 @@ export default function Layout({ children }: any) {
             {children}
             </div>
         </div>
+      
       </body>
     </html>
 
