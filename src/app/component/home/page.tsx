@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ListMusic from '../listmusic';
 import ListAlbum from '../listalbum';
+import ListMusicTop from '../listmusictop';
+
 
 interface Album {
     id_album: string;
@@ -44,7 +46,8 @@ export default function Home() {
             
         </div>
         <ListMusic />
-        <ListAlbum/>
+        <ListAlbum />
+        <ListMusicTop/>
     </>
     );
 }
