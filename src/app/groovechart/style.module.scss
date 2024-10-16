@@ -91,6 +91,12 @@
 }
 .musicList h5{
     padding-left: 100px;
+    text-align:left;
+}
+.musicList p{
+    padding-left: 100px;
+    text-align:left;
+    font-size: 15px;
 }
 
 .musicCard {
@@ -142,5 +148,7 @@
     position: absolute;
 
 }
-
+.Titles{
+    flex-direction: column;
+}
 

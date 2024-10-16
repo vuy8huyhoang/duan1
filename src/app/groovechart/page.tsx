@@ -48,6 +48,7 @@ interface Music {
     id_music: string;
     name: string;
     url_cover: string;
+    composer: string;
 }
 
 export default function GrooveChartPage() {
@@ -66,8 +67,6 @@ export default function GrooveChartPage() {
                 setLoading(false);
             }
         };
-
-        fetchMusicData();
     }, []);
 
     return (
@@ -83,9 +82,15 @@ export default function GrooveChartPage() {
                     <div key={music.id_music} className={styles.musicCard}>
                         <span className={styles.index}>{index + 1}.</span>
                         <img src={music.url_cover} alt={music.name} className={styles.musicCover} />
-                        <h5 className="card-title text-success">{music.name} <br /></h5>
+                        <div className={styles.Titles}>
+                        <h5 className={styles.musicName}>{music.name} <br /></h5>
+                        <p className={styles.musicArtist}>{music.composer}</p>
+                        </div>
                         <div className={styles.moreOptions}>...</div>
-                        jyfutfyhtfutfuyfvuiygviug
+                      
+                      <div key={music.id_type} className={styles.musicCard}>
+
+                      </div>
                     </div>
                     
                 ))}
