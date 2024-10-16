@@ -6,6 +6,9 @@ import axios from 'axios';
 import ListMusic from '../listmusic';
 import ListAlbum from '../listalbum';
 import ListMusicTop from '../listmusictop';
+import ListType from '../listtype';
+import AlbumHot from '../albumhot';
+import MusicPartner from '../musicpartner';
 
 
 interface Album {
@@ -13,6 +16,7 @@ interface Album {
     name: string;
     url_cover: string;
 }
+
 
 export default function Home() {
     const [albumData, setAlbumData] = useState<Album[]>([]);
@@ -48,7 +52,10 @@ export default function Home() {
         
         <ListMusic />
         <ListAlbum />
-        <ListMusicTop/>
+        <ListMusicTop />
+        <ListType />
+        <AlbumHot />
+        <MusicPartner/>
     </>
     );
 }
