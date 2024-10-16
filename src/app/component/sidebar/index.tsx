@@ -73,7 +73,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Playlist')}
                 >
                     <ReactSVG className={styles.csvg} src="/Frame 10 (2).svg" />
-                    <a href="#">Playlist</a>
+                    <a href="/playlist">Playlist</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'Album' ? styles.active : ''}`}
