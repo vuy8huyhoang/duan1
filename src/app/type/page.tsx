@@ -2,9 +2,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './type.module.scss';
-import { ReactSVG } from 'react-svg';
-import Slideshow from '../component/slideshow';
-
 // Định nghĩa interface Type
 interface Type {
   id_type: string;
@@ -134,7 +131,7 @@ const TypePage = () => {
 
   return (
     <>
-    {/* <Slideshow/> */}
+      {/* <Slideshow/> */}
       <div className={styles.banner}>
         <img src="https://photo-zmp3.zmdcdn.me/cover/3/f/4/1/3f41f32d1ca9baeb2206137e5f2eab5c.jpg" alt="Banner" className={styles.bannerImage} />
       </div>
@@ -237,22 +234,22 @@ const TypePage = () => {
         </button>
       </div>
       <div className={styles.headerSection}>
-  <h2>Trữ Tình & Bolero</h2>
-</div>
-<div className={styles.albumContainer}>
-  {fixedTypes3.slice(0, 5).map((type) => (
-    <div key={type.id_type} className={styles.albumItem}>
-      <div className={styles.albumContent}>
-        <img
-          src={imageMapping[type.name as keyof typeof imageMapping] || "https://default-image-link.com/default.jpg"}
-          alt={type.name}
-          className={styles.albumImage}
-        />
-        <a className={styles.albumLabel}>{type.name}</a>
+        <h2>Trữ Tình & Bolero</h2>
       </div>
-    </div>
-  ))}
-</div>
+      <div className={styles.albumContainer}>
+        {fixedTypes3.slice(0, 5).map((type) => (
+          <div key={type.id_type} className={styles.albumItem}>
+            <div className={styles.albumContent}>
+              <img
+                src={imageMapping[type.name as keyof typeof imageMapping] || "https://default-image-link.com/default.jpg"}
+                alt={type.name}
+                className={styles.albumImage}
+              />
+              <a className={styles.albumLabel}>{type.name}</a>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 };
