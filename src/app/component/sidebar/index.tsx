@@ -29,14 +29,14 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Khám Phá')}
                 >
                     <ReactSVG className={styles.csvg} src="/earth_light.svg" />
-                    <a href="#">Khám Phá</a>
+                    <a href="">Khám Phá</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === '#groovechart' ? styles.active : ''}`}
                     onClick={() => handleMenuClick('#groovechart')}
                 >
                     <ReactSVG className={styles.csvg} src="/Vector (1).svg" />
-                    <a href="/groovechart">#groovechart</a>
+                    <a href="">#groovechart</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'BXH Nhạc Mới' ? styles.active : ''}`}
