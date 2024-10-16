@@ -68,14 +68,13 @@
     
     display: flex;
     background-color: #170F23;
-    height: auto;
+
 }
 
 body {
     margin: 0 auto;
     font-family: inter, Arial, Helvetica, sans-serif;
 }
-
 * {
     font-family: inherit;
 }

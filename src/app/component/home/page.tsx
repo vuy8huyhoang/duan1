@@ -5,12 +5,18 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ListMusic from '../listmusic';
 import ListAlbum from '../listalbum';
+import ListMusicTop from '../listmusictop';
+import ListType from '../listtype';
+import AlbumHot from '../albumhot';
+import MusicPartner from '../musicpartner';
+
 
 interface Album {
     id_album: string;
     name: string;
     url_cover: string;
 }
+
 
 export default function Home() {
     const [albumData, setAlbumData] = useState<Album[]>([]);
@@ -44,7 +50,11 @@ export default function Home() {
             
         </div>
         <ListMusic />
-        <ListAlbum/>
+        <ListAlbum />
+        <ListMusicTop />
+        <ListType />
+        <AlbumHot />
+        <MusicPartner/>
     </>
     );
 }
