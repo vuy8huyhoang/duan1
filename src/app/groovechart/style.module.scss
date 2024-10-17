@@ -1,67 +1,3 @@
-// .contentwrapper {
-//     width: 100%;
-    
-//     /* Đẩy phần nội dung chính sang phải theo độ rộng của sidebar */
-//     padding: 20px;
-//     box-sizing: border-box;
-//     /* Đảm bảo padding được tính đúng */
-// }
-
-// /* Title Styles */
-// .title {
-//     text-align: left;
-//     margin-bottom: 40px;
-//     color: #fff;
-//     font-size: 18px;
-//     font-weight: bold;
-// }
-
-// /* Album List */
-// .musicList {
-//     display: flex;
-//     flex-wrap: wrap;
-//     justify-content: space-between;
-//     padding: 0 20px;
-// }
-
-// /* Individual Album Card */
-// .musicCard {
-//     border-radius: 10px;
-//     padding: 20px;
-//     text-align: center;
-//     color: #fff;
-//     width: 30%;
-//     height: 240px;
-//     transition: transform 0.3s ease-in-out;
-//     overflow: hidden;
-// }
-// .musicCard img{
-//     height: 240px;
-// }
-
-// .musicCard:hover {
-//     transform: scale(1.05);
-// }
-
-// /* Album Cover Image */
-// .musicCover {
-//     width: 450px;
-//     border-radius: 10px;
-//     margin-bottom: 15px;
-// }
-
-// /* Album Name */
-// .musicName {
-//     font-size: 1.8rem;
-//     margin: 10px 0;
-//     font-weight: bold;
-//     color: #fff;
-// }
-
-/* style.module.scss */
-
-/* style.module.scss */
-
 .contentwrapper {
     // position: relative;
     align-items: center;
@@ -83,26 +19,24 @@
 .musicList {
     width: 100% ;
     // position: absolute;
-    display: flex;
-    flex-direction: column; /* Hiển thị các bài hát theo cột */
+    
     gap: 1.5rem; /* Khoảng cách giữa các bài hát */
     padding-top: 50x;
     padding-left: 150px;
 }
 .musicList h5{
-    padding-left: 100px;
     text-align:left;
 }
 .musicList p{
-    padding-left: 100px;
     text-align:left;
     font-size: 15px;
 }
 
 .musicCard {
-    display: flex;
+    display: grid;
+    grid-template-columns: 100px 200px 300px auto;
     align-items: center; /* Căn giữa nội dung theo chiều dọc */
-    
+    gap: 10px;
     padding: 1rem;
     border-radius: 10px;
     transition: transform 0.3s ease;
@@ -112,10 +46,15 @@
         transform: scale(1.02); /* Hiệu ứng phóng to nhẹ khi hover */
     }
 }
-
+.image{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
 .musicCover {
-    width: 60px;  /* Kích thước ảnh nhỏ hơn cho vừa với dòng */
-    height: 60px;
+    width: 90px;  /* Kích thước ảnh nhỏ hơn cho vừa với dòng */
+    height: 90px;
     border-radius: 8px;
     object-fit: cover;
     margin-right: 1rem;  /* Khoảng cách giữa ảnh và tên bài hát */
@@ -130,7 +69,7 @@
     width: 60px;
     min-width: 38px;
     -webkit-text-stroke: 1.5px #fff;
-    opacity: .7;
+    opacity: 0.7;
     font-size: 32px;
     font-weight: 900;
     line-height: 1;
@@ -144,8 +83,6 @@
     cursor: pointer;
     font-size: 1.5rem;
     color: #ffffff;  /* Màu trắng cho dấu chấm */
-    padding-left: 700px;
-    position: absolute;
 
 }
 .Titles{
@@ -154,4 +91,33 @@
 .musicList h2{
     padding-left: 100px;
     text-align:left;
+}
+.playButton{
+    position: absolute;
+    top: 0;
+    left: -110px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 2px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-grow: 1;
+    opacity: 0;
+}
+.musicCard:hover{
+    .image{
+        .playButton{
+            opacity: 1;
+        }
+    }
+}
+.playButton svg {
+    width: 20px;
+    height: 30px;
+    stroke: #FFFFFF;
+    fill: none !important;
 }
