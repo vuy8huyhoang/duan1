@@ -57,6 +57,12 @@ const TypePage = () => {
     "SPA - YOGA": string;
     "KHÚC NHẠC VUI": string;
 
+    "Liên Khúc Bolero": string;
+    "Bolero Mới Nhất": string;
+    "Bolero Hay Nhất": string;
+    "Trữ Tình Việt Nổi Bật": string;
+    "Nhạc Quê Hương Hôm Nay": string;
+
   } = {
     "Top 100": "https://photo-zmp3.zmdcdn.me/cover/2/d/2/d/2d2d88326a507319335ffc2e2887c0b7.jpg",
     "Nhạc Trẻ": "https://photo-zmp3.zmdcdn.me/cover/6/6/3/5/6635bad85a570ca140e207910b5d44f1.jpg",
@@ -84,6 +90,11 @@ const TypePage = () => {
     "SPA - YOGA": "https://photo-zmp3.zmdcdn.me/cover/d/0/d/7/d0d772a6c3e35b3e768d5c3ebf644ecd.jpg",
     "KHÚC NHẠC VUI": "https://photo-zmp3.zmdcdn.me/cover/5/4/5/4/5454a8586d26bd5e5bdb7682b84dce0f.jpg",
 
+    "Liên Khúc Bolero": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/b/6/5/a/b65a377df7861e613a08e945881286e5.jpg",
+    "Bolero Mới Nhất": "	https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/5/7/4/c/574c11ef1d1663c8cc9cc32b4ef6ca9e.jpg",
+    "Bolero Hay Nhất": "https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/e/f/c/a/efcab3847536a199aa404550b70e2254.jpg",
+    "Trữ Tình Việt Nổi Bật": "	https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/8/4/f/c/84fcafc328a2872fc649b77e3dd25056.jpg",
+    "Nhạc Quê Hương Hôm Nay": "	https://photo-resize-zmp3.zmdcdn.me/w320_r1x1_jpeg/cover/6/a/c/0/6ac061435006cee16891c1d92e9337b1.jpg",
   };
 
   const fixedTypes1 = [
@@ -110,13 +121,7 @@ const TypePage = () => {
     { id_type: 16, name: "RUNNING" },
     { id_type: 17, name: "TẬP TRUNG" },
   ];
-  // const fixedTypes4 = [
-  //   { id_type: 9, name: "Bolero Ngôi Sao Trẻ" },
-  //   { id_type: 10, name: "Bolero Mới Nhất" },
-  //   { id_type: 11, name: "Bolero Hay Nhất" },
-  //   { id_type: 12, name: "Trữ Tình Việt Nổi Bật" },
-  //   { id_type: 14, name: "Nhạc Quê Hương Hôm Nay" },
-  // ];
+ 
   const additionalTypes = [
     { id_type: 18, name: "TÌNH YÊU" },
     { id_type: 19, name: "CÀ PHÊ" },
@@ -125,6 +130,13 @@ const TypePage = () => {
     { id_type: 22, name: "CHƠI GAME" },
     { id_type: 23, name: "SPA - YOGA" },
     { id_type: 24, name: "KHÚC NHẠC VUI" },
+  ];
+  const fixedTypes4 = [
+    { id_type: 25, name: "Liên Khúc Bolero" },
+    { id_type: 26, name: "Bolero Mới Nhất" },
+    { id_type: 27, name: "Bolero Hay Nhất" },
+    { id_type: 28, name: "Trữ Tình Việt Nổi Bật" },
+    { id_type: 29, name: "Nhạc Quê Hương Hôm Nay" },
   ];
   const extraTypes = [
     { id_type: 5, name: "Những Chuyến Đi" }, // Album thêm
@@ -248,7 +260,7 @@ const TypePage = () => {
         </div>
       </div>
       <div className={styles.albumContainer}>
-        {fixedTypes3.slice(0, 5).map((type) => (
+        {fixedTypes4.slice(0, 5).map((type) => (
           <div key={type.id_type} className={styles.albumItem}>
             <div className={styles.albumWrapper}>
               <img
@@ -272,8 +284,39 @@ const TypePage = () => {
           </div>
         ))}
       </div>
-    </>
+      <div className={styles.headerSection}>
+        <h2>Trữ Tình & Bolero</h2>
+        <div className={styles.all}>
+          <a href="#" className={styles.viewAllButton}>Tất cả</a>
+          <ReactSVG className={styles.csvg} src="/all.svg" />
+        </div>
+      </div>
+      <div className={styles.albumContainer}>
+        {fixedTypes4.slice(0, 5).map((type) => (
+          <div key={type.id_type} className={styles.albumItem}>
+            <div className={styles.albumWrapper}>
+              <img
+                src={imageMapping[type.name as keyof typeof imageMapping] || "https://default-image-link.com/default.jpg"}
+                alt={type.name}
+                className={styles.albumImage}
+              />
+              <div className={styles.overlay}>
+                <button className={styles.likeButton}>
+                  <ReactSVG src="/heart.svg" />
+                </button>
+                <button className={styles.playButton}>
+                  <ReactSVG src="/play.svg" />
+                </button>
+                <button className={styles.moreButton}>
+                  <ReactSVG src="/more.svg" />
+                </button>
+              </div>
+            </div>
+            <a className={styles.albumLabel}>{type.name}</a>
+          </div>
+        ))}
+      </div>
+    </>  
   );
 };
-
 export default TypePage;
