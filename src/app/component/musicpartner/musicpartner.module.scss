@@ -1,0 +1,78 @@
+.partnerSection {
+    text-align: center;
+    padding: 20px;
+<<<<<<< HEAD
+
+    color: #fff;
+
+    h2 {
+        margin-bottom: 20px;
+        font-size: 1.5em;
+    }
+
+    .logoGrid {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .logoCard {
+        width: 160px;
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 10px;
+        transition: transform 0.3s;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+=======
+    color: #fff;
+}
+
+.partnerSection h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.logoGrid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    justify-content: center;
+    gap: 20px;
+}
+
+.logoCard {
+    width: 80%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    transition: transform 0.3s;
+}
+
+.logoCard img {
+    width: 120px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.logoCard:hover {
+    transform: scale(1.1);
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+}

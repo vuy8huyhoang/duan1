@@ -1,26 +1,28 @@
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
-import style from './listalbum.module.scss'; // Import file CSS module
+import style from './albumhot.module.scss';
 import { ReactSVG } from 'react-svg';
 
 interface Album {
     id_album: string;
     name: string;
     url_cover: string;
+    artist: {
+        name: string;
+    };
 }
 
-
-export default function ListAlbum() {
+export default function AlbumHot() {
     const [albumData, setAlbumData] = useState<Album[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios.get("/album")
             .then((response: any) => {
-                console.log(response);
+                console.log(response); 
                 if (response && response.result && response.result.data) {
-                    const albumObj = response.result.data;
-                    setAlbumData(albumObj.slice(0, 5));
+                    const albumObj = response.result.data; 
+                    setAlbumData(albumObj.slice(0, 5)); 
                 } else {
                     console.error('Response result.data is undefined or null', response);
                 }
@@ -33,10 +35,12 @@ export default function ListAlbum() {
             });
     }, []);
 
+
+
     return (
         <>
             <div className={style.headerSection}>
-                <h2>Chill</h2>
+                <h2>Mới phát hành</h2>
                 <div className={style.all}>
                     <a href="#" className={style.viewAllButton}>Tất cả</a>
                     <ReactSVG className={style.csvg} src="/all.svg" />
@@ -58,13 +62,13 @@ export default function ListAlbum() {
                                     <button className={style.playButton}>
                                         <ReactSVG src="/play.svg" />
                                     </button>
-
                                     <button className={style.moreButton}>
                                         <ReactSVG src="/more.svg" />
                                     </button>
                                 </div>
                             </div>
                             <a className={style.albumTitle}>{album.name}</a>
+                            <p className={style.artistName}>{album.artist.name}</p>
                         </div>
                     ))
                 )}

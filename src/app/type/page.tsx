@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './type.module.scss';
+import { ReactSVG } from 'react-svg';
+
 // Định nghĩa interface Type
 interface Type {
   id_type: string;
@@ -108,6 +110,13 @@ const TypePage = () => {
     { id_type: 16, name: "RUNNING" },
     { id_type: 17, name: "TẬP TRUNG" },
   ];
+  // const fixedTypes4 = [
+  //   { id_type: 9, name: "Bolero Ngôi Sao Trẻ" },
+  //   { id_type: 10, name: "Bolero Mới Nhất" },
+  //   { id_type: 11, name: "Bolero Hay Nhất" },
+  //   { id_type: 12, name: "Trữ Tình Việt Nổi Bật" },
+  //   { id_type: 14, name: "Nhạc Quê Hương Hôm Nay" },
+  // ];
   const additionalTypes = [
     { id_type: 18, name: "TÌNH YÊU" },
     { id_type: 19, name: "CÀ PHÊ" },
@@ -226,8 +235,6 @@ const TypePage = () => {
           ))}
         </div>
       )}
-
-
       <div className={styles.buttonContainer}>
         <button className={styles.button} onClick={handleShowMoreBottom}>
           <span className={styles.viewAllButton}>Tất cả</span>
@@ -235,18 +242,33 @@ const TypePage = () => {
       </div>
       <div className={styles.headerSection}>
         <h2>Trữ Tình & Bolero</h2>
+        <div className={styles.all}>
+          <a href="#" className={styles.viewAllButton}>Tất cả</a>
+          <ReactSVG className={styles.csvg} src="/all.svg" />
+        </div>
       </div>
       <div className={styles.albumContainer}>
         {fixedTypes3.slice(0, 5).map((type) => (
           <div key={type.id_type} className={styles.albumItem}>
-            <div className={styles.albumContent}>
+            <div className={styles.albumWrapper}>
               <img
                 src={imageMapping[type.name as keyof typeof imageMapping] || "https://default-image-link.com/default.jpg"}
                 alt={type.name}
                 className={styles.albumImage}
               />
-              <a className={styles.albumLabel}>{type.name}</a>
+              <div className={styles.overlay}>
+                <button className={styles.likeButton}>
+                  <ReactSVG src="/heart.svg" />
+                </button>
+                <button className={styles.playButton}>
+                  <ReactSVG src="/play.svg" />
+                </button>
+                <button className={styles.moreButton}>
+                  <ReactSVG src="/more.svg" />
+                </button>
+              </div>
             </div>
+            <a className={styles.albumLabel}>{type.name}</a>
           </div>
         ))}
       </div>

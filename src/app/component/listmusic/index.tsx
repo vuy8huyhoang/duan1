@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import style from './listmusic.module.scss';
 import { ReactSVG } from 'react-svg';
 
@@ -20,20 +20,25 @@ const ListMusic: React.FC = () => {
     const [activeFilter, setActiveFilter] = useState<string>('Tất cả');
 
     useEffect(() => {
-        const fetchAlbums = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/music');
-                console.log(response.data);
-                setAlbums(response.data.data.slice(0, 6));
-                setIsLoading(false);
-            } catch (error: any) {
-                setError(error.message);
-                setIsLoading(false);
-            }
-        };
+        axios.get('/music')
+            .then((response: any) => {
 
-        fetchAlbums();
+                if (response && response.result && response.result.data) {
+                    const albumObj = response.result.data; 
+                    setAlbums(albumObj.slice(0, 6)); 
+                } else {
+                    console.error('Response result.data is undefined or null', response);
+                }
+            })
+            .catch((error: any) => {
+                setError(error.message);
+                console.error('Lỗi fetch album', error);
+            })
+            .finally(() => {
+                setIsLoading(false); 
+            });
     }, []);
+
 
     const handleFilterClick = (filter: string) => {
         setActiveFilter(filter);

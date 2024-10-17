@@ -33,7 +33,6 @@ export const GET = async (request: Request) => {
     ${getByLike(name, "name")}
     ${getByLike(slug, "slug")}
     ${getByEqual(is_show, "is_show")}
-
     ${getByLimitOffset(limit, offset, "created_at")}
     `;
     const [typeList]: Array<any> = await connection.query(query, queryParams);

@@ -22,7 +22,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Thư Viện')}
                 >
                     <ReactSVG className={styles.csvg} src="/Group (1).svg" />
-                    <a href="#">Thư Viện</a>
+                    <a href="/playlist">Thư Viện</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'Khám Phá' ? styles.active : ''}`}

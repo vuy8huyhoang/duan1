@@ -138,7 +138,7 @@
   display: flex;                    
   justify-content: space-between;   
   flex-wrap: wrap;    
-  margin-left: 22px;   
+ padding: 20px 40px;
 }
 
 .albumItem {
@@ -150,15 +150,83 @@
   display: flex;
   flex-direction: column;           
   align-items: center;        
-  width: calc(100% - 40px);
+  width: calc(100% - 10px);
+  height: 218px;
 }
 
 .albumImage {
-  width: 100%;                       
+  width: 100%;      
+  height: 218px;                 
   border-radius: 5px;                
 }
 
 .albumLabel {
   text-align: center;               
-  margin-top: 8px;                
+  margin-top: 8px;
+  color: #FFFFFF;                
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.albumWrapper:hover .overlay {
+  opacity: 1;
+}
+.playButton,
+.likeButton,
+.moreButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1; /* Đảm bảo các nút này hiển thị phía trên overlay */
+}
+
+/* Điều chỉnh vị trí của từng nút nếu cần */
+.likeButton {
+  position: absolute;
+  top: 50%;  /* Giữa theo chiều dọc */
+  left: 20%; /* Tùy chỉnh khoảng cách từ bên trái */
+  transform: translate(-50%, -50%);
+}
+
+.playButton {
+  position: absolute;
+  top: 50%;   /* Giữa theo chiều dọc */
+  left: 50%;  /* Giữa theo chiều ngang */
+  transform: translate(-50%, -50%);
+}
+
+.moreButton {
+  position: absolute;
+  top: 50%;  /* Giữa theo chiều dọc */
+  right: 20%; /* Tùy chỉnh khoảng cách từ bên phải */
+  transform: translate(50%, -50%);
+}
+
+
+.playButton svg,
+.likeButton svg,
+.moreButton svg {
+  width: 30px;
+  height: 30px;
+  // stroke: #FFFFFF;
+  
+  
 }

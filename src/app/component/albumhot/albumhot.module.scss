@@ -16,7 +16,13 @@
 .all {
     display: flex;
     align-items: center;
+<<<<<<< HEAD
+    /* Căn giữa theo chiều dọc */
     gap: 10px;
+    /* Khoảng cách giữa các phần tử */
+=======
+    gap: 10px;
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 }
 
 .viewAllButton {
@@ -34,25 +40,41 @@
 }
 
 .csvg {
+<<<<<<< HEAD
+    /* Đặt kích thước cho SVG nếu cần */
     fill: #ffffff;
+    /* Đặt màu cho SVG */
+=======
+    fill: #ffffff;
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     transition: fill 0.3s ease;
 }
 
 .csvg:hover {
     fill: #6c63ff;
+<<<<<<< HEAD
+    /* Màu khi hover SVG */
+=======
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 }
 
 .albumGrid {
     display: grid;
+<<<<<<< HEAD
+    grid-template-columns: repeat(5, 1fr); // 5 album theo hàng ngang
+=======
     grid-template-columns: repeat(5, 1fr);
-    /* 5 album theo hàng ngang cho màn hình lớn */
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     grid-gap: 20px;
     justify-items: center;
     padding: 20px;
 }
 
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .albumCard {
     display: flex;
     flex-direction: column;
@@ -74,6 +96,11 @@
     border-radius: 10px;
 }
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .albumTitle {
     color: #FFFFFF;
     font-size: 14px;
@@ -81,6 +108,10 @@
     margin-top: 10px;
 }
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .overlay {
     position: absolute;
     top: 0;
@@ -88,15 +119,24 @@
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: space-between;
-    /* Căn đều khoảng cách giữa các nút */
+<<<<<<< HEAD
+    justify-content: center;
+    /* Căn giữa theo chiều ngang */
     align-items: center;
     /* Căn giữa theo chiều dọc */
+    gap: 20px;
+    /* Khoảng cách giữa các nút */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Màu nền mờ */
+    opacity: 0;
+=======
+    justify-content: space-between;
+    align-items: center;
     gap: 20px;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     padding: 0 30px;
-    /* Điều chỉnh khoảng cách giữa các nút và mép */
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     transition: opacity 0.3s ease;
 }
 
@@ -105,8 +145,12 @@
 }
 
 .playButton,
+<<<<<<< HEAD
+.likeButton {
+=======
 .likeButton,
 .moreButton {
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     background: none;
     border: none;
     cursor: pointer;
@@ -115,16 +159,52 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
+<<<<<<< HEAD
+}
+.likeButton{
+    position: absolute;
+        top: 200;
+        left: 30px;
+}
+.playButton{
+position: absolute;
+    top: 200;
+    right: 100px;
+}
+.moreButton {
+    position: absolute;
+    top: 200;
+    right: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.playButton svg,
+.likeButton svg,
+=======
     flex-grow: 1;
-    /* Các nút đều có khoảng cách đều nhau */
 }
 
 .likeButton svg,
 .playButton svg,
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .moreButton svg {
     width: 30px;
     height: 30px;
     stroke: #FFFFFF;
     fill: none !important;
+}
+
+<<<<<<< HEAD
+.artistName{
+=======
+.artistName {
+>>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+    color: #726E79;
 }
