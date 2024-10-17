@@ -49,6 +49,9 @@ interface Music {
     name: string;
     url_cover: string;
     composer: string;
+    types: {
+        name: string;
+    }[];
 }
 
 export default function GrooveChartPage() {
@@ -60,13 +63,14 @@ export default function GrooveChartPage() {
             try {
                 const response = await axios.get('http://localhost:3000/api/music');
                 setMusicData(response.data.data.slice(0, 8));  
-                console.log(musicData);
+                console.log(setMusicData);
             } catch (error) {
                 console.error('Lỗi fetch album', error);
             } finally {
                 setLoading(false);
             }
         };
+        fetchMusicData();
     }, []);
 
     return (
@@ -87,12 +91,14 @@ export default function GrooveChartPage() {
                         <p className={styles.musicArtist}>{music.composer}</p>
                         </div>
                         <div className={styles.moreOptions}>...</div>
-                      
-                      <div key={music.id_type} className={styles.musicCard}>
-
-                      </div>
                     </div>
-                    
+                ))}
+            </div>
+            <div className={styles.musicList}>
+                {musicData.map((music,index) => (
+                    <div key={music.id_music} className={styles.musicCard}> 
+                        <h2 className={styles.typeName}>{music.types.map(type => type.name).join(", ")} <br /></h2>
+                    </div>
                 ))}
             </div>
         </div>
