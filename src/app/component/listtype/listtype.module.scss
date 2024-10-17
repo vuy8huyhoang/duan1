@@ -18,21 +18,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
-
-    background: linear-gradient(135deg, #6a11cb, #2575fc); // Gradient mặc định
-}
-
-.albumCard:hover {
-    transform: scale(1.05); // Phóng to khi di chuột
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); // Bóng đổ sâu hơn khi hover
-
     background: linear-gradient(135deg, #6a11cb, #2575fc);
 }
 
 .albumCard:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-
 }
 
 .albumTitle {
@@ -40,30 +31,8 @@
     font-weight: bold;
     color: white;
     text-decoration: none;
-    text-transform: uppercase; // Viết hoa tất cả chữ cái
+    text-transform: uppercase;
 }
-
-/* Màu gradient khác nhau cho từng card */
-.albumCard:nth-child(1) {
-    background: linear-gradient(135deg, #4c2e96, #a29bfe); // Bài hát Việt Nam
-}
-
-.albumCard:nth-child(2) {
-    background: linear-gradient(135deg, #2b6d47, #4ac29a); // US-UK
-}
-
-.albumCard:nth-child(3) {
-    background: linear-gradient(135deg, #9c2c2c, #f39c9c); // K-Pop
-}
-
-.albumCard:nth-child(4) {
-    background: linear-gradient(135deg, #1e3a8a, #3b82f6); // Thẻ bổ sung
-}
-
-.albumCard:nth-child(5) {
-    background: linear-gradient(135deg, #9333ea, #d8b4fe); // Thẻ bổ sung
-}
-
 
 .albumCard:nth-child(1) {
     background: linear-gradient(135deg, #4c2e96, #a29bfe);
@@ -84,5 +53,3 @@
 .albumCard:nth-child(5) {
     background: linear-gradient(135deg, #9333ea, #d8b4fe);
 }
-
-

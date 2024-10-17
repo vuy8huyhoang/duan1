@@ -42,16 +42,14 @@
     fill: #6c63ff;
 }
 
+/* Album Grid: Điều chỉnh số cột dựa trên kích thước màn hình */
 .albumGrid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    /* 5 album theo hàng ngang cho màn hình lớn */
     grid-gap: 20px;
     justify-items: center;
     padding: 20px;
 }
-
-
 
 .albumCard {
     display: flex;
@@ -89,14 +87,11 @@
     bottom: 0;
     display: flex;
     justify-content: space-between;
-    /* Căn đều khoảng cách giữa các nút */
     align-items: center;
-    /* Căn giữa theo chiều dọc */
     gap: 20px;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     padding: 0 30px;
-    /* Điều chỉnh khoảng cách giữa các nút và mép */
     transition: opacity 0.3s ease;
 }
 
@@ -117,7 +112,6 @@
     align-items: center;
     position: relative;
     flex-grow: 1;
-    /* Các nút đều có khoảng cách đều nhau */
 }
 
 .likeButton svg,
@@ -128,3 +122,4 @@
     stroke: #FFFFFF;
     fill: none !important;
 }
+
