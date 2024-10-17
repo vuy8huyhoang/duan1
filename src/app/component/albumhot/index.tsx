@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import style from './albumhot.module.scss';
 import { ReactSVG } from 'react-svg';
 
@@ -17,24 +17,30 @@ export default function AlbumHot() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchAlbumData = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/album');
-                setAlbumData(response.data.data.slice(0, 5));
-            } catch (error) {
+        axios.get("/album")
+            .then((response: any) => {
+                console.log(response); 
+                if (response && response.result && response.result.data) {
+                    const albumObj = response.result.data; 
+                    setAlbumData(albumObj.slice(0, 5)); 
+                } else {
+                    console.error('Response result.data is undefined or null', response);
+                }
+            })
+            .catch((error: any) => {
                 console.error('Lỗi fetch album', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAlbumData();
+            })
+            .finally(() => {
+                setLoading(false); 
+            });
     }, []);
+
+
 
     return (
         <>
             <div className={style.headerSection}>
-                <h2>Album hot</h2>
+                <h2>Mới phát hành</h2>
                 <div className={style.all}>
                     <a href="#" className={style.viewAllButton}>Tất cả</a>
                     <ReactSVG className={style.csvg} src="/all.svg" />
@@ -62,7 +68,7 @@ export default function AlbumHot() {
                                 </div>
                             </div>
                             <a className={style.albumTitle}>{album.name}</a>
-                            <a className={style.artistName}>{album.artist.name}</a> 
+                            <p className={style.artistName}>{album.artist.name}</p>
                         </div>
                     ))
                 )}

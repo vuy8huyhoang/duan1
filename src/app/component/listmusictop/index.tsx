@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import style from './listmusictop.module.scss';
 import { ReactSVG } from 'react-svg';
 
@@ -16,36 +16,44 @@ interface Album {
 const ListMusicTop: React.FC = () => {
     const [albums, setAlbums] = useState<Album[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [currentIndex, setCurrentIndex] = useState<number>(0); // Quản lý chỉ số slide hiện tại
+    const [currentIndex, setCurrentIndex] = useState<number>(0); 
 
     useEffect(() => {
-        const fetchAlbums = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/music');
-                setAlbums(response.data.data.slice(0, 6)); // Lấy 6 album đầu tiên
-                setIsLoading(false);
-            } catch (error: any) {
-                console.error(error);
-                setIsLoading(false);
-            }
-        };
-
-        fetchAlbums();
+        axios.get('/music')
+            .then((response: any) => {
+                console.log('Full API response:', response); 
+                if (response && response.result && response.result.data) {
+                    setAlbums(response.result.data.slice(0, 6)); 
+                } else {
+                    console.error('Response result.data is undefined or null:', response);
+                    setAlbums([]); 
+                }
+            })
+            .catch((error: any) => {
+                console.error('Lỗi fetch album:', error);
+                setAlbums([]);
+            })
+            .finally(() => {
+                setIsLoading(false); 
+            });
     }, []);
 
+
+
+
+
     const nextSlide = () => {
-        // Tăng chỉ số và quay lại đầu nếu vượt quá số album
         setCurrentIndex((prevIndex) => {
-            const maxIndex = Math.max(0, albums.length - 3); // Giới hạn chỉ số lớn nhất là album cuối - 3
-            return prevIndex + 1 > maxIndex ? 0 : prevIndex + 1; // Di chuyển chỉ số 1 đơn vị
+            const maxIndex = Math.max(0, albums.length - 3); 
+            return prevIndex + 1 > maxIndex ? 0 : prevIndex + 1; 
         });
     };
 
     const prevSlide = () => {
-        // Giảm chỉ số và quay lại cuối nếu nhỏ hơn 0
+        
         setCurrentIndex((prevIndex) => {
             const maxIndex = Math.max(0, albums.length - 3);
-            return prevIndex - 1 < 0 ? maxIndex : prevIndex - 1; // Di chuyển chỉ số 1 đơn vị
+            return prevIndex - 1 < 0 ? maxIndex : prevIndex - 1; 
         });
     };
 
@@ -60,15 +68,15 @@ const ListMusicTop: React.FC = () => {
             </div>
 
             <div className={style.sliderContainer}>
-                <button onClick={prevSlide} className={style.leftArrow}><ReactSVG src="/back-arrow.svg" /></button> {/* Nút sang trái */}
+                <button onClick={prevSlide} className={style.leftArrow}><ReactSVG src="/back-arrow.svg" /></button>
 
                 <div className={style.albumList}>
                     {isLoading ? (
                         <div style={{ color: 'white' }}>Đang tải...</div>
                     ) : (
-                        albums.slice(currentIndex, currentIndex + 3).map((album, index) => ( // Hiển thị 3 album liên tiếp
+                        albums.slice(currentIndex, currentIndex + 3).map((album, index) => ( 
                             <div className={style.songCard} key={album.id}>
-                                <h1 className={style.rank}>{`#${currentIndex + index + 1}`}</h1> {/* Thứ tự */}
+                                <h1 className={style.rank}>{`#${currentIndex + index + 1}`}</h1> 
                                 <div className={style.albumCoverWrapper}>
                                     <img src={album.url_cover} alt={album.name} className={style.albumCover} />
                                     <div className={style.playButton}>
@@ -84,7 +92,7 @@ const ListMusicTop: React.FC = () => {
                     )}
                 </div>
 
-                <button onClick={nextSlide} className={style.rightArrow}><ReactSVG src="/next-arrow.svg" /></button> {/* Nút sang phải */}
+                <button onClick={nextSlide} className={style.rightArrow}><ReactSVG src="/next-arrow.svg" /></button> 
             </div>
         </>
     );

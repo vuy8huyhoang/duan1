@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import style from './listtype.module.scss'; // Import file CSS module
 import { ReactSVG } from 'react-svg';
 
@@ -15,20 +15,27 @@ export default function ListType() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchAlbumData = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/type');
-                setAlbumData(response.data.data.slice(0, 3));  // Lấy 3 album như yêu cầu
-                console.log(setAlbumData);
-            } catch (error) {
-                console.error('Lỗi fetch album', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+        axios.get('/type')
+            .then((response: any) => {
+                console.log('Full API response:', response); 
 
-        fetchAlbumData();
+                if (response && response.result && response.result.data) {
+                    setAlbumData(response.result.data.slice(0, 3)); 
+                } else {
+                    console.error('Response data is undefined or null:', response);
+                    setAlbumData([]); 
+                }
+            })
+            .catch((error: any) => {
+                console.error('Lỗi fetch album:', error); 
+                setAlbumData([]); 
+            })
+            .finally(() => {
+                setLoading(false); 
+            });
     }, []);
+
+
 
     return (
         <>

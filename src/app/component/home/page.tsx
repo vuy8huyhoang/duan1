@@ -2,7 +2,7 @@
 
 import styles from './home.module.scss'; 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import ListMusic from '../listmusic';
 import ListAlbum from '../listalbum';
 import ListMusicTop from '../listmusictop';
@@ -23,18 +23,23 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchAlbumData = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/album');
-                setAlbumData(response.data.data.slice(0, 3));  
-            } catch (error) {
-                console.error('Lỗi fetch album', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAlbumData();
+        axios.get('/album')
+            .then((response: any) => {
+                console.log('Full API response:', response); 
+                if (response && response.result && response.result.data) {
+                    setAlbumData(response.result.data.slice(0, 3)); 
+                } else {
+                    console.error('Response result.data is undefined or null:', response);
+                    setAlbumData([]); 
+                }
+            })
+            .catch((error: any) => {
+                console.error('Lỗi fetch album:', error);
+                setAlbumData([]);
+            })
+            .finally(() => {
+                setLoading(false); 
+            });
     }, []);
 
     return (<>
