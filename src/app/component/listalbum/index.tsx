@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import style from './listalbum.module.scss'; // Import file CSS module
 import { ReactSVG } from 'react-svg';
 
@@ -15,18 +15,22 @@ export default function ListAlbum() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchAlbumData = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/album');
-                setAlbumData(response.data.data.slice(0, 5));  // Lấy 5 album như yêu cầu
-            } catch (error) {
+        axios.get("/album")
+            .then((response: any) => {
+                console.log(response);
+                if (response && response.result && response.result.data) {
+                    const albumObj = response.result.data;
+                    setAlbumData(albumObj.slice(0, 5));
+                } else {
+                    console.error('Response result.data is undefined or null', response);
+                }
+            })
+            .catch((error: any) => {
                 console.error('Lỗi fetch album', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAlbumData();
+            })
+            .finally(() => {
+                setLoading(false); 
+            });
     }, []);
 
     return (

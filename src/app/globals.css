@@ -60,19 +60,25 @@
     font-weight: 900;
     font-style: normal;
 }
-.contain{
+.contain {
     margin-top: 100px;
     margin-left: 250px;
 }
+
 .container {
+    
     display: flex;
     background-color: #170F23;
+
+    flex-wrap: wrap;
+
 }
 
 body {
-    margin: 0 auto;
+    margin: 0;
     font-family: inter, Arial, Helvetica, sans-serif;
 }
+
 * {
     font-family: inherit;
 }

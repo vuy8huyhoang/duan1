@@ -1,28 +1,29 @@
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
-import style from './albumhot.module.scss';
+import style from './bxh.module.scss';
 import { ReactSVG } from 'react-svg';
 
-interface Album {
-    id_album: string;
+interface Music {
+    id_music: string;
     name: string;
     url_cover: string;
-    artist: {
+    composer: string;
+    types: {
         name: string;
-    };
+    }[];
 }
 
-export default function AlbumHot() {
-    const [albumData, setAlbumData] = useState<Album[]>([]);
+export default function Bxh() {
+    const [albumData, setBxhData] = useState<Music[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get("/album")
+        axios.get("/music")
             .then((response: any) => {
                 console.log(response); 
                 if (response && response.result && response.result.data) {
-                    const albumObj = response.result.data; 
-                    setAlbumData(albumObj.slice(0, 5)); 
+                    const musicObj = response.result.data; 
+                    setBxhData(musicObj.slice(0, 5)); 
                 } else {
                     console.error('Response result.data is undefined or null', response);
                 }
@@ -51,10 +52,10 @@ export default function AlbumHot() {
                 {loading ? (
                     <p>Đang tải album...</p>
                 ) : (
-                    albumData.map((album) => (
-                        <div key={album.id_album} className={style.albumCard}>
+                    albumData.map((music) => (
+                        <div key={music.id_music} className={style.albumCard}>
                             <div className={style.albumWrapper}>
-                                <img src={album.url_cover} alt={album.name} className={style.albumCover} />
+                                <img src={music.url_cover} alt={music.name} className={style.musicCover} />
                                 <div className={style.overlay}>
                                     <button className={style.likeButton}>
                                         <ReactSVG src="/heart.svg" />
@@ -67,8 +68,8 @@ export default function AlbumHot() {
                                     </button>
                                 </div>
                             </div>
-                            <a className={style.albumTitle}>{album.name}</a>
-                            <p className={style.artistName}>{album.artist.name}</p>
+                            <a className={style.musicTitle}>{music.name}</a>
+                            {/* <p className={style.composerName}>{music.types.name}</p> */}
                         </div>
                     ))
                 )}

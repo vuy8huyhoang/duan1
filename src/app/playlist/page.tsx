@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+"use client"; // Bắt buộc để sử dụng các hook trên Client Side
 
-// Định nghĩa các kiểu dữ liệu
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router"; // Tiếp tục sử dụng next/router
+
 interface Music {
   id_music: string;
   name: string;
@@ -17,16 +18,23 @@ interface Playlist {
 const PlaylistPage = () => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  
 
   const fetchPlaylists = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/playlist/me"); // API để lấy danh sách playlist của người dùng
+      const response = await fetch("/api/playlist/me"); // Thay thế URL nếu cần
       if (!response.ok) throw new Error("Failed to fetch playlists");
       const data = await response.json();
-      setPlaylists(data.data); // Giả sử data trả về chứa mảng playlists
-    } catch (error) {
+
+      if (data && data.data) {
+        setPlaylists(data.data);
+      } else {
+        setError("No playlists found");
+      }
+    } catch (error: any) {
       console.error(error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -38,6 +46,8 @@ const PlaylistPage = () => {
 
   if (loading) return <p>Loading...</p>;
 
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <div>
       <h1>Your Playlists</h1>
@@ -48,7 +58,7 @@ const PlaylistPage = () => {
           {playlists.map((playlist) => (
             <li key={playlist.id_playlist}>
               <h2>{playlist.name}</h2>
-              <p>{playlist.created_at}</p>
+              <p>Created at: {playlist.created_at}</p>
               <ul>
                 {playlist.musics.map((music) => (
                   <li key={music.id_music}>
