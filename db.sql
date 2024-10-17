@@ -2737,7 +2737,12 @@ insert into Playlist (id_playlist, id_user, name, playlist_index) values
 ("p0002", "u0001", "Play list 2", 1),
 ("p0003", "u0001", "Play list 3", 2),
 ("p0004", "u0006", "Play list 4", 0),
-("p0005", "u0006", "Play list 5", 1);
+("p0005", "u0006", "Play list 5", 1),
+("p0006", "u0005", "Play list 1", 0),
+("p0007", "u0005", "Play list 2", 1),
+("p0008", "u0005", "Play list 3", 2),
+("p0009", "u0005", "Play list 4", 0),
+("p0010", "u0005", "Play list 5", 1);
 
 insert into MusicPlaylistDetail (id_playlist, id_music) values
 ("p0001", "m0001"),
