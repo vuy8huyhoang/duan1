@@ -25,10 +25,6 @@
     text-align: center;
     color: #fff;
     flex-basis: 30%;
-<<<<<<< HEAD
-=======
-    /* Đảm bảo album luôn chiếm 30% không đổi */
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     height: 230px;
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
@@ -93,88 +89,4 @@
     color: #ccc;
 }
 
-<<<<<<< HEAD
-@media (max-width: 1200px) {
-    .albumCard {
-        flex-basis: 45%;
-        height: auto;
-    }
 
-    .albumName {
-        font-size: 1.6rem;
-    }
-
-    .artistName {
-        font-size: 1.2rem;
-    }
-}
-
-@media (max-width: 992px) {
-    .albumCard {
-        flex-basis: 48%;
-        height: auto;
-    }
-
-    .albumCover {
-        width: 100%;
-    }
-
-    .title {
-        font-size: 1.6rem;
-        margin-bottom: 2%;
-    }
-
-    .albumName {
-        font-size: 1.4rem;
-    }
-
-    .artistName {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .albumCard {
-        flex-basis: 100%;
-        height: auto;
-    }
-
-    .title {
-        font-size: 1.4rem;
-        margin-bottom: 1.5%;
-    }
-
-    .albumName {
-        font-size: 1.3rem;
-    }
-
-    .artistName {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .contentwrapper {
-        padding: 5%;
-    }
-
-    .title {
-        font-size: 1.2rem;
-        margin-bottom: 1%;
-    }
-
-    .albumName {
-        font-size: 1.1rem;
-    }
-
-    .musicList {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .musicListItem {
-        padding: 10px;
-    }
-}
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f

@@ -16,13 +16,14 @@
 .all {
     display: flex;
     align-items: center;
-<<<<<<< HEAD
-    /* Căn giữa theo chiều dọc */
+
+    
     gap: 10px;
-    /* Khoảng cách giữa các phần tử */
-=======
+    
     gap: 10px;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
+    gap: 10px;
+
 }
 
 .viewAllButton {
@@ -40,41 +41,33 @@
 }
 
 .csvg {
-<<<<<<< HEAD
-    /* Đặt kích thước cho SVG nếu cần */
+
+   
     fill: #ffffff;
-    /* Đặt màu cho SVG */
-=======
-    fill: #ffffff;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+    
+    
+    
     transition: fill 0.3s ease;
 }
 
 .csvg:hover {
     fill: #6c63ff;
-<<<<<<< HEAD
-    /* Màu khi hover SVG */
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .albumGrid {
     display: grid;
-<<<<<<< HEAD
-    grid-template-columns: repeat(5, 1fr); // 5 album theo hàng ngang
-=======
-    grid-template-columns: repeat(5, 1fr);
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
+    grid-template-columns: repeat(5, 1fr); 
+
+
     grid-gap: 20px;
     justify-items: center;
     padding: 20px;
 }
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .albumCard {
     display: flex;
     flex-direction: column;
@@ -96,11 +89,7 @@
     border-radius: 10px;
 }
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .albumTitle {
     color: #FFFFFF;
     font-size: 14px;
@@ -108,10 +97,7 @@
     margin-top: 10px;
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .overlay {
     position: absolute;
     top: 0;
@@ -119,24 +105,24 @@
     right: 0;
     bottom: 0;
     display: flex;
-<<<<<<< HEAD
+
     justify-content: center;
-    /* Căn giữa theo chiều ngang */
+ 
     align-items: center;
-    /* Căn giữa theo chiều dọc */
+ 
     gap: 20px;
-    /* Khoảng cách giữa các nút */
+    
     background-color: rgba(0, 0, 0, 0.5);
-    /* Màu nền mờ */
+
     opacity: 0;
-=======
+
     justify-content: space-between;
     align-items: center;
     gap: 20px;
     background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     padding: 0 30px;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
     transition: opacity 0.3s ease;
 }
 
@@ -144,13 +130,11 @@
     opacity: 1;
 }
 
-.playButton,
-<<<<<<< HEAD
-.likeButton {
-=======
+
+
 .likeButton,
 .moreButton {
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
     background: none;
     border: none;
     cursor: pointer;
@@ -159,7 +143,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-<<<<<<< HEAD
+
 }
 .likeButton{
     position: absolute;
@@ -185,26 +169,22 @@ position: absolute;
     align-items: center;
 }
 
-.playButton svg,
-.likeButton svg,
-=======
-    flex-grow: 1;
-}
+
+
+    
+
 
 .likeButton svg,
 .playButton svg,
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
 .moreButton svg {
     width: 30px;
     height: 30px;
     stroke: #FFFFFF;
     fill: none !important;
+    flex-grow: 1;
 }
 
-<<<<<<< HEAD
-.artistName{
-=======
+
 .artistName {
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     color: #726E79;
 }

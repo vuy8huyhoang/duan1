@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
-/* General Styles */
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 .headerSection {
     display: flex;
     justify-content: space-between;
@@ -20,13 +17,9 @@
 .all {
     display: flex;
     align-items: center;
-<<<<<<< HEAD
-    /* Căn giữa theo chiều dọc */
+
     gap: 10px;
-    /* Khoảng cách giữa các phần tử */
-=======
-    gap: 10px;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .viewAllButton {
@@ -44,20 +37,16 @@
 }
 
 .csvg {
-<<<<<<< HEAD
-    /* Đặt kích thước cho SVG nếu cần */
+
+   
     fill: #ffffff;
-    /* Đặt màu cho SVG */
-=======
-    fill: #ffffff;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+   
     transition: fill 0.3s ease;
 }
 
 .csvg:hover {
     fill: #6c63ff;
-<<<<<<< HEAD
-    /* Màu khi hover SVG */
+
 }
 
 .headerSection {
@@ -75,36 +64,25 @@
 .viewAllButton {
     text-decoration: none;
     margin-right: 10px;
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .albumList {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-<<<<<<< HEAD
-    /* 3 cột */
-    gap: 15px;
-    padding-left:40px ;
-=======
+
     gap: 15px;
     padding-left: 40px;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     padding-right: 40px;
 }
 
 .songCard {
     width: 95%;
-<<<<<<< HEAD
+
     height: fit-content;
     display: flex;
     gap: 15px;
     background-color: #2B2336   ;
-=======
-    display: flex;
-    gap: 15px;
-    background-color: #2B2336;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     border-radius: 8px;
     overflow: hidden;
     position: relative;
@@ -112,30 +90,20 @@
     transition: transform 0.3s;
 }
 
-<<<<<<< HEAD
 
 
-.rank {
-    position: absolute;
-    bottom: -30px;
-    right: 290px;
-=======
+
 .rank {
     position: absolute;
     top: 10px;
     right: 20px;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     color: white;
     font-weight: bold;
     font-size: 50px;
     border-radius: 4px;
 }
-<<<<<<< HEAD
-.songCard h1{
-=======
 
 .songCard h1 {
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
     color: transparent;
     -webkit-text-stroke: 1px gray;
 }
@@ -148,7 +116,7 @@
     height: 130px;
     border-radius: 10px;
     overflow: hidden;
-<<<<<<< HEAD
+
 }
 
 .albumCover {
@@ -156,8 +124,7 @@
     height: 150%;
     object-fit: cover;
     border-radius: 10px;
-    /* Đảm bảo bìa không bị méo */
-=======
+   
     position: relative;
 }
 
@@ -191,47 +158,35 @@
 
 .songCard:hover .playButton {
     opacity: 1;
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .songInfo {
     padding: 5px 0;
-<<<<<<< HEAD
-    /* Padding cho thông tin bài hát */
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .songName {
     font-weight: bold;
     color: white;
-<<<<<<< HEAD
-    /* Màu chữ cho tên bài hát */
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .composerName {
     color: #aaa;
-<<<<<<< HEAD
-    /* Màu chữ cho tên nhạc sĩ */
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .releaseDate {
     font-size: 12px;
-<<<<<<< HEAD
-    /* Kích thước font cho ngày phát hành */
+
     color: #ccc;
 }
 
 
-=======
-    color: #ccc;
-}
 
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
+
 .sliderContainer {
     align-items: center;
     position: relative;
@@ -242,7 +197,6 @@
     background: none;
     border: none;
     color: white;
-<<<<<<< HEAD
     width: 5px;
     cursor: pointer;
 }
@@ -293,17 +247,6 @@
 
 .songCard {
     position: relative;
-    /* Tùy chỉnh thêm */
-}
-
-
-
-
-
-
-
-
-=======
     cursor: pointer;
     font-size: 24px;
 }
@@ -327,5 +270,5 @@
 .leftArrow:hover,
 .rightArrow:hover {
     color: #6c63ff;
+
 }
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f

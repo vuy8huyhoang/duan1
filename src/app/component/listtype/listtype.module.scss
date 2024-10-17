@@ -18,21 +18,21 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
-<<<<<<< HEAD
+
     background: linear-gradient(135deg, #6a11cb, #2575fc); // Gradient mặc định
 }
 
 .albumCard:hover {
     transform: scale(1.05); // Phóng to khi di chuột
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); // Bóng đổ sâu hơn khi hover
-=======
+
     background: linear-gradient(135deg, #6a11cb, #2575fc);
 }
 
 .albumCard:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 }
 
 .albumTitle {
@@ -40,7 +40,6 @@
     font-weight: bold;
     color: white;
     text-decoration: none;
-<<<<<<< HEAD
     text-transform: uppercase; // Viết hoa tất cả chữ cái
 }
 
@@ -64,9 +63,7 @@
 .albumCard:nth-child(5) {
     background: linear-gradient(135deg, #9333ea, #d8b4fe); // Thẻ bổ sung
 }
-=======
-    text-transform: uppercase;
-}
+
 
 .albumCard:nth-child(1) {
     background: linear-gradient(135deg, #4c2e96, #a29bfe);
@@ -88,4 +85,4 @@
     background: linear-gradient(135deg, #9333ea, #d8b4fe);
 }
 
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
