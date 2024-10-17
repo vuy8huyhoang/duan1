@@ -68,11 +68,9 @@
 .container {
     display: flex;
     background-color: #170F23;
+    flex-wrap: wrap;
 }
-<<<<<<< HEAD
- 
-=======
->>>>>>> bcba6c3423e2691ef14e43c612b25dfbb3c1ee5f
+
 body {
     margin: 0;
     font-family: inter, Arial, Helvetica, sans-serif;
