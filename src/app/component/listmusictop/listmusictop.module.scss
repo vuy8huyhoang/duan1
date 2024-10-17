@@ -1,3 +1,4 @@
+/* General Styles */
 .headerSection {
     display: flex;
     justify-content: space-between;
@@ -16,9 +17,7 @@
 .all {
     display: flex;
     align-items: center;
-    /* Căn giữa theo chiều dọc */
     gap: 10px;
-    /* Khoảng cách giữa các phần tử */
 }
 
 .viewAllButton {
@@ -36,49 +35,27 @@
 }
 
 .csvg {
-    /* Đặt kích thước cho SVG nếu cần */
     fill: #ffffff;
-    /* Đặt màu cho SVG */
     transition: fill 0.3s ease;
 }
 
 .csvg:hover {
     fill: #6c63ff;
-    /* Màu khi hover SVG */
-}
-
-.headerSection {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.all {
-    display: flex;
-    align-items: center;
-}
-
-.viewAllButton {
-    text-decoration: none;
-    margin-right: 10px;
 }
 
 .albumList {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 3 cột */
     gap: 15px;
-    padding-left:40px ;
+    padding-left: 40px;
     padding-right: 40px;
 }
 
 .songCard {
     width: 95%;
-    height: fit-content;
     display: flex;
     gap: 15px;
-    background-color: #2B2336   ;
+    background-color: #2B2336;
     border-radius: 8px;
     overflow: hidden;
     position: relative;
@@ -86,18 +63,17 @@
     transition: transform 0.3s;
 }
 
-
-
 .rank {
     position: absolute;
-    bottom: -30px;
-    right: 290px;
+    top: 10px;
+    right: 20px;
     color: white;
     font-weight: bold;
     font-size: 50px;
     border-radius: 4px;
 }
-.songCard h1{
+
+.songCard h1 {
     color: transparent;
     -webkit-text-stroke: 1px gray;
 }
@@ -110,38 +86,58 @@
     height: 130px;
     border-radius: 10px;
     overflow: hidden;
+    position: relative;
 }
 
 .albumCover {
-    width: 150%;
-    height: 150%;
+    width: 135%;
+    height: 135%;
     object-fit: cover;
     border-radius: 10px;
-    /* Đảm bảo bìa không bị méo */
+    position: relative;
+}
+
+.playButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.playButton svg {
+    width: 30px;
+    height: 30px;
+}
+
+.songCard:hover .albumCover {
+    opacity: 0.5;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1;
+}
+
+.songCard:hover .playButton {
+    opacity: 1;
 }
 
 .songInfo {
     padding: 5px 0;
-    /* Padding cho thông tin bài hát */
 }
 
 .songName {
     font-weight: bold;
     color: white;
-    /* Màu chữ cho tên bài hát */
 }
 
 .composerName {
     color: #aaa;
-    /* Màu chữ cho tên nhạc sĩ */
 }
 
 .releaseDate {
     font-size: 12px;
-    /* Kích thước font cho ngày phát hành */
     color: #ccc;
 }
-
 
 .sliderContainer {
     align-items: center;
@@ -153,63 +149,27 @@
     background: none;
     border: none;
     color: white;
-    width: 5px;
     cursor: pointer;
+    font-size: 24px;
 }
-.leftArrow{
+
+.leftArrow {
     position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
     z-index: 1000;
-    left:10px;
-    top: 50px;
 }
-.rightArrow{
+
+.rightArrow {
     position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
     z-index: 1000;
-    right: 55px;
-    top:50px;
 }
 
-
-.albumCoverWrapper {
-    position: relative;
-    
+.leftArrow:hover,
+.rightArrow:hover {
+    color: #6c63ff;
 }
-
-.playButton {
-    position: absolute;
-    width: 20px;
-    top: 65px;
-    left: 5;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    /* Mặc định ẩn */
-    transition: opacity 0.3s ease-in-out;
-}
-.playButton svg{
-    width: 30px;
-    height: 30px;
-}
-.songCard:hover .albumCover{
-    opacity: 0.5;
-        transition: opacity 0.3s ease-in-out;
-        z-index: 1;
-}
-.songCard:hover .playButton {
-            opacity: 1;
-    
-            /* Hiển thị khi hover */
-        }
-
-
-.songCard {
-    position: relative;
-    /* Tùy chỉnh thêm */
-}
-
-
-
-
-
-
-
-

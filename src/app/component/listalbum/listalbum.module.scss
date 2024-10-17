@@ -16,9 +16,7 @@
 .all {
     display: flex;
     align-items: center;
-    /* Căn giữa theo chiều dọc */
     gap: 10px;
-    /* Khoảng cách giữa các phần tử */
 }
 
 .viewAllButton {
@@ -36,24 +34,24 @@
 }
 
 .csvg {
-    /* Đặt kích thước cho SVG nếu cần */
     fill: #ffffff;
-    /* Đặt màu cho SVG */
     transition: fill 0.3s ease;
 }
 
 .csvg:hover {
     fill: #6c63ff;
-    /* Màu khi hover SVG */
 }
 
 .albumGrid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); // 5 album theo hàng ngang
+    grid-template-columns: repeat(5, 1fr);
+    /* 5 album theo hàng ngang cho màn hình lớn */
     grid-gap: 20px;
     justify-items: center;
     padding: 20px;
 }
+
+
 
 .albumCard {
     display: flex;
@@ -76,15 +74,12 @@
     border-radius: 10px;
 }
 
-
-
 .albumTitle {
     color: #FFFFFF;
     font-size: 14px;
     text-align: center;
     margin-top: 10px;
 }
-
 
 .overlay {
     position: absolute;
@@ -93,15 +88,15 @@
     right: 0;
     bottom: 0;
     display: flex;
-    justify-content: center;
-    /* Căn giữa theo chiều ngang */
+    justify-content: space-between;
+    /* Căn đều khoảng cách giữa các nút */
     align-items: center;
     /* Căn giữa theo chiều dọc */
     gap: 20px;
-    /* Khoảng cách giữa các nút */
     background-color: rgba(0, 0, 0, 0.5);
-    /* Màu nền mờ */
     opacity: 0;
+    padding: 0 30px;
+    /* Điều chỉnh khoảng cách giữa các nút và mép */
     transition: opacity 0.3s ease;
 }
 
@@ -110,7 +105,8 @@
 }
 
 .playButton,
-.likeButton {
+.likeButton,
+.moreButton {
     background: none;
     border: none;
     cursor: pointer;
@@ -119,37 +115,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.likeButton{
-    position: absolute;
-        top: 200;
-        left: 30px;
-}
-.playButton{
-position: absolute;
-    top: 200;
-    right: 100px;
-}
-.moreButton {
-    position: absolute;
-    top: 200;
-    right: 30px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
+    flex-grow: 1;
+    /* Các nút đều có khoảng cách đều nhau */
 }
 
-.playButton svg,
 .likeButton svg,
+.playButton svg,
 .moreButton svg {
     width: 30px;
     height: 30px;
     stroke: #FFFFFF;
     fill: none !important;
 }
-
