@@ -316,7 +316,7 @@ const TypePage = () => {
           </div>
         ))}
       </div>
-    </>  
+    </>   
   );
 };
 export default TypePage;
