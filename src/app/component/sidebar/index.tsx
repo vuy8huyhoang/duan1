@@ -22,7 +22,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Thư Viện')}
                 >
                     <ReactSVG className={styles.csvg} src="/Group (1).svg" />
-                    <a href="#">Thư Viện</a>
+                    <a href="/playlist">Thư Viện</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'Khám Phá' ? styles.active : ''}`}
@@ -50,7 +50,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Chủ Đề & Thể Loại')}
                 >
                     <ReactSVG className={styles.csvg} src="/type_light.svg" />
-                    <a href="#">Chủ Đề & Thể Loại</a>
+                    <a href="/type">Chủ Đề & Thể Loại</a>
                 </li>
             </ul>
             <ul className={styles.submenu}>
@@ -73,7 +73,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Playlist')}
                 >
                     <ReactSVG className={styles.csvg} src="/Frame 10 (2).svg" />
-                    <a href="/playlist">Playlist</a>
+                    <a href="#">Playlist</a>
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'Album' ? styles.active : ''}`}

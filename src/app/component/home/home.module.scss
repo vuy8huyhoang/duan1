@@ -1,14 +1,14 @@
 .contentwrapper {
     width: 100%;
-    padding: 40px;
+    padding: 2.5%;
     box-sizing: border-box;
 }
 
 .title {
     text-align: left;
-    margin-bottom: 40px;
+    margin-bottom: 2.5%;
     color: #fff;
-    font-size: 18px;
+    font-size: 1.8rem;
     font-weight: bold;
 }
 
@@ -23,14 +23,16 @@
     border-radius: 10px;
     text-align: center;
     color: #fff;
-    width: 30%;
-    height: 220px;
+    flex-basis: 30%;
+    height: 230px;
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
+    margin-bottom: 20px;
 }
-.albumCard img{
-    width: 100%;
 
+.albumCard img {
+    width: 100%;
+    object-fit: cover;
 }
 
 .albumCard:hover {
@@ -38,7 +40,7 @@
 }
 
 .albumCover {
-    width: 490px;
+    width: 100%;
     border-radius: 10px;
     margin-bottom: 15px;
     object-fit: cover;
@@ -85,3 +87,4 @@
     font-size: 1rem;
     color: #ccc;
 }
+
