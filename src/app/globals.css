@@ -68,9 +68,7 @@
 .container {
     display: flex;
     background-color: #170F23;
-    flex-wrap: wrap;
-} 
-
+}
 body {
     margin: 0;
     font-family: inter, Arial, Helvetica, sans-serif;

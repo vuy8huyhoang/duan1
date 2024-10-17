@@ -10,7 +10,6 @@ import {
 import { getServerErrorMsg, throwCustomError } from "@/utils/Error";
 import { getQueryParams, objectResponse } from "@/utils/Response";
 import { v4 as uuidv4 } from "uuid";
-
 export const GET = async (request: Request) => {
   try {
     const params = getQueryParams(request);
@@ -19,7 +18,6 @@ export const GET = async (request: Request) => {
     const { limit, offset, id_type, name, slug, created_at, is_show }: any =
       params;
     const queryParams: any[] = [];
-
     const query = `
     SELECT 
       id_type,
@@ -38,19 +36,16 @@ export const GET = async (request: Request) => {
 
     ${getByLimitOffset(limit, offset, "created_at")}
     `;
-
     const [typeList]: Array<any> = await connection.query(query, queryParams);
     return objectResponse({ data: typeList }, 200);
   } catch (error) {
     return getServerErrorMsg(error);
   }
 };
-
 export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     const { name, slug, is_show = 1 } = body;
-
     // Validation
     Checker.checkString(name, true);
     Checker.checkString(slug);
@@ -69,7 +64,6 @@ export const POST = async (request: Request) => {
       );
       if (slugList.length !== 0) throwCustomError("Slug is already exist", 409);
     }
-
     // Check slug not empty
     if (slug === "") throwCustomError("Slug cannot be empty string", 400);
 
@@ -89,7 +83,6 @@ export const POST = async (request: Request) => {
       `,
       [newId, name, slug, is_show]
     );
-
     return objectResponse({ newID: newId });
   } catch (error) {
     return getServerErrorMsg(error);

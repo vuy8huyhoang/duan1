@@ -50,7 +50,7 @@ export default function Sidebar() {
                     onClick={() => handleMenuClick('Chủ Đề & Thể Loại')}
                 >
                     <ReactSVG className={styles.csvg} src="/type_light.svg" />
-                    <a href="#">Chủ Đề & Thể Loại</a>
+                    <a href="/type">Chủ Đề & Thể Loại</a>
                 </li>
             </ul>
             <ul className={styles.submenu}>
