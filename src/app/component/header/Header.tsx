@@ -15,7 +15,7 @@ const Header: React.FC = () => {
         <input type="text" placeholder="Tìm kiếm bài hát, tác giả..." />
       </div>
       <div className={styles.headerRight}>
-        
+        <img src="/Vector.svg" alt="" />
         <img src="/Group 24.svg" alt="" />
         <img src="/Setting.svg" alt="" />
       </div>

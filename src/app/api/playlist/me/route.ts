@@ -47,6 +47,7 @@ export const GET = async (request: Request) => {
     WHERE TRUE
       AND id_user = '${id_user}'
       ${getByEqual(id_playlist, "p.id_playlist")}
+    GROUP BY p.id_playlist
     `;
 
     const [playlistList]: Array<any> = await connection.query(

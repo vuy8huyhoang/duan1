@@ -22,7 +22,6 @@ export default function Layout({ children }: any) {
         />
       </head>
       <body
-      //  onClick={onClickBodyHandle}
       >
         <div className="container">
           <Sidebar />
