@@ -43,7 +43,7 @@
     transition: color 0.3s;
 }
 
-.menuItem a {
+.menuItem span {
     font-family: inter;
     font-weight: medium;
     font-size: 13px;
@@ -117,7 +117,7 @@
         border-width: 1.5px;
     }
 
-    a {
+    span {
         color: #FFFFFF;
     }
 

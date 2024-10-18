@@ -68,7 +68,6 @@
     background-color: #555;
 }
 
-/* Album List */
 .albumList {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -96,6 +95,7 @@
 }
 
 .albumCoverWrapper {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -103,7 +103,6 @@
     height: 90px;
     border-radius: 8px;
     overflow: hidden;
-    position: relative;
 }
 
 .albumCover {
@@ -125,17 +124,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .composerName {
     color: #b3b3b3;
     font-size: 14px;
-    margin-top: 5px;
-}
-
-.releaseTime {
-    color: #b3b3b3;
-    font-size: 12px;
     margin-top: 5px;
 }
 
@@ -190,4 +184,23 @@
 .songControls i:hover {
     color: white;
 }
+/* Chỉ bài hát đang phát hiển thị nút pause khi hover */
+.playing:hover .overlay {
+    opacity: 1;
+}
 
+.playButton i.fa-play {
+    display: inline;
+}
+
+.playButton i.fa-pause {
+    display: none;
+}
+
+.playing .playButton i.fa-play {
+    display: none;
+}
+
+.playing .playButton i.fa-pause {
+    display: inline;
+}

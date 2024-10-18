@@ -1,5 +1,4 @@
 "use client";
-
 import styles from './home.module.scss'; 
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
@@ -9,8 +8,6 @@ import ListMusicTop from '../listmusictop';
 import ListType from '../listtype';
 import AlbumHot from '../albumhot';
 import MusicPartner from '../musicpartner';
-
-
 interface Album {
     id_album: string;
     name: string;
@@ -54,7 +51,6 @@ export default function Home() {
             
             
         </div>
-        
         <ListMusic />
         <ListAlbum />
         <ListMusicTop />

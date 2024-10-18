@@ -11,6 +11,7 @@ interface Album {
     genre: string;
     created_at: string;
     composer: string;
+    url_path: string;
 }
 
 const ListMusicTop: React.FC = () => {
@@ -23,7 +24,7 @@ const ListMusicTop: React.FC = () => {
             .then((response: any) => {
                 console.log('Full API response:', response); 
                 if (response && response.result && response.result.data) {
-                    setAlbums(response.result.data.slice(0, 6)); 
+                    setAlbums(response.result.data.slice(15, 60)); 
                 } else {
                     console.error('Response result.data is undefined or null:', response);
                     setAlbums([]); 
