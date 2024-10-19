@@ -26,7 +26,7 @@ const PlaylistPage = () => {
   const fetchPlaylists = async () => {
     try {
       localStorage.setItem("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6InUwMDA1IiwiZXhwIjoxNzY1MTY5MjgzfQ.ZT-i4LBI-1OW9gsc1UyTsBO1J8qirj5UmxzIl9ASWno")
-      const response = await axios.get("profile"); // Sử dụng axios để lấy dữ liệu
+      const response = await axios.get("playlist/me"); // Sử dụng axios để lấy dữ liệu
       const data = response.data;
       console.log(response);
 
