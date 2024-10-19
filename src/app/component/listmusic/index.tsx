@@ -18,7 +18,7 @@ const ListMusic: React.FC = () => {
     const [albums, setAlbums] = useState<Album[]>([]);
     const [currentSong, setCurrentSong] = useState<Album | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
-    const [hoveredSong, setHoveredSong] = useState<number | null>(null); // Trạng thái bài hát đang hover
+    const [hoveredSong, setHoveredSong] = useState<number | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>('Tất cả');
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -93,7 +93,6 @@ const ListMusic: React.FC = () => {
                                     className={style.playButton}
                                     onClick={() => handlePlayPause(album)}
                                 >
-                                    {/* Kiểm tra xem bài hát có đang hover và đang phát không */}
                                     {album.id === currentSong?.id && isPlaying ? (
                                         <i className="fas fa-pause"></i>
                                     ) : hoveredSong === album.id ? (
