@@ -14,7 +14,7 @@ interface Music {
 }
 
 export default function Bxh() {
-    const [albumData, setBxhData] = useState<Music[]>([]);
+    const [musicData, setBxhData] = useState<Music[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export default function Bxh() {
     return (
         <>
             <div className={style.headerSection}>
-                <h2>Mới phát hành</h2>
+                <h2>Bảng xếp hạng </h2>
                 <div className={style.all}>
                     <a href="#" className={style.viewAllButton}>Tất cả</a>
                     <ReactSVG className={style.csvg} src="/all.svg" />
@@ -52,7 +52,7 @@ export default function Bxh() {
                 {loading ? (
                     <p>Đang tải album...</p>
                 ) : (
-                    albumData.map((music) => (
+                    musicData.map((music) => (
                         <div key={music.id_music} className={style.albumCard}>
                             <div className={style.albumWrapper}>
                                 <img src={music.url_cover} alt={music.name} className={style.musicCover} />
@@ -69,7 +69,10 @@ export default function Bxh() {
                                 </div>
                             </div>
                             <a className={style.musicTitle}>{music.name}</a>
-                            {/* <p className={style.composerName}>{music.types.name}</p> */}
+                            <p className={style.composerName}>
+                                {music.types.map((type) => type.name).join(', ')}
+                            </p>
+
                         </div>
                     ))
                 )}

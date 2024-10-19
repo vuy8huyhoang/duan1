@@ -56,7 +56,7 @@ export default function GrooveChartPage() {
                         <div className={styles.Titles}>
                         <h5 className={styles.musicName}>{music.name} <br /></h5>
                         <p className={styles.musicArtist}>{music.composer}</p>
-                        </div>
+                        </div>      
                         <div className={styles.moreOptions}>...</div>
                     </div>
                 ))}
@@ -69,6 +69,7 @@ export default function GrooveChartPage() {
                     </div>
                 ))}
             </div> */}
+            
         </div>
         
     );
