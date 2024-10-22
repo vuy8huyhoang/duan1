@@ -39,8 +39,6 @@ export default function ListType() {
 
     return (
         <>
-
-
             <div className={style.albumGrid}>
                 {loading ? (
                     <p>Đang tải album...</p>
