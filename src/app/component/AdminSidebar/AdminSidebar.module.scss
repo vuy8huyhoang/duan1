@@ -1,6 +1,5 @@
-// SCSS cho Sidebar
 .sidebar {
-    width: 250px;
+    width: 260px;
     background-color: #0a284b;
     height: 100vh;
     color: white;
@@ -8,62 +7,86 @@
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
 
-    &__user {
+    .user {
         display: flex;
         flex-direction: column;
         align-items: center;
         margin-bottom: 20px;
-    }
-
-    &__avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        margin-bottom: 10px;
-    }
-
-    &__user-info {
         text-align: center;
-        
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+            border-radius: 50%;
+        }
+
+        .userInfo {
+            .userName {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: #ffffff;
+                /* Màu chữ trắng */
+            }
+
+            .userWelcome {
+                font-size: 12px;
+                color: #a1b1c1;
+                /* Màu chữ xám nhạt */
+            }
+        }
     }
 
-    &__user-name {
-        font-size: 16px;
-        margin-bottom: 5px;
-    }
-
-    &__user-welcome {
-        font-size: 12px;
-        color: #a1b1c1;
-    }
-
-    &__menu {
+    .menu {
         list-style: none;
         padding: 0;
         width: 100%;
+        margin: 0;
+
+        li {
+            margin-bottom: 10px;
+            .menuItem{
+                display: flex;
+                align-items: center;
+            }
+            a {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                font-size: 16px;
+                color: white;
+                text-decoration: none;
+                font-weight: 500;
+                transition: background-color 0.3s ease;
+                position: relative;
+border-radius: 10px;
+
+    
+
+    &.active {
+        background-color: #C4DCFE;
+        color: #0a284b;
+        border-radius: 10px;
+        
     }
 
-    &__menu-item {
-        display: flex;
-        align-items: center;
-        padding: 15px 20px;
-        font-size: 16px;
-        text-decoration: none;
-        color: white;
-        transition: background-color 0.3s ease;
+                .csvg {
+                    width: 30px;
+                    height: 30px;
+                }
 
-        i {
-            font-size: 20px;
-            margin-right: 10px;
-        }
-
-        &:hover {
-            background-color: #1a3d5d;
-        }
-
-        &.active {
-            background-color: #1a3d5d;
+                .menuText {
+                    font-size: 14px;
+                    margin-left:15px ;
+                    letter-spacing: 0.5px;
+                    color: white;
+                }
+                                
+            }
         }
     }
 }
