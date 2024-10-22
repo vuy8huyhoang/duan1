@@ -1,6 +1,6 @@
 .sidebar {
-    width: 260px;
-    background-color: #0a284b;
+    width: 12%;
+    background-color: #011E40;
     height: 100vh;
     color: white;
     display: flex;
@@ -9,6 +9,9 @@
     padding-top: 20px;
     padding-left: 15px;
     padding-right: 15px;
+    position: sticky;
+    left: 0;
+    top: 0;
 
     .user {
         display: flex;
@@ -57,7 +60,7 @@
                 display: flex;
                 align-items: center;
                 padding: 15px 20px;
-                font-size: 16px;
+                font-size: 14px;
                 color: white;
                 text-decoration: none;
                 font-weight: 500;

@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from './component/header/Header';
 import { usePathname } from 'next/navigation';
 import AdminSidebar from './component/AdminSidebar';
+import AdminHeader from './component/AdminHeader';
 
 export default function Layout({ children }: any) {
   const pathname = usePathname();
@@ -31,8 +32,14 @@ export default function Layout({ children }: any) {
           </div>
         ) : (
             <div className="admin-container">
-              <AdminSidebar/>
-            {children}
+              <AdminSidebar />
+              
+              <div className="admin-content">
+                <AdminHeader />
+                  {children}
+              </div>
+              
+              
           </div>
         )}
       </body>
