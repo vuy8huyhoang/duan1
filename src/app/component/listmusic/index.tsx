@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/lib/axios';
 import style from './listmusic.module.scss';
 import { ReactSVG } from 'react-svg';
+import Link from 'next/link';
 
 interface Album {
     id: number;
@@ -12,7 +13,12 @@ interface Album {
     genre: string;
     release: string;
     composer: string;
+    music:string;
+    musics:{
+       id_music: string
+    }
 }
+
 
 const ListMusic: React.FC = () => {
     const [albums, setAlbums] = useState<Album[]>([]);
@@ -80,6 +86,7 @@ const ListMusic: React.FC = () => {
 
             <div className={style.albumList}>
                 {filteredAlbums.map((album) => (
+                    
                     <div
                         key={album.id}
                         className={style.songCard}
@@ -102,11 +109,13 @@ const ListMusic: React.FC = () => {
                                     )}
                                 </button>
                             </div>
-                        </div>
+                        </div>                   
+                        <Link href={`/musicdetail/${album.id}`} className={style.albumTitle}>
                         <div className={style.songInfo}>
                             <div className={style.songName}>{album.name}</div>
                             <div className={style.composerName}>{album.composer}</div>
                         </div>
+                        </Link>
                         <div className={style.songControls}>
                             <i className="fas fa-heart"></i>
                             <i className="fas fa-ellipsis-h"></i>
