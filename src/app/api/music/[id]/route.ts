@@ -121,7 +121,7 @@ export const PATCH = async (request: Request, context: any) => {
     Checker.checkIncluded(is_show, [0, 1]);
 
     // Check permission
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     if (currentUser?.role !== "admin")
       throwCustomError("Not enough permission", 403);
 
