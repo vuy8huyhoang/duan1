@@ -1,6 +1,7 @@
 .container {
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: #f9f9f9;
+    min-height: 100vh;
 }
 
 .header {
@@ -8,11 +9,11 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    a {
-            text-decoration: none;
-        }
+
     h1 {
         margin: 0;
+        font-size: 24px;
+        color: #333;
     }
 
     .addButton {
@@ -26,13 +27,16 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
-        .csvg{
+
+        .csvg {
             width: 20px;
             height: 20px;
         }
-        .addText{
+
+        .addText {
             font-size: 14px;
         }
+
         &:hover {
             background-color: #218838;
         }
@@ -42,19 +46,22 @@
 .tableContainer {
     overflow-x: auto;
     background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
-.songTable {
+.typeTable {
     width: 100%;
     border-collapse: collapse;
+    font-size: 16px;
 
     thead {
-        background-color: #f2f2f2;
-        padding: 20px;
+        background-color: #343a40;
+        color: white;
+
         th {
-            padding: 10px;
+            padding: 12px 15px;
             text-align: left;
         }
     }
@@ -67,37 +74,16 @@
         }
 
         td {
-            padding: 10px;
+            padding: 12px 15px;
             border-bottom: 1px solid #dee2e6;
-            img{
-                width: 100px;
-                height: 100px;
-                border-radius: 10px;
-                object-fit: cover;
-            }
         }
 
         .actions {
-            height: 150px;
             display: flex;
-            align-items: center;
             gap: 10px;
         }
 
-        .editButton {
-            border: none;
-            background: none;
-            padding: 5px;
-            cursor: pointer;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            transition: transform 0.2s ease-in-out;
-
-            
-        }
-
-        .deleteButton {
+        .editButton, .deleteButton {
             border: none;
             background: none;
             padding: 5px;
@@ -108,13 +94,20 @@
             transition: transform 0.2s ease-in-out;
         }
 
-        .loading {
-            text-align: center;
-            padding: 20px;
+        .editButton:hover, .deleteButton:hover {
+            transform: scale(1.1);
         }
     }
+
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
 }
-.csvg{
-    width: 30px;
-    height: 30px;
+
+.csvg {
+    width: 20px;
+    height: 20px;
 }
