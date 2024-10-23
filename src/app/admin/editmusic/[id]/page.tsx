@@ -97,18 +97,22 @@ export default function EditMusic({ params }: { params: { id: string } }) {
     };
 
     const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedArtistId = e.target.value; 
+        const selectedArtistId = e.target.value;
 
         setSong((prevSong) => {
             if (prevSong) {
-                return {
-                    ...prevSong,
-                    artists: [{ id_artist: selectedArtistId, name: prevSong.artists.find(artist => artist.id_artist === selectedArtistId)?.name || "" }],
-                };
+                const existingArtists = prevSong.artists.map(artist => artist.id_artist);
+                if (!existingArtists.includes(selectedArtistId)) {
+                    return {
+                        ...prevSong,
+                        artists: [...prevSong.artists, { id_artist: selectedArtistId, name: "" }],
+                    };
+                }
             }
             return prevSong;
         });
     };
+
 
     const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedTypeId = e.target.value; 
@@ -126,13 +130,19 @@ export default function EditMusic({ params }: { params: { id: string } }) {
 
     const handleSubmit = async () => {
         setLoading(true);
-        const slug = song?.name.toLowerCase().replace(/\s+/g, "-");
 
+        const slug = song?.name.toLowerCase().replace(/\s+/g, "-");
         const songData = {
-            ...song,
+            name: song?.name,
             slug,
-            release_date: song?.release_date || null,
+            url_path: song?.url_path || "", 
+            url_cover: song?.url_cover || "", 
+            producer: song?.producer || "", 
+            composer: song?.composer || "", 
+            release_date: song?.release_date || null, 
             last_update: new Date().toISOString(),
+            artists: song.artists.map(artist => ({ id_artist: artist.id_artist })), 
+            types: song.types.map(type => ({ id_type: type.id_type })),
         };
 
         try {
@@ -155,6 +165,8 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             setLoading(false);
         }
     };
+
+
 
     return (
         <div className={styles.container}>
