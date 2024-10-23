@@ -11,6 +11,13 @@ interface Artist {
 
     
 }
+interface Lyrics {
+    id_lyrics: string;
+    id_music: string;
+    lyrics: string;
+    start_time: number;
+    end_time: number;
+}
 
 interface Type {
     id_type: string;
