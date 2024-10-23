@@ -11,6 +11,13 @@ interface Artist {
 
     
 }
+interface Lyrics {
+    id_lyrics: string;
+    id_music: string;
+    lyrics: string;
+    start_time: number;
+    end_time: number;
+}
 
 interface Type {
     id_type: string;
@@ -35,8 +42,8 @@ interface Song {
     is_show: number;
     view: number;
     favorite: number;
-    artists: string[]; // Lưu id_artist
-    types: string[];   // Lưu id_type
+    artists: string[]; 
+    types: string[];  
 }
 
 export default function AddMusic() {
@@ -68,17 +75,16 @@ export default function AddMusic() {
             .get("/artist")
             .then((response: any) => {
                 console.log("Full API response for artists:", response);
-                // Đảm bảo kiểm tra đúng cấu trúc trả về
                 if (response && response.result && response.result.artistList) {
-                    setArtists(response.result.artistList); // Lưu artistList vào state artists
+                    setArtists(response.result.artistList); 
                 } else {
                     console.error("Response data for artists is undefined or empty:", response);
-                    setArtists([]); // Nếu không có dữ liệu, khởi tạo mảng rỗng
+                    setArtists([]); 
                 }
             })
             .catch((error: any) => {
                 console.error("Lỗi fetch nghệ sĩ:", error);
-                setArtists([]); // Đặt mảng rỗng trong trường hợp lỗi
+                setArtists([]); 
             });
     }, []);
 
@@ -94,12 +100,12 @@ export default function AddMusic() {
                     setTypes(response.result.data);
                 } else {
                     console.error("Response data for types is undefined or empty:", response);
-                    setTypes([]); // Nếu không có dữ liệu, khởi tạo mảng rỗng
+                    setTypes([]); 
                 }
             })
             .catch((error: any) => {
                 console.error("Lỗi fetch thể loại:", error);
-                setTypes([]); // Đặt mảng rỗng trong trường hợp lỗi
+                setTypes([]);
             });
     }, []); 
 
@@ -188,8 +194,8 @@ export default function AddMusic() {
                     value={song.release_date || ""}
                     onChange={handleChange}
                 />
-                <h3>Chọn Nghệ sĩ</h3>
-                <select  onChange={handleArtistSelect}>
+                <select onChange={handleArtistSelect}>
+                    <option value="">Chọn nghệ sĩ</option>
                     {artists && artists.length > 0 ? (
                         artists.map(artist => (
                             <option key={artist.id_artist} value={artist.id_artist}>
@@ -201,9 +207,10 @@ export default function AddMusic() {
                     )}
                 </select>
 
-                {/* Select Thể loại */}
-                <h3>Chọn Thể loại</h3>
-                <select  onChange={handleTypeSelect}>
+                
+               
+                <select onChange={handleTypeSelect}>
+                    <option value="">Chọn thể loại</option>
                     {types && types.length > 0 ? (
                         types.map(type => (
                             <option key={type.id_type} value={type.id_type}>

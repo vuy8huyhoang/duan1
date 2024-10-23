@@ -7,11 +7,16 @@ import styles from "../EditMusic.module.scss";
 interface Artist {
     id_artist: string;
     name: string;
+    slug: string;
+    url_cover: string;
 }
 
 interface Type {
     id_type: string;
     name: string;
+    slug: string;
+    created_at: string;
+    is_show: number;
 }
 
 interface Song {
@@ -29,8 +34,8 @@ interface Song {
     is_show: number;
     view: number;
     favorite: number;
-    artists: string[]; // Store artist IDs
-    types: string[];   // Store type IDs
+    artists: { id_artist: string; name: string }[]; 
+    types: { id_type: string; name: string }[];   
 }
 
 export default function EditMusic({ params }: { params: { id: string } }) {
@@ -40,7 +45,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [formattedDate, setFormattedDate] = useState<string>("");
 
-    // Fetch artists and types
     useEffect(() => {
         axios.get("/artist").then((response: any) => {
             if (response?.result?.artistList) {
@@ -62,7 +66,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     if (response && response.result && response.result.data) {
                         const songData = response.result.data;
 
-                        // Format release date
                         if (songData.release_date) {
                             const date = new Date(songData.release_date);
                             const formatted = date.toISOString().split("T")[0];
@@ -70,7 +73,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                         }
 
                         setSong(songData);
-                        console.log("Song data after fetch:", songData); // Kiểm tra dữ liệu bài hát sau khi fetch
                     } else {
                         setSong(null);
                     }
@@ -85,7 +87,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
         }
     }, [params.id]);
 
-
     if (loading) return <p>Đang tải...</p>;
     if (!song) return <p>Không tìm thấy bài hát.</p>;
 
@@ -95,36 +96,32 @@ export default function EditMusic({ params }: { params: { id: string } }) {
     };
 
     const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedArtist = e.target.value;
+        const selectedArtistId = e.target.value; 
+
         setSong((prevSong) => {
             if (prevSong) {
-                const updatedSong = {
+                return {
                     ...prevSong,
-                    artists: [selectedArtist], // Cập nhật chỉ nghệ sĩ hiện tại
+                    artists: [{ id_artist: selectedArtistId, name: prevSong.artists.find(artist => artist.id_artist === selectedArtistId)?.name || "" }],
                 };
-                console.log("Updated song with selected artist:", updatedSong); // Kiểm tra sau khi chọn nghệ sĩ
-                return updatedSong;
             }
             return prevSong;
         });
     };
-
 
     const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedType = e.target.value;
+        const selectedTypeId = e.target.value; 
+
         setSong((prevSong) => {
             if (prevSong) {
-                const updatedSong = {
+                return {
                     ...prevSong,
-                    types: [selectedType], // Cập nhật chỉ thể loại hiện tại
+                    types: [{ id_type: selectedTypeId, name: prevSong.types.find(type => type.id_type === selectedTypeId)?.name || "" }],
                 };
-                console.log("Updated song with selected type:", updatedSong); // Kiểm tra sau khi chọn thể loại
-                return updatedSong;
             }
             return prevSong;
         });
     };
-
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -202,30 +199,29 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     value={formattedDate}
                     onChange={handleChange}
                 />
-
                 <select
-                    value={song?.artists.length ? song.artists[0] : ""}  // Hiển thị nghệ sĩ hiện tại hoặc để trống
+                    value={song?.artists.length ? song.artists[0].id_artist : ""}  
                     onChange={handleArtistSelect}
                 >
-                    <option value="">Chọn nghệ sĩ</option> {/* Placeholder cho dropdown */}
+                    <option value="">Chọn nghệ sĩ</option> 
                     {artists.map(artist => (
                         <option key={artist.id_artist} value={artist.id_artist}>
                             {artist.name}
                         </option>
                     ))}
                 </select>
-
                 <select
-                    value={song?.types.length ? song.types[0] : ""}  // Hiển thị thể loại hiện tại hoặc để trống
+                    value={song?.types.length ? song.types[0].id_type : ""}  
                     onChange={handleTypeSelect}
                 >
-                    <option value="">Chọn thể loại</option> {/* Placeholder cho dropdown */}
+                    <option value="">Chọn thể loại</option>
                     {types.map(type => (
                         <option key={type.id_type} value={type.id_type}>
                             {type.name}
                         </option>
                     ))}
                 </select>
+
             </div>
             <button onClick={handleSubmit} disabled={loading}>
                 {loading ? "Đang cập nhật..." : "Cập nhật bài hát"}
