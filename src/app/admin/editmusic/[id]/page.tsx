@@ -53,7 +53,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             }
         });
     }, []);
-
     // Fetch the song data
     useEffect(() => {
         if (params.id) {
@@ -158,7 +157,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             setLoading(false);
         }
     };
-
     return (
         <div className={styles.container}>
             <h2>Chỉnh sửa bài hát</h2>
@@ -229,7 +227,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     ))}
                 </select>
             </div>
-
             <button onClick={handleSubmit} disabled={loading}>
                 {loading ? "Đang cập nhật..." : "Cập nhật bài hát"}
             </button>

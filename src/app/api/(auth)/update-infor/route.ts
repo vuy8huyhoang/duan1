@@ -77,8 +77,6 @@ export const PATCH = async (request: Request) => {
     if (fieldsToUpdate.length === 0) {
       return throwCustomError("No fields provided for update", 400);
     }
-
-    // Construct the SQL query
     const query = `
       UPDATE User
       SET ${fieldsToUpdate.join(", ")}
