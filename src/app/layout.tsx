@@ -1,12 +1,14 @@
-"use client"
+"use client";
 import Sidebar from './component/sidebar';
-import "./globals.css"
+import "./globals.css";
 import Header from './component/header/Header';
-export default function Layout({ children }: any) {
+import { usePathname } from 'next/navigation';
+import AdminSidebar from './component/AdminSidebar';
+import AdminHeader from './component/AdminHeader';
 
-  // axios.get("/posts").then((r: any) => {
-  //   console.log(r);
-  // })
+export default function Layout({ children }: any) {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith('/admin');
 
   return (
     <html lang="en">
@@ -14,24 +16,33 @@ export default function Layout({ children }: any) {
         <title>Groove</title>
         <meta name="description" content="Soundy website description" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* <link rel="icon" href="../favicon.ico" /> */}
+        <link rel="icon" href="/logo.svg" />
         <link
           rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" // Thêm Font Awesome
-        />
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"  />
       </head>
-      <body
-      >
-        <div className="container">
-          <Sidebar />
-          <Header />
-          <div className="contain">
-            {children}
+      <body>
+        {!isAdmin ? (
+          <div className="container">
+            <Sidebar />
+            <Header />
+            <div className="contain">
+              {children}
             </div>
-        </div>
-      
+          </div>
+        ) : (
+            <div className="admin-container">
+              <AdminSidebar />
+              
+              <div className="admin-content">
+                <AdminHeader />
+                  {children}
+              </div>
+              
+              
+          </div>
+        )}
       </body>
     </html>
-
   );
 }

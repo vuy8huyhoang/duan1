@@ -4,6 +4,7 @@ import axios from 'axios';
 import styles from './style.module.scss';
 import { ReactSVG } from 'react-svg';
 import Bxh from '../component/bxh';
+import ListType from '../component/listtype';
 interface Music {
     id_music: string;
     name: string;
@@ -61,7 +62,7 @@ export default function GrooveChartPage() {
                     </div>
                 ))}
             </div>
-            <Bxh />  
+            
             {/* <div className={styles.musicList}>
                 {musicData.map((music,index) => (
                     <div key={music.id_music} className={styles.musicCard}> 
@@ -69,6 +70,9 @@ export default function GrooveChartPage() {
                     </div>
                 ))}
             </div> */}
+
+
+
             
         </div>
         

@@ -29,7 +29,7 @@ export const PATCH = async (request: Request) => {
       const query = `UPDATE User SET password = ? WHERE id_user = ?`;
       await connection.query(query, [hashedPassword, currentUser.id_user]);
 
-      return objectResponse("Change password successfully", 200);
+      return objectResponse({ message: "Change password successfully" }, 200);
     } else {
       throwCustomError("Wrong password", 400);
     }

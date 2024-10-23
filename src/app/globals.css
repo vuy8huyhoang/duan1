@@ -60,6 +60,7 @@
     font-weight: 900;
     font-style: normal;
 }
+
 .contain {
     margin-top: 100px;
     margin-left: 250px;
@@ -75,11 +76,32 @@
 }
 
 body {
+
     margin: 0;
     padding: 0;
     font-family: inter, Arial, Helvetica, sans-serif;
+    
 }
 
 * {
+    
+        box-sizing: border-box;
     font-family: inherit;
 }
+.admin-container {
+    display: flex;
+        flex-wrap: wrap;
+    background-color: #011E40;
+}
+
+.admin-content {
+    width: 88%;
+    background-color: #F5F5F5;
+    
+}
+
+.admin-children {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
