@@ -22,7 +22,7 @@ export default function GrooveChartPage() {
     useEffect(() => {
         const fetchMusicData = async () => {
             try {
-                const response = await axios.get('http://localhost:3002/api/music');
+                const response = await axios.get('http://localhost:3001/api/music');
                 setMusicData(response.data.data.slice(0, 8));  
                 console.log(setMusicData);
             } catch (error) {
