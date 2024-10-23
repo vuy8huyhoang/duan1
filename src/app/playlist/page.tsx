@@ -98,7 +98,7 @@ const PlaylistPage = () => {
   </button>
   {playlists.map((playlist) => (
     <div key={playlist.id_playlist} className={style.playlistItem}>
-      <img src="/placeholder-image.png" alt="Playlist cover" />
+      <img src="/playlist.png" alt="Playlist cover" />
       <p>{playlist.name}</p>
     </div>
   ))}
