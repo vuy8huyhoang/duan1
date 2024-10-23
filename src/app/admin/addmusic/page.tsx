@@ -1,30 +1,146 @@
-"use client"; 
-
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
+import axios from "@/lib/axios";
 import styles from "./AddMusic.module.scss";
 
+interface Artist {
+    id_artist: string;
+    name: string;
+    slug: string;
+    url_cover: string;
+
+    
+}
+
+interface Type {
+    id_type: string;
+    name: string;
+    slug: string;
+    created_at: string;
+    is_show: number;
+}
+
+interface Song {
+    id_music: string;
+    name: string;
+    slug: string;
+    url_path: string;
+    url_cover: string;
+    total_duration: string | null;
+    producer: string;
+    composer: string;
+    release_date: string | null;
+    created_at: string;
+    last_update: string;
+    is_show: number;
+    view: number;
+    favorite: number;
+    artists: string[]; // Lưu id_artist
+    types: string[];   // Lưu id_type
+}
+
 export default function AddMusic() {
-    const [song, setSong] = useState({
+    const [song, setSong] = useState<Song>({
+        id_music: "",
         name: "",
+        slug: "",
+        url_path: "",
+        url_cover: "",
+        total_duration: null,
+        producer: "",
         composer: "",
-        releaseDate: "",
-        genre: "",
-        album: "",
-        lyrics: "",
+        release_date: null,
+        created_at: new Date().toISOString(),
+        last_update: new Date().toISOString(),
+        is_show: 1,
+        view: 0,
+        favorite: 0,
+        artists: [],
+        types: [],
     });
+
+    const [artists, setArtists] = useState<Artist[]>([]);
+    const [types, setTypes] = useState<Type[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+        axios
+            .get("/artist")
+            .then((response: any) => {
+                console.log("Full API response for artists:", response);
+                // Đảm bảo kiểm tra đúng cấu trúc trả về
+                if (response && response.result && response.result.artistList) {
+                    setArtists(response.result.artistList); // Lưu artistList vào state artists
+                } else {
+                    console.error("Response data for artists is undefined or empty:", response);
+                    setArtists([]); // Nếu không có dữ liệu, khởi tạo mảng rỗng
+                }
+            })
+            .catch((error: any) => {
+                console.error("Lỗi fetch nghệ sĩ:", error);
+                setArtists([]); // Đặt mảng rỗng trong trường hợp lỗi
+            });
+    }, []);
+
+
+
+
+    useEffect(() => {
+        axios
+            .get("/type")
+            .then((response: any) => {
+                console.log("Full API response for types:", response);
+                if (response && response.result && response.result.data) {
+                    setTypes(response.result.data);
+                } else {
+                    console.error("Response data for types is undefined or empty:", response);
+                    setTypes([]); // Nếu không có dữ liệu, khởi tạo mảng rỗng
+                }
+            })
+            .catch((error: any) => {
+                console.error("Lỗi fetch thể loại:", error);
+                setTypes([]); // Đặt mảng rỗng trong trường hợp lỗi
+            });
+    }, []); 
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setSong({ ...song, [name]: value });
     };
 
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        console.log(`File uploaded: ${file?.name}`);
+    const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedArtists = Array.from(e.target.selectedOptions, option => option.value);
+        setSong({ ...song, artists: selectedArtists });
     };
 
-    const handleSubmit = () => {
-        console.log("Song data submitted:", song);
+    const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedTypes = Array.from(e.target.selectedOptions, option => option.value);
+        setSong({ ...song, types: selectedTypes });
+    };
+
+    const handleSubmit = async () => {
+        setLoading(true);
+        const slug = song.name.toLowerCase().replace(/\s+/g, '-');
+        const songData = { ...song, slug };
+
+        try {
+            const response = await axios.post("/music", songData, {
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (response.status === 200 || response.status === 201) {
+                alert("Bài hát đã được thêm thành công!");
+                window.location.href = "/admin/adminmusic";
+            } else {
+                alert("Thêm bài hát không thành công.");
+            }
+        } catch (error) {
+            console.error("Error submitting song data:", error);
+            alert("Đã xảy ra lỗi khi gửi dữ liệu.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -38,8 +154,27 @@ export default function AddMusic() {
                     value={song.name}
                     onChange={handleChange}
                 />
-                <input type="file" onChange={handleFileUpload} />
-                <input type="file" onChange={handleFileUpload} />
+                <input
+                    type="text"
+                    name="url_path"
+                    placeholder="URL video"
+                    value={song.url_path}
+                    onChange={handleChange}
+                />
+                <input
+                    type="text"
+                    name="url_cover"
+                    placeholder="URL ảnh bìa"
+                    value={song.url_cover}
+                    onChange={handleChange}
+                />
+                <input
+                    type="text"
+                    name="producer"
+                    placeholder="Nhà sản xuất"
+                    value={song.producer}
+                    onChange={handleChange}
+                />
                 <input
                     type="text"
                     name="composer"
@@ -49,31 +184,42 @@ export default function AddMusic() {
                 />
                 <input
                     type="date"
-                    name="releaseDate"
-                    value={song.releaseDate}
+                    name="release_date"
+                    value={song.release_date || ""}
                     onChange={handleChange}
                 />
-                <select name="genre" value={song.genre} onChange={handleChange}>
-                    <option value="">Chọn thể loại</option>
-                    <option value="nhac-vui">Nhạc vui</option>
-                    <option value="nhac-buon">Nhạc buồn</option>
+                <h3>Chọn Nghệ sĩ</h3>
+                <select  onChange={handleArtistSelect}>
+                    {artists && artists.length > 0 ? (
+                        artists.map(artist => (
+                            <option key={artist.id_artist} value={artist.id_artist}>
+                                {artist.name}
+                            </option>
+                        ))
+                    ) : (
+                        <option>Đang tải nghệ sĩ...</option>
+                    )}
                 </select>
-                <select name="album" value={song.album} onChange={handleChange}>
-                    <option value="">Chọn album</option>
-                    <option value="album-1">Album 1</option>
-                    <option value="album-2">Album 2</option>
+
+                {/* Select Thể loại */}
+                <h3>Chọn Thể loại</h3>
+                <select  onChange={handleTypeSelect}>
+                    {types && types.length > 0 ? (
+                        types.map(type => (
+                            <option key={type.id_type} value={type.id_type}>
+                                {type.name}
+                            </option>
+                        ))
+                    ) : (
+                        <option>Đang tải thể loại...</option>
+                    )}
                 </select>
+
             </div>
 
-            <textarea
-                name="lyrics"
-                placeholder="Lyrics bài hát"
-                value={song.lyrics}
-                onChange={handleChange}
-                className={styles.lyricsInput}
-            />
-
-            <button onClick={handleSubmit}>Thêm bài hát</button>
+            <button onClick={handleSubmit} disabled={loading}>
+                {loading ? "Đang gửi..." : "Thêm bài hát"}
+            </button>
         </div>
     );
 }

@@ -121,14 +121,14 @@ export const PATCH = async (request: Request, context: any) => {
     Checker.checkIncluded(is_show, [0, 1]);
 
     // Check permission
-    const currentUser = await getCurrentUser(request);
+    const currentUser = await getCurrentUser(request, true);
     if (currentUser?.role !== "admin")
       throwCustomError("Not enough permission", 403);
 
     // Check unique slug if slug is provided
     if (slug) {
       const [slugList]: Array<any> = await connection.query(
-        `select id_music from Music where slug = ? and id_user <> '${currentUser.id_user}'`,
+        `select id_music from Music where slug = ? and id_music <> '${currentUser.id_user}'`,
         [slug, id_music]
       );
       if (slugList.length !== 0) throwCustomError("Slug is already exist", 409);

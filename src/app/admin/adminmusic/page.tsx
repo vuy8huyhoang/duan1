@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "@/lib/axios"; 
 import styles from "./AdminMusic.module.scss";
 import { ReactSVG } from "react-svg";
+import Link from 'next/link';
 
 
 interface Song {
@@ -12,12 +13,14 @@ interface Song {
     releaseDate: string;
     created_at: string;
     producer: string;
+    url_cover: string;
 }
 
 export default function AdminMusic() {
     const [songs, setSongs] = useState<Song[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
+   
     useEffect(() => {
         axios
             .get("/music")
@@ -52,9 +55,11 @@ export default function AdminMusic() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>Quản lý bài hát</h1>
+                <Link href="/admin/addmusic" passHref>
                 <button className={styles.addButton}>
                     <ReactSVG className={styles.csvg} src="/plus.svg" />
-                    <div className={styles.addText}>Tạo bài hát mới</div></button>
+                        <div className={styles.addText} >Tạo bài hát mới</div></button>
+                </Link>
             </div>
 
             <div className={styles.tableContainer}>
@@ -65,6 +70,7 @@ export default function AdminMusic() {
                                 <input type="checkbox" />
                             </th>
                             <th>ID</th>
+                            <th>Hình ảnh</th>
                             <th>Tên bài hát</th>
                             <th>Ca sĩ</th>
                             <th>Ngày tạo</th>
@@ -86,13 +92,18 @@ export default function AdminMusic() {
                                         <input type="checkbox" />
                                     </td>
                                     <td>#{song.id_music}</td>
+                                    <td><img src={song.url_cover} alt="" /></td>
+
                                     <td>{song.name}</td>
                                     <td>{song.composer}</td>
                                     <td>{song.created_at}</td>
                                     <td>{song.producer}</td>
                                     <td className={styles.actions}>
                                         <button className={styles.editButton}>
-                                            <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" /></button>
+                                            <Link href={`/admin/editmusic/${song.id_music}`} passHref>
+                                                <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
+                                            </Link>
+                                        </button>
                                         <button className={styles.deleteButton}  onClick={() => handleDeleteSong(song.id_music)}>
                                             <ReactSVG className={styles.csvg} src="/Rectangle 79.svg"  /></button>
                                     </td>
