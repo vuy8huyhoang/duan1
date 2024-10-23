@@ -342,7 +342,7 @@ VALUES
         'VN',
         "2024-08-17T15:11:11z",
         "2024-08-17T15:11:11z",
-        1
+        0
     ),
     (
         'u0005',
@@ -1488,9 +1488,10 @@ values
 insert into MusicTypeDetail (id_music, id_type)
 values
     -- Em của ngày hôm qua (V-Pop)
-    ('m0001', 't0001'),
+    -- ('m0001', 't0001'),
     
     -- Chắc ai đó sẽ về (V-Pop)
+    ('m0002', 't0003'),
     ('m0002', 't0001'),
     
     -- Không phải dạng vừa đâu (Rap)
