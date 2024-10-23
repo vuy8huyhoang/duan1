@@ -58,7 +58,7 @@ export const PATCH = async (request: Request, context: any) => {
     // Check unique slug if slug is provided
     if (slug) {
       const [slugList]: Array<any> = await connection.query(
-        `select id_artist from Artist where slug = ? and id_user <> '${currentUser.id_user}'`,
+        `select id_artist from Artist where slug = ?`,
         [slug]
       );
       if (slugList.length !== 0) throwCustomError("Slug is already exist", 409);
