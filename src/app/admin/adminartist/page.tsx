@@ -1,69 +1,69 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "@/lib/axios"; 
-import styles from "./AdminMusic.module.scss";
+import axios from "@/lib/axios";
+import styles from "./AdminArtist.module.scss";
 import { ReactSVG } from "react-svg";
 import Link from 'next/link';
 
-
-interface Song {
-    id_music: string;
+interface Artist {
+    id_artist: string;
     name: string;
-    composer: string;
-    releaseDate: string;
+    slug: string | null;
+    url_cover: string | null;
     created_at: string;
-    producer: string;
-    url_cover: string;
+    last_update: string;
+    is_show: number;
+    followers: number;
 }
 
-export default function AdminMusic() {
-    const [songs, setSongs] = useState<Song[]>([]);
+export default function AdminArtist() {
+    const [artists, setArtists] = useState<Artist[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
-   
     useEffect(() => {
         axios
-            .get("/music")
+            .get("/artist")
             .then((response: any) => {
                 console.log("Full API response:", response);
-                if (response && response.result && response.result.data) {
-                    setSongs(response.result.data);
+                if (response?.result?.artistList) {
+                    setArtists(response.result.artistList);
                 } else {
                     console.error("Response data is undefined or empty:", response);
-                    setSongs([]); 
+                    setArtists([]);
                 }
             })
             .catch((error: any) => {
-                console.error("Lỗi fetch bài hát:", error);
-                setSongs([]); 
+                console.error("Lỗi fetch ca sĩ:", error);
+                setArtists([]);
             })
             .finally(() => {
-                setLoading(false); 
+                setLoading(false);
             });
     }, []);
 
-    const handleDeleteSong = async (id_music: string) => {
+    const handleDeleteArtist = async (id_artist: string) => {
         try {
-            
-            await axios.delete(`/music/${id_music}`);
-            setSongs(songs.filter((song) => song.id_music !== id_music));
+            await axios.delete(`/artist/${id_artist}`);
+            setArtists(artists.filter((artist) => artist.id_artist !== id_artist));
         } catch (error) {
-            console.error("Lỗi xóa bài hát:", error);
+            console.error("Lỗi xóa ca sĩ:", error);
         }
     };
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Quản lý bài hát</h1>
-                <Link href="/admin/addmusic" passHref>
-                <button className={styles.addButton}>
-                    <ReactSVG className={styles.csvg} src="/plus.svg" />
-                        <div className={styles.addText} >Tạo bài hát mới</div></button>
+                <h1>Quản lý ca sĩ</h1>
+                <Link href="/admin/addartist" passHref>
+                    <button className={styles.addButton}>
+                        <ReactSVG className={styles.csvg} src="/plus.svg" />
+                        <div className={styles.addText}>Tạo ca sĩ mới</div>
+                    </button>
                 </Link>
             </div>
 
             <div className={styles.tableContainer}>
-                <table className={styles.songTable}>
+                <table className={styles.artistTable}>
                     <thead>
                         <tr>
                             <th>
@@ -71,32 +71,28 @@ export default function AdminMusic() {
                             </th>
                             <th>ID</th>
                             <th>Hình ảnh</th>
-                            <th>Tên bài hát</th>
-                            <th>Ca sĩ</th>
+                            <th>Tên ca sĩ</th>
                             <th>Ngày tạo</th>
-                            <th>Nhà sản xuất</th>
                             <th>Tính năng</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={7} className={styles.loading}>
+                                <td colSpan={6} className={styles.loading}>
                                     Đang tải...
                                 </td>
                             </tr>
                         ) : (
-                            songs.map((song) => (
-                                <tr key={song.id_music}>
+                            artists.map((artist) => (
+                                <tr key={artist.id_artist}>
                                     <td>
                                         <input type="checkbox" />
                                     </td>
-                                    <td>#{song.id_music}</td>
-                                    <td><img src={song.url_cover} alt="" /></td>
-
-                                    <td>{song.name}</td>
-                                    <td>{song.composer}</td>
-                                    <td>{new Date(song.created_at).toLocaleString('vi-VN', {
+                                    <td>#{artist.id_artist}</td>
+                                    <td><img src={artist.url_cover || "/default-cover.jpg"} alt={artist.name} /></td>
+                                    <td>{artist.name}</td>
+                                    <td>{new Date(artist.created_at).toLocaleString('vi-VN', {
                                         year: 'numeric',
                                         month: '2-digit',
                                         day: '2-digit',
@@ -104,16 +100,15 @@ export default function AdminMusic() {
                                         minute: '2-digit',
                                         hour12: false
                                     })}</td>
-
-                                    <td>{song.producer}</td>
                                     <td className={styles.actions}>
                                         <button className={styles.editButton}>
-                                            <Link href={`/admin/editmusic/${song.id_music}`} passHref>
+                                            <Link href={`/admin/editartist/${artist.id_artist}`} passHref>
                                                 <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
                                             </Link>
                                         </button>
-                                        <button className={styles.deleteButton}  onClick={() => handleDeleteSong(song.id_music)}>
-                                            <ReactSVG className={styles.csvg} src="/Rectangle 79.svg"  /></button>
+                                        <button className={styles.deleteButton} onClick={() => handleDeleteArtist(artist.id_artist)}>
+                                            <ReactSVG className={styles.csvg} src="/Rectangle 79.svg" />
+                                        </button>
                                     </td>
                                 </tr>
                             ))

@@ -77,7 +77,7 @@ const AdminSidebar: React.FC = () => {
                 </li>
                 <li>
                     <Link
-                        href="#"
+                        href="/admin/adminartist"
                         className={`${styles.menuItem} ${activeItem === 'Quản lý ca sĩ' ? styles.active : ''}`}
                         onClick={() => handleMenuClick('Quản lý ca sĩ')}
                     >
