@@ -1,0 +1,113 @@
+.container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .addButton {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        .csvg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .addText {
+            font-size: 14px;
+        }
+
+        &:hover {
+            background-color: #218838;
+        }
+    }
+}
+
+.tableContainer {
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.typeTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+
+    thead {
+        background-color: #343a40;
+        color: white;
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+        }
+    }
+
+    tbody {
+        tr {
+            &:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editButton, .deleteButton {
+            border: none;
+            background: none;
+            padding: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .editButton:hover, .deleteButton:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+}
+
+.csvg {
+    width: 20px;
+    height: 20px;
+}
