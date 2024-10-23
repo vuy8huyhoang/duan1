@@ -110,12 +110,11 @@ const ListMusic: React.FC = () => {
                                 </button>
                             </div>
                         </div>                   
-                        <Link href={`/musicdetail/${album.id}`} className={style.albumTitle}>
+                    
                         <div className={style.songInfo}>
-                            <div className={style.songName}>{album.name}</div>
-                            <div className={style.composerName}>{album.composer}</div>
+                                <div className={style.songName}><Link href={`/musicdetail/${album.id}`}>{album.name}</Link></div>
+                            <div className={style.composerName}><Link href={`/musicdetail/${album.id}`}>{album.composer}</Link></div>
                         </div>
-                        </Link>
                         <div className={style.songControls}>
                             <i className="fas fa-heart"></i>
                             <i className="fas fa-ellipsis-h"></i>
