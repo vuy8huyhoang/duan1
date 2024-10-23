@@ -23,9 +23,9 @@ export default function EditArtist({ params }: { params: { id: string } }) {
             axios
                 .get(`/artist/${params.id}`)
                 .then((response: any) => {
-                    if(response?.result?.artistList) {
-                        setArtist(response.result.artistList);
-                        console.log(setArtist);
+                    console.log("Full API response for artist:", response);
+                    if (response?.result?.data) {
+                        setArtist(response.result.data); 
                     } else {
                         console.error("Không tìm thấy nghệ sĩ:", response);
                         setArtist(null);
@@ -53,7 +53,6 @@ export default function EditArtist({ params }: { params: { id: string } }) {
 
         setLoading(true);
 
-        // Tạo slug từ tên nghệ sĩ
         const slug = artist.name.toLowerCase().replace(/\s+/g, '-');
         const artistData = { ...artist, slug };
 
@@ -64,7 +63,7 @@ export default function EditArtist({ params }: { params: { id: string } }) {
 
             if (response.status === 200 || response.status === 204) {
                 alert("Nghệ sĩ đã được cập nhật thành công!");
-                window.location.href = "/admin/adminartist"; 
+                window.location.href = "/admin/adminartist";
             } else {
                 alert("Cập nhật nghệ sĩ không thành công.");
             }
