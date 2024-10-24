@@ -118,19 +118,28 @@
 }
 
 .songName {
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+
+    a {
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+    }
 }
 
 .composerName {
-    color: #b3b3b3;
-    font-size: 14px;
-    margin-top: 5px;
+    a {
+        color: #b3b3b3;
+        font-size: 14px;
+        margin-top: 5px;
+        text-decoration: none;
+        z-index: 1;
+    }
 }
 
 .overlay {
@@ -184,6 +193,7 @@
 .songControls i:hover {
     color: white;
 }
+
 /* Chỉ bài hát đang phát hiển thị nút pause khi hover */
 .playing:hover .overlay {
     opacity: 1;

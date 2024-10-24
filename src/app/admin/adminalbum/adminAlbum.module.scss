@@ -26,13 +26,17 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
-        .csvg{
+        
+
+        .csvg {
             width: 20px;
             height: 20px;
         }
-        .addText{
+
+        .addText {
             font-size: 14px;
         }
+
         &:hover {
             background-color: #218838;
         }
@@ -46,7 +50,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.songTable {
+.albumTable {
     width: 100%;
     border-collapse: collapse;
 
@@ -70,7 +74,8 @@
         td {
             padding: 10px;
             border-bottom: 1px solid #dee2e6;
-            img{
+
+            img {
                 width: 100px;
                 height: 100px;
                 border-radius: 10px;
@@ -109,13 +114,15 @@
             transition: transform 0.2s ease-in-out;
         }
 
+
         .loading {
             text-align: center;
             padding: 20px;
         }
     }
 }
-.csvg{
+
+.csvg {
     width: 30px;
     height: 30px;
 }
