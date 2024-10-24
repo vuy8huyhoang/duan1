@@ -57,7 +57,11 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             }
         });
     }, []);
+<<<<<<< HEAD
 
+=======
+    // Fetch the song data
+>>>>>>> 582d9ecc1d8066acec5ca2242e6ce2b1a26bfe81
     useEffect(() => {
         if (params.id) {
             axios
@@ -246,7 +250,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 </select>
 
             </div>
-
             <button onClick={handleSubmit} disabled={loading}>
                 {loading ? "Đang cập nhật..." : "Cập nhật bài hát"}
             </button>
