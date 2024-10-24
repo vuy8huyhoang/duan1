@@ -1,17 +1,23 @@
 
 'use client'
 import React, { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from '@/lib/axios';
 import style from './songdetail.module.scss';   
+import AlbumHot from '@/app/component/albumhot';
+import MusicPartner from '@/app/component/musicpartner';
 interface Music {
     id_music: number;
     name: string;
     url_cover: string;
     url_path: string;
-    artist: string;
-    genre: string;
-    release: string;
+    artists:{
+        name:string;
+    }[];
+    types:{
+        name:string;
+    }[];
+    release_date: string;
     composer: string;
     total_duration: string | null;
 }
@@ -20,10 +26,21 @@ const SongDetailPage: React.FC = ({params}) => {
     const id = params.id;
     const [musicdetail, setMusic] = useState<Music | null>(null);
     const [loading, setLoading] = useState(true);
+    function formatDate(isoString) {
+        // Chuyển đổi chuỗi ISO thành đối tượng Date
+        const date = new Date(isoString);
+      
+        // Lấy ngày, tháng và năm
+        const day = date.getUTCDate().toString().padStart(2, '0');
+        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0
+        const year = date.getUTCFullYear();
+      
+        // Trả về chuỗi theo định dạng ngày/tháng/năm
+        return `${day}/${month}/${year}`;
+      }
     useEffect(() => {
         axios.get(`/music/${id}`)
             .then((response: any) => {
-                console.log(response);
                 if (response && response.result.data) {
                     setMusic(response.result.data);
                 } else {
@@ -31,7 +48,7 @@ const SongDetailPage: React.FC = ({params}) => {
                 }
             })
             .catch((error: any) => {
-                console.error('Lỗi fetch chi tiết album', error);
+                console.error('Error fetching album details', error);
             })
             .finally(() => {
                 setLoading(false);
@@ -45,17 +62,31 @@ const SongDetailPage: React.FC = ({params}) => {
         return <p>Không tìm thấy music</p>;
     }
     return (
-        <div className={style.modalOverlay}>
-            <div className={style.modalContent}>
-                <h2>{musicdetail.name}</h2>
-                <img src={musicdetail.url_cover} alt={musicdetail.name} className={style.coverImage} />
-                <p><strong>Ca sĩ:</strong> {musicdetail.artist}</p>
-                <p><strong>Thể loại:</strong> {musicdetail.genre}</p>
-                <p><strong>Ngày phát hành:</strong> {musicdetail.release}</p>
-                <p><strong>Nhà soạn nhạc:</strong> {musicdetail.composer}</p>
-                <audio controls src={musicdetail.url_path}></audio>
-            </div>
+        <div className={style.contentwrapper}>
+                    <div className={style.modalContent}>
+                        <div className={style.modalContentRight}>
+                        
+                        <img src={musicdetail.url_cover} alt={musicdetail.name} className={style.coverImage} />
+                        <h2>{musicdetail.name}</h2>
+                        <p><strong>Ca sĩ:</strong> {musicdetail.artists.map(artist=>artist.name).join(",")}</p>
+                        </div>
+
+                       <div className={style.modalContentLeft}>
+                        <p>Bài Hát</p>
+                        <div className={style.songContent}>
+                            <p className={style.songTitle}> {musicdetail.name}</p>
+                            {musicdetail.release_date && <p className={style.songArtist}> {formatDate(musicdetail.release_date)}</p>}
+                            <p className={style.songDuration}> {musicdetail.composer}</p>
+                           
+                        </div>
+                        <audio controls src={musicdetail.url_path}></audio>
+                       </div>
+                        
+                    </div>
+                    <AlbumHot />
+                    <MusicPartner />  
         </div>
+        
     );
 };
 

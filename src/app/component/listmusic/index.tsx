@@ -4,8 +4,8 @@ import style from './listmusic.module.scss';
 import { ReactSVG } from 'react-svg';
 import Link from 'next/link';
 
-interface Album {
-    id: number;
+interface Mussic {
+    id_music: number;
     name: string;
     url_cover: string;
     url_path: string;
@@ -21,12 +21,14 @@ interface Album {
 
 
 const ListMusic: React.FC = () => {
-    const [albums, setAlbums] = useState<Album[]>([]);
-    const [currentSong, setCurrentSong] = useState<Album | null>(null);
+    const [albums, setAlbums] = useState<Mussic[]>([]);
+    const [currentSong, setCurrentSong] = useState<Mussic | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [hoveredSong, setHoveredSong] = useState<number | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>('Tất cả');
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    
+      
 
     useEffect(() => {
         axios.get('/music')
@@ -46,8 +48,8 @@ const ListMusic: React.FC = () => {
         }
     }, [currentSong]);
 
-    const handlePlayPause = (album: Album) => {
-        if (currentSong?.id === album.id && isPlaying) {
+    const handlePlayPause = (album: Mussic) => {
+        if (currentSong?.id_music === album.id_music && isPlaying) {
             audioRef.current?.pause();
             setIsPlaying(false);
         } else {
@@ -85,43 +87,51 @@ const ListMusic: React.FC = () => {
             </div>
 
             <div className={style.albumList}>
-                {filteredAlbums.map((album) => (
+                {filteredAlbums.map((album) => {
+                    console.log(album)
+                    return (
+                        (
                     
-                    <div
-                        key={album.id}
-                        className={style.songCard}
-                        onMouseEnter={() => setHoveredSong(album.id)}
-                        onMouseLeave={() => setHoveredSong(null)}
-                    >
-                        <div className={style.albumCoverWrapper}>
-                            <img src={album.url_cover} alt={album.name} className={style.albumCover} />
-                            <div className={style.overlay}>
-                                <button
-                                    className={style.playButton}
-                                    onClick={() => handlePlayPause(album)}
-                                >
-                                    {album.id === currentSong?.id && isPlaying ? (
-                                        <i className="fas fa-pause"></i>
-                                    ) : hoveredSong === album.id ? (
-                                        <i className="fas fa-play"></i>
-                                    ) : (
-                                        <i className="fas fa-play"></i>
-                                    )}
-                                </button>
+                            <div
+                                key={album.id_music}
+                                className={style.songCard}
+                                onMouseEnter={() => setHoveredSong(album.id_music)}
+                                onMouseLeave={() => setHoveredSong(null)}
+                            >
+                                <div className={style.albumCoverWrapper}>
+                                    <img src={album.url_cover} alt={album.name} className={style.albumCover} />
+                                    <div className={style.overlay}>
+                                        <button
+                                            className={style.playButton}
+                                            onClick={() => handlePlayPause(album)}
+                                        >
+                                            {album.id_music === currentSong?.id_music && isPlaying ? (
+                                                <i className="fas fa-pause"></i>
+                                            ) : hoveredSong === album.id_music ? (
+                                                <i className="fas fa-play"></i>
+                                            ) : (
+                                                <i className="fas fa-play"></i>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>             
+                                {/* <div className={style.songName}><Link href={`/musicdetail/${album.id_music}`}>{album.name}</Link></div>
+                                <div className={style.composerName}><Link href={`/musicdetail/${album.id_music}`}>{album.composer}</Link></div>       */}
+                                <Link href={`/musicdetail/${album.id_music}`} className={style.albumTitle}>
+                                <div className={style.songInfo}>
+                                    <div className={style.songName}>{album.name}</div>
+                                    <div className={style.composerName}>{album.composer}</div>
+                                </div>
+                                </Link>
+                                <div className={style.songControls}>
+                                    <i className="fas fa-heart"></i>
+                                    <i className="fas fa-ellipsis-h"></i>
+                                </div>
                             </div>
-                        </div>                   
-                        <Link href={`/musicdetail/${album.id}`} className={style.albumTitle}>
-                        <div className={style.songInfo}>
-                            <div className={style.songName}>{album.name}</div>
-                            <div className={style.composerName}>{album.composer}</div>
-                        </div>
-                        </Link>
-                        <div className={style.songControls}>
-                            <i className="fas fa-heart"></i>
-                            <i className="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                ))}
+                        )
+                    )
+                }
+                )}
             </div>
 
             <audio ref={audioRef}></audio>
