@@ -57,24 +57,32 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             }
         });
     }, []);
-
-    // Fetch the song data
     useEffect(() => {
         if (params.id) {
             axios
                 .get(`/music/${params.id}`)
                 .then((response: any) => {
-                    if (response && response.result && response.result.data) {
-                        const songData = response.result.data;
+                    console.log("Full API response:", response);  
+                    if (response?.result) {
+                        const songData = response.result;
 
+                        // Xử lý release_date
                         if (songData.release_date) {
-                            const date = new Date(songData.release_date);
-                            const formatted = date.toISOString().split("T")[0];
-                            setFormattedDate(formatted);
+                            try {
+                                const date = new Date(songData.release_date);
+                                const formatted = date.toISOString().split("T")[0];
+                                setFormattedDate(formatted);
+                            } catch (error) {
+                                console.error("Lỗi khi xử lý release_date:", error);
+                            }
+                        } else {
+                            setFormattedDate(""); 
                         }
 
                         setSong(songData);
+                        console.log("Song data:", songData); 
                     } else {
+                        console.log("Không tìm thấy bài hát:", response);  
                         setSong(null);
                     }
                 })
@@ -88,9 +96,14 @@ export default function EditMusic({ params }: { params: { id: string } }) {
         }
     }, [params.id]);
 
-    if (loading) return <p>Đang tải...</p>;
-    if (!song) return <p>Không tìm thấy bài hát.</p>;
 
+    console.log("params.id:", params.id);
+    if (loading) return <p>Đang tải...</p>;
+    if (!song) {
+        console.log("Song is null or undefined", song);
+        return <p>Không tìm thấy bài hát.</p>;
+    }
+    console.log("Song data to display: ", song);
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setSong({ ...song, [name]: value } as Song);
@@ -207,12 +220,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     value={song?.composer || ""}
                     onChange={handleChange}
                 />
-                <input
-                    type="date"
-                    name="release_date"
-                    value={formattedDate}
-                    onChange={handleChange}
-                />
+                
                 <select
                     value={song?.artists.length ? song.artists[0].id_artist : ""}  
                     onChange={handleArtistSelect}
@@ -237,7 +245,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 </select>
 
             </div>
-
             <button onClick={handleSubmit} disabled={loading}>
                 {loading ? "Đang cập nhật..." : "Cập nhật bài hát"}
             </button>

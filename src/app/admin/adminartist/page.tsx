@@ -9,7 +9,7 @@ interface Artist {
     id_artist: string;
     name: string;
     slug: string | null;
-    url_cover: string | null;
+    url_cover: string ;
     created_at: string;
     last_update: string;
     is_show: number;
@@ -90,14 +90,12 @@ export default function AdminArtist() {
                                         <input type="checkbox" />
                                     </td>
                                     <td>#{artist.id_artist}</td>
-                                    <td><img src={artist.url_cover || "/default-cover.jpg"} alt={artist.name} /></td>
+                                    <td><img src={artist.url_cover} alt={artist.name} /></td>
                                     <td>{artist.name}</td>
                                     <td>{new Date(artist.created_at).toLocaleString('vi-VN', {
                                         year: 'numeric',
                                         month: '2-digit',
                                         day: '2-digit',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
                                         hour12: false
                                     })}</td>
                                     <td className={styles.actions}>
