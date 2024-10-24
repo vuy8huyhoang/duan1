@@ -47,8 +47,8 @@ export default function EditMusic({ params }: { params: { id: string } }) {
 
     useEffect(() => {
         axios.get("/artist").then((response: any) => {
-            if (response?.result?.artistList) {
-                setArtists(response.result.artistList);
+            if (response && response.result && response.result.data) {
+                setArtists(response.result.data);
             }
         });
         axios.get("/type").then((response: any) => {

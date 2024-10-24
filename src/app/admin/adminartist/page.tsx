@@ -25,8 +25,8 @@ export default function AdminArtist() {
             .get("/artist")
             .then((response: any) => {
                 console.log("Full API response:", response);
-                if (response?.result?.artistList) {
-                    setArtists(response.result.artistList);
+                if (response && response.result && response.result.data) {
+                    setArtists(response.result.data);
                 } else {
                     console.error("Response data is undefined or empty:", response);
                     setArtists([]);
