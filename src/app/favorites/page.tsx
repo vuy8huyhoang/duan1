@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from '@/lib/axios';
-import style from './albumdetail.module.scss';
+import style from './favorites.module.scss';
 
 
 

@@ -18,6 +18,7 @@ interface Music {
     url_path: string | null;
     total_duration: string | null;
     artist?: Artist; 
+    producer:string;
 }
 
 interface AlbumDetail {
@@ -78,7 +79,7 @@ export default function AlbumDetail({ params }) {
                     <div className={style.songHeader}>
                         <span className={style.songNumber}></span>
                         <span className={style.songTitle}>Tên bài hát</span>
-                        <span className={style.songArtist}>Nghệ sĩ</span>
+                        <span className={style.songArtist}>Nhà Sản Xuất</span>
                         <span className={style.songDuration}>Thời gian</span>
                     </div>
                     <ul className={style.songList}>
@@ -91,7 +92,7 @@ export default function AlbumDetail({ params }) {
                                         {track.name ? track.name : 'Chưa có tên bài hát'}
                                     </span>
                                     <span className={style.songArtist}>
-                                        {track.artist ? track.artist.name : 'Chưa có nghệ sĩ'}
+                                        {track.producer ? track.producer : 'Chưa có nghệ sĩ'}
                                     </span>
                                     <span className={style.songDuration}>
                                         {track.total_duration ? track.total_duration : 'Chưa có thời lượng'}

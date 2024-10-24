@@ -1,20 +1,24 @@
+"use client"
 import { useState, useEffect } from 'react';
 import styles from './sidebar.module.scss';
 import { ReactSVG } from 'react-svg';
-
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { clsx } from 'clsx';
 export default function Sidebar() {
-    const [activeItem, setActiveItem] = useState<string>('Khám Phá'); // Khởi tạo trạng thái mặc định
+    const [activeItem, setActiveItem] = useState<string>('Khám Phá');
+    const pathname = usePathname();
 
-    // Hàm xử lý khi click vào menu
+    console.log(pathname);
     const handleMenuClick = (item: string, path: string) => {
         setActiveItem(item);
         if (typeof window !== 'undefined') {
-            localStorage.setItem('activeItem', item); // Lưu vào localStorage
-            window.location.href = path; // Điều hướng sang trang mới
+            localStorage.setItem('activeItem', item);
+            window.location.href = path;
         }
     };
 
-    // Kiểm tra giá trị từ localStorage khi component mount
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const storedItem = localStorage.getItem('activeItem');
@@ -22,7 +26,7 @@ export default function Sidebar() {
                 setActiveItem(storedItem);
             }
         }
-    }, []); // Chạy khi component mount lần đầu
+    }, []);
 
     return (
         <div className={styles.sidebar}>
@@ -33,69 +37,88 @@ export default function Sidebar() {
             </div>
             <ul className={styles.menu}>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Thư Viện' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Thư Viện', '/playlist')}
+
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Group (1).svg" />
-                    <span>Thư Viện</span>
+                    <Link href="/thuvien" className={clsx(styles.menuItem, { [styles.active]: pathname === "/thuvien" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Group (1).svg" />
+                        <span>Thư Viện</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Khám Phá' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Khám Phá', '/')}
                 >
-                    <ReactSVG className={styles.csvg} src="/earth_light.svg" />
-                    <span>Khám Phá</span>
+                    <Link href="/" className={clsx(styles.menuItem, { [styles.active]: pathname === "/" })}>
+
+                        <ReactSVG className={styles.csvg} src="/earth_light.svg" />
+                        <span>Khám Phá</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === '#groovechart' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('#groovechart', '/groovechart')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Vector (1).svg" />
-                    <span>#groovechart</span>
+
+                    <Link href="/groovechart" className={clsx(styles.menuItem, { [styles.active]: pathname === "/groovechart" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Vector (1).svg" />
+                        <span>#groovechart</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'BXH Nhạc Mới' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('BXH Nhạc Mới', '#')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Vector (2).svg" />
-                    <span>BXH Nhạc Mới</span>
+                    <Link href="/bxh" className={clsx(styles.menuItem, { [styles.active]: pathname === "/bxh" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Vector (2).svg" />
+                        <span>BXH Nhạc Mới</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Chủ Đề & Thể Loại' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Chủ Đề & Thể Loại', '/type')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/type_light.svg" />
-                    <span>Chủ Đề & Thể Loại</span>
+                    <Link href="/type" className={clsx(styles.menuItem, { [styles.active]: pathname === "/type" })}>
+
+                        <ReactSVG className={styles.csvg} src="/type_light.svg" />
+                        <span>Chủ Đề & Thể Loại</span>
+                    </Link>
                 </li>
             </ul>
             <ul className={styles.submenu}>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Nghe gần đây' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Nghe gần đây', '#')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Frame 10.svg" />
-                    <span>Nghe gần đây</span>
+                    <Link href="/history" className={clsx(styles.menuItem, { [styles.active]: pathname === "/history" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Frame 10.svg" />
+                        <span>Nghe gần đây</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Bài hát yêu thích' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Bài hát yêu thích', '#')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Frame 10 (1).svg" />
-                    <span>Bài hát yêu thích</span>
+                    <Link href="/favorites" className={clsx(styles.menuItem, { [styles.active]: pathname === "/favorites" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Frame 10 (1).svg" />
+                        <span>Bài hát yêu thích</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Playlist' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Playlist', '#')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Frame 10 (2).svg" />
-                    <span>Playlist</span>
+                    <Link href="/playlist" className={clsx(styles.menuItem, { [styles.active]: pathname === "/playlist" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Frame 10 (2).svg" />
+                        <span>Playlist</span>
+                    </Link>
                 </li>
                 <li
-                    className={`${styles.menuItem} ${activeItem === 'Album' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Album', '/album')}
+
                 >
-                    <ReactSVG className={styles.csvg} src="/Frame 10 (3).svg" />
-                    <span>Album</span>
+                    <Link href="/album" className={clsx(styles.menuItem, { [styles.active]: pathname === "/album" })}>
+
+                        <ReactSVG className={styles.csvg} src="/Frame 10 (3).svg" />
+                        <span>Album</span>
+                    </Link>
                 </li>
             </ul>
             <div className={styles.createPlaylist}>
