@@ -92,7 +92,7 @@ export default function Sidebar() {
                 </li>
                 <li
                     className={`${styles.menuItem} ${activeItem === 'Album' ? styles.active : ''}`}
-                    onClick={() => handleMenuClick('Album', '#')}
+                    onClick={() => handleMenuClick('Album', '/album')}
                 >
                     <ReactSVG className={styles.csvg} src="/Frame 10 (3).svg" />
                     <span>Album</span>

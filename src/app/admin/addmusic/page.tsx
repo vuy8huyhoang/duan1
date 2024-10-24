@@ -75,8 +75,8 @@ export default function AddMusic() {
             .get("/artist")
             .then((response: any) => {
                 console.log("Full API response for artists:", response);
-                if (response && response.result && response.result.artistList) {
-                    setArtists(response.result.artistList); 
+                if (response && response.result && response.result.data) {
+                    setArtists(response.result.data);
                 } else {
                     console.error("Response data for artists is undefined or empty:", response);
                     setArtists([]); 
