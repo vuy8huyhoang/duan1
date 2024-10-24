@@ -14,28 +14,29 @@
 
     .formGroup {
         display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
         margin-bottom: 20px;
-
-        input {
+    
+        input,
+        select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 14px;
         }
-
-        // Checkbox styles
-        label {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 10px;
+    
+        select {
+            appearance: none; /* Để loại bỏ kiểu mặc định của trình duyệt */
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease-in-out;
+            &:focus {
+                border-color: #007bff;
+            }
         }
     }
+    
 
     button {
         width: 100%;

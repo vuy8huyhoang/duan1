@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "@/lib/axios";
 import styles from "./AddType.module.scss";
 
@@ -33,13 +33,14 @@ export default function AddType() {
         const typeData = { ...type, slug };
 
         try {
-            const response = await axios.post("/type", typeData, {
+            const response:any = await axios.post("/type", typeData, {
                 headers: { "Content-Type": "application/json" },
             });
 
             if (response.status === 200 || response.status === 201) {
+                const resultData = response.data.result.data; // Lấy dữ liệu từ response
                 alert("Thể loại đã được thêm thành công!");
-                window.location.href = "/admin/types"; // Đường dẫn đến trang quản lý thể loại
+                window.location.href = "/admin/admintype";
             } else {
                 alert("Thêm thể loại không thành công.");
             }
@@ -62,17 +63,28 @@ export default function AddType() {
                     value={type.name}
                     onChange={handleChange}
                 />
-                <div>
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="is_show"
-                            checked={type.is_show === 1}
-                            onChange={() => setType({ ...type, is_show: type.is_show === 1 ? 0 : 1 })}
-                        />
-                        Hiện thị
-                    </label>
-                </div>
+                <input
+                    type="text"
+                    name="slug"
+                    placeholder="Slug (tự động tạo nếu để trống)"
+                    value={type.slug}
+                    onChange={handleChange}
+                />
+                <input
+                    type="text"
+                    name="created_at"
+                    placeholder="Ngày tạo"
+                    value={type.created_at}
+                    onChange={handleChange}
+                />
+                <select
+                    name="is_show"
+                    value={type.is_show}
+                    onChange={(e) => setType({ ...type, is_show: parseInt(e.target.value) })}>
+
+                    <option value={1}>Hiển thị</option>
+                    <option value={0}>Ẩn</option>
+                </select>
             </div>
 
             <button onClick={handleSubmit} disabled={loading}>
