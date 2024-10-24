@@ -1,7 +1,9 @@
+
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
 import style from './listalbum.module.scss'; // Import file CSS module
 import { ReactSVG } from 'react-svg';
+import Link from 'next/link';
 
 interface Album {
     id_album: string;
@@ -64,7 +66,10 @@ export default function ListAlbum() {
                                     </button>
                                 </div>
                             </div>
-                            <a className={style.albumTitle}>{album.name}</a>
+                           
+                            <Link href={`/albumdetail/${album.id_album}`} className={style.albumTitle}>
+                                {album.name}
+                            </Link>
                         </div>
                     ))
                 )}

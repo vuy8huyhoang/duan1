@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
 import style from './albumhot.module.scss';
 import { ReactSVG } from 'react-svg';
-
+import Link from 'next/link';
 interface Album {
     id_album: string;
     name: string;
@@ -67,8 +67,8 @@ export default function AlbumHot() {
                                     </button>
                                 </div>
                             </div>
-                            <a className={style.albumTitle}>{album.name}</a>
-                            <p className={style.artistName}>{album.artist.name}</p>
+                            <Link href={`/albumdetail/${album.id_album}`}  className={style.albumTitle}>{album.name}</Link>
+                            <Link href={`/albumdetail/${album.id_album}`} className={style.artistName}>{album.artist.name}</Link>
                         </div>
                     ))
                 )}

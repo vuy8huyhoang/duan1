@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import styles from './style.module.scss';
 import { ReactSVG } from 'react-svg';
 import Bxh from '../component/bxh';
@@ -22,11 +22,13 @@ export default function GrooveChartPage() {
     useEffect(() => {
         const fetchMusicData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/music');
-                setMusicData(response.data.data.slice(0, 8));  
-                console.log(setMusicData);
+                axios.get("music")
+                .then((res:any)=> 
+                    {console.log(res); 
+                    setMusicData(res.result.data.slice(0,8))})
+
             } catch (error) {
-                console.error('Lỗi fetch album', error);
+                console.error('Lỗi fetch music', error);
             } finally {
                 setLoading(false);
             }
