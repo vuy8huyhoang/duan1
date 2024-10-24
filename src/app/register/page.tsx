@@ -1,8 +1,6 @@
 'use client'; // Đảm bảo sử dụng 'use client' đúng chính tả
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 const RegisterPage = () => {
   const router = useRouter();
   const [fullname, setFullname] = useState("");
