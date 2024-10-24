@@ -116,19 +116,23 @@ export default function AddMusic() {
     };
 
     const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedArtists = Array.from(e.target.selectedOptions, option => option.value);
+        const selectedArtists = Array.from(e.target.selectedOptions, option => option.value);  // Chỉ lấy ID nghệ sĩ
         setSong({ ...song, artists: selectedArtists });
     };
 
     const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedTypes = Array.from(e.target.selectedOptions, option => option.value);
+        const selectedTypes = Array.from(e.target.selectedOptions, option => option.value);  // Chỉ lấy ID thể loại
         setSong({ ...song, types: selectedTypes });
     };
+
+
 
     const handleSubmit = async () => {
         setLoading(true);
         const slug = song.name.toLowerCase().replace(/\s+/g, '-');
         const songData = { ...song, slug };
+
+        console.log("Submitting song data:", songData);  // Log dữ liệu trước khi gửi request
 
         try {
             const response = await axios.post("/music", songData, {
@@ -148,6 +152,8 @@ export default function AddMusic() {
             setLoading(false);
         }
     };
+
+
 
     return (
         <div className={styles.container}>
@@ -188,12 +194,7 @@ export default function AddMusic() {
                     value={song.composer}
                     onChange={handleChange}
                 />
-                <input
-                    type="date"
-                    name="release_date"
-                    value={song.release_date || ""}
-                    onChange={handleChange}
-                />
+                
                 <select onChange={handleArtistSelect}>
                     <option value="">Chọn nghệ sĩ</option>
                     {artists && artists.length > 0 ? (
@@ -207,9 +208,7 @@ export default function AddMusic() {
                     )}
                 </select>
 
-                
-               
-                <select onChange={handleTypeSelect}>
+                <select  onChange={handleTypeSelect}>
                     <option value="">Chọn thể loại</option>
                     {types && types.length > 0 ? (
                         types.map(type => (
@@ -221,6 +220,7 @@ export default function AddMusic() {
                         <option>Đang tải thể loại...</option>
                     )}
                 </select>
+
 
             </div>
 
