@@ -7,7 +7,7 @@ interface Type {
     id_type: string;
     name: string;
     slug: string;
-    created_at: string;
+    
     is_show: number;
 }
 
@@ -16,7 +16,7 @@ export default function AddType() {
         id_type: "",
         name: "",
         slug: "",
-        created_at: new Date().toISOString(),
+        
         is_show: 1,
     });
 
@@ -38,7 +38,6 @@ export default function AddType() {
             });
 
             if (response.status === 200 || response.status === 201) {
-                const resultData = response.data.result.data; // Lấy dữ liệu từ response
                 alert("Thể loại đã được thêm thành công!");
                 window.location.href = "/admin/admintype";
             } else {
@@ -70,13 +69,7 @@ export default function AddType() {
                     value={type.slug}
                     onChange={handleChange}
                 />
-                <input
-                    type="text"
-                    name="created_at"
-                    placeholder="Ngày tạo"
-                    value={type.created_at}
-                    onChange={handleChange}
-                />
+                
                 <select
                     name="is_show"
                     value={type.is_show}
