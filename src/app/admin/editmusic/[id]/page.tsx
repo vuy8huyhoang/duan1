@@ -57,17 +57,12 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             }
         });
     }, []);
-<<<<<<< HEAD
-
-=======
-    // Fetch the song data
->>>>>>> 582d9ecc1d8066acec5ca2242e6ce2b1a26bfe81
     useEffect(() => {
         if (params.id) {
             axios
                 .get(`/music/${params.id}`)
                 .then((response: any) => {
-                    console.log("Full API response:", response);  // Log toàn bộ phản hồi từ API
+                    console.log("Full API response:", response);  
                     if (response?.result) {
                         const songData = response.result;
 
@@ -81,13 +76,13 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                                 console.error("Lỗi khi xử lý release_date:", error);
                             }
                         } else {
-                            setFormattedDate("");  // Nếu release_date là null, đặt giá trị mặc định
+                            setFormattedDate(""); 
                         }
 
                         setSong(songData);
-                        console.log("Song data:", songData);  // Log dữ liệu bài hát
+                        console.log("Song data:", songData); 
                     } else {
-                        console.log("Không tìm thấy bài hát:", response);  // Thông báo nếu không có dữ liệu
+                        console.log("Không tìm thấy bài hát:", response);  
                         setSong(null);
                     }
                 })
