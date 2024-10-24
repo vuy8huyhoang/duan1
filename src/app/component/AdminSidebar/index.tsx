@@ -21,7 +21,7 @@ const AdminSidebar: React.FC = () => {
                 setActiveItem(storedItem);
             }
         }
-    }, []); // Chạy khi component mount lần đầu
+    }, []); 
 
     return (
         <div className={styles.sidebar}>
