@@ -1,26 +1,45 @@
-import React, { useEffect, useState } from 'react'; 
-import styles from './Header.module.scss'; // Import SCSS
+import React, { useEffect, useState } from 'react';
+import styles from './Header.module.scss';
 import Login from '../auth';
+
 const Header: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
-  const [userFullname, setUserFullname] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState(false); 
 
   const toggleLoginPopup = () => {
-    setShowLogin((prev) => !prev);
+    if (!isLoggedIn) {
+      setShowLogin((prev) => !prev);
+    }
   };
+
+  const toggleDropdown = () => {
+    if (isLoggedIn) {
+      setShowDropdown((prev) => !prev); 
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+    setShowDropdown(false);
+  };
+
   useEffect(() => {
-    const fullname = localStorage.getItem("fullname");
-    setUserFullname(fullname);
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      setIsLoggedIn(true);
+      setShowLogin(false); 
+    } else {
+      setIsLoggedIn(false);
+    }
   }, [showLogin]);
+
   return (
-    
     <header className={styles.zingHeader}>
       <div className={styles.headerLeft}>
         <i className="fa fa-arrow-left"></i>
         <i className="fa fa-arrow-right"></i>
-      </div>
-      <div className={styles.headerRight}>
-      
       </div>
       <div className={styles.headerCenter}>
         <input type="text" placeholder="Tìm kiếm bài hát, tác giả..." />
@@ -28,16 +47,36 @@ const Header: React.FC = () => {
       <div className={styles.headerRight}>
         <img src="/Vector.svg" alt="" />
         <img src="/Group 24.svg" alt="" />
-        <img
-          src="/Setting.svg"
-          alt="Settings"
-          onClick={toggleLoginPopup}
-          style={{ cursor: 'pointer' }}
-        />
-        {userFullname && <span className={styles.username}>{userFullname}</span>}
 
+        <div className={styles.settingsContainer}>
+          {isLoggedIn ? (
+            <>
+              <img
+                src="/Setting.svg"
+                alt="Settings"
+                onClick={toggleDropdown}
+                style={{ cursor: 'pointer' }}
+              />
+              {showDropdown && (
+                <div className={styles.dropdownMenu}>
+                  <ul>
+                    <li onClick={handleLogout}>Đăng xuất</li>
+                  </ul>
+                </div>
+              )}
+            </>
+          ) : (
+            <img
+              src="/Setting.svg"
+              alt="Settings"
+              onClick={toggleLoginPopup}
+              style={{ cursor: 'pointer' }}
+            />
+          )}
+        </div>
       </div>
-      {showLogin && <Login closePopup={toggleLoginPopup} />}
+
+      {showLogin && !isLoggedIn && <Login closePopup={toggleLoginPopup} />}
     </header>
   );
 };

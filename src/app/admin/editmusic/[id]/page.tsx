@@ -64,7 +64,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 .then((response: any) => {
                     if (response?.result?.data) {
                         const songData = response.result.data;
-                        setSong(songData); // Gán dữ liệu vào state
+                        setSong(songData); 
                         console.log("Song data fetched:", songData);
                     }
                 })

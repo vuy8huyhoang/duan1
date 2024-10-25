@@ -17,7 +17,6 @@ export default function ListType() {
     useEffect(() => {
         axios.get('/type')
             .then((response: any) => {
-                console.log('Full API response:', response); 
 
                 if (response && response.result && response.result.data) {
                     setAlbumData(response.result.data.slice(0, 3)); 
