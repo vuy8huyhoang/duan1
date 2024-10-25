@@ -5,6 +5,17 @@ import styles from "./adminAlbum.module.scss";
 import { ReactSVG } from "react-svg";
 import Link from 'next/link';
 
+interface Music {
+    id_music: string;
+    name: string;
+    url_path: string;
+}
+
+interface Artist {
+    id_artist: string;
+    name: string;
+}
+
 interface Album {
     id_album: string;
     name: string;
@@ -12,10 +23,8 @@ interface Album {
     created_at: string;
     is_show: number;
     url_cover: string;
-    artist: {
-        id_artist: string;
-        name: string;
-    };
+    artist: Artist;
+    musics: Music[]; // Thêm trường để lưu trữ danh sách bài hát
 }
 
 export default function AdminAlbum() {
@@ -57,9 +66,10 @@ export default function AdminAlbum() {
             <div className={styles.header}>
                 <h1>Quản lý Album</h1>
                 <Link href="/admin/addalbum" passHref>
-                <button className={styles.addButton}>
-                    <ReactSVG className={styles.csvg} src="/plus.svg" />
-                    <div className={styles.addText}>Tạo album mới</div></button>
+                    <button className={styles.addButton}>
+                        <ReactSVG className={styles.csvg} src="/plus.svg" />
+                        <div className={styles.addText}>Tạo album mới</div>
+                    </button>
                 </Link>
             </div>
 
@@ -75,13 +85,14 @@ export default function AdminAlbum() {
                             <th>Tên album</th>
                             <th>Nghệ sĩ</th>
                             <th>Ngày phát hành</th>
+                            <th>Bài hát</th> {/* Thêm cột bài hát */}
                             <th>Tính năng</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={7} className={styles.loading}>
+                                <td colSpan={8} className={styles.loading}> {/* Cập nhật colspan */}
                                     Đang tải...
                                 </td>
                             </tr>
@@ -100,6 +111,17 @@ export default function AdminAlbum() {
                                         month: '2-digit',
                                         day: '2-digit'
                                     })}</td>
+                                    <td>
+                                        <ul className={styles.songList}> {/* Thêm className vào đây */}
+                                            {album.musics.map((music) => (
+                                                <li key={music.id_music}>
+                                                    <a href={music.url_path} target="_blank" rel="noopener noreferrer">
+                                                        {music.name}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </td>
                                     <td className={styles.actions}>
                                         <button className={styles.editButton}>
                                             <Link href={`/admin/editalbum/${album.id_album}`} passHref>
