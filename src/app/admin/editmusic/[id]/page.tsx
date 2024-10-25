@@ -34,8 +34,8 @@ interface Song {
     is_show: number;
     view: number;
     favorite: number;
-    artists: { id_artist: string; name: string }[]; 
-    types: { id_type: string; name: string }[];   
+    artists: { id_artist: string; name: string }[];
+    types: { id_type: string; name: string }[];
 }
 
 export default function EditMusic({ params }: { params: { id: string } }) {
@@ -62,33 +62,14 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             axios
                 .get(`/music/${params.id}`)
                 .then((response: any) => {
-                    console.log("Full API response:", response);  
-                    if (response?.result) {
-                        const songData = response.result;
-
-                        // Xử lý release_date
-                        if (songData.release_date) {
-                            try {
-                                const date = new Date(songData.release_date);
-                                const formatted = date.toISOString().split("T")[0];
-                                setFormattedDate(formatted);
-                            } catch (error) {
-                                console.error("Lỗi khi xử lý release_date:", error);
-                            }
-                        } else {
-                            setFormattedDate(""); 
-                        }
-
-                        setSong(songData);
-                        console.log("Song data:", songData); 
-                    } else {
-                        console.log("Không tìm thấy bài hát:", response);  
-                        setSong(null);
+                    if (response?.result?.data) {
+                        const songData = response.result.data;
+                        setSong(songData); // Gán dữ liệu vào state
+                        console.log("Song data fetched:", songData);
                     }
                 })
                 .catch((error: any) => {
                     console.error("Lỗi fetch bài hát:", error);
-                    setSong(null);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -128,7 +109,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
 
 
     const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedTypeId = e.target.value; 
+        const selectedTypeId = e.target.value;
 
         setSong((prevSong) => {
             if (prevSong) {
@@ -148,13 +129,13 @@ export default function EditMusic({ params }: { params: { id: string } }) {
         const songData = {
             name: song?.name,
             slug,
-            url_path: song?.url_path || "", 
-            url_cover: song?.url_cover || "", 
-            producer: song?.producer || "", 
-            composer: song?.composer || "", 
-            release_date: song?.release_date || null, 
+            url_path: song?.url_path || "",
+            url_cover: song?.url_cover || "",
+            producer: song?.producer || "",
+            composer: song?.composer || "",
+            release_date: song?.release_date || null,
             last_update: new Date().toISOString(),
-            artists: song.artists.map(artist => ({ id_artist: artist.id_artist })), 
+            artists: song.artists.map(artist => ({ id_artist: artist.id_artist })),
             types: song.types.map(type => ({ id_type: type.id_type })),
         };
 
@@ -217,23 +198,24 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     type="text"
                     name="composer"
                     placeholder="Người sáng tác"
-                    value={song?.composer || ""}
+                    value={song.composer || ""}
                     onChange={handleChange}
                 />
-                
+
                 <select
-                    value={song?.artists.length ? song.artists[0].id_artist : ""}  
+                    value={song?.artists && song.artists.length > 0 ? song.artists[0].id_artist : ""}
                     onChange={handleArtistSelect}
                 >
-                    <option value="">Chọn nghệ sĩ</option> 
+                    <option value="">Chọn nghệ sĩ</option>
                     {artists.map(artist => (
                         <option key={artist.id_artist} value={artist.id_artist}>
                             {artist.name}
                         </option>
                     ))}
                 </select>
+
                 <select
-                    value={song?.types.length ? song.types[0].id_type : ""}  
+                    value={song?.types && song.types.length > 0 ? song.types[0].id_type : ""}
                     onChange={handleTypeSelect}
                 >
                     <option value="">Chọn thể loại</option>
@@ -243,6 +225,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                         </option>
                     ))}
                 </select>
+
 
             </div>
             <button onClick={handleSubmit} disabled={loading}>

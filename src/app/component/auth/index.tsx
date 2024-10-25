@@ -9,8 +9,6 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState(false); // Trạng thái xác thực email
-  const [verificationCode, setVerificationCode] = useState(""); // Mã xác thực OTP
 
   const [user, setUser] = useState({
     email: "",
@@ -39,15 +37,9 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
-    setErrors({ ...errors, [name]: "" }); // Xóa lỗi khi người dùng bắt đầu nhập lại
+    setErrors({ ...errors, [name]: "" }); 
   };
 
-  // Xử lý thay đổi mã xác thực
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVerificationCode(e.target.value);
-  };
-
-  // Xác thực email
   const validateEmail = (email: string): boolean => {
     if (!email) {
       setErrors((prev) => ({ ...prev, email: "Email là bắt buộc." }));
@@ -63,7 +55,6 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     return true;
   };
 
-  // Xác thực mật khẩu (ít nhất 6 ký tự)
   const validatePassword = (password: string): boolean => {
     if (password.length < 6) {
       setErrors((prev) => ({
@@ -75,7 +66,6 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     return true;
   };
 
-  // Xác thực form đăng ký
   const validateRegisterForm = (): boolean => {
     let isValid = true;
 
@@ -135,7 +125,6 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     }
   };
 
-  // Hàm xử lý đăng ký và gửi mã xác thực email
   const handleRegister = async (): Promise<void> => {
     if (!validateRegisterForm()) return;
 
@@ -146,19 +135,8 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       });
 
       if (response.status === 200 || response.status === 201) {
-        alert("Đăng ký thành công! Vui lòng kiểm tra email để xác thực.");
-
-        // Gửi yêu cầu gửi mã xác thực email
-        const verificationResponse = await axios.post("/verify-email", {
-          email: user.email,
-        });
-
-        if (verificationResponse.status === 200) {
-          alert("Đã gửi mã xác thực tới email của bạn!");
-          setIsVerifying(true);
-        } else {
-          alert("Lỗi khi gửi mã xác thực.");
-        }
+        alert("Đăng ký thành công!");
+        setIsLogin(true); 
       } else {
         alert("Đăng ký không thành công.");
       }
@@ -170,37 +148,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     }
   };
 
-  const handleVerifyEmail = async (): Promise<void> => {
-    if (!verificationCode) {
-      alert("Vui lòng nhập mã xác thực.");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const response = await axios.post("/verify-email", {
-        email: user.email,
-        token: verificationCode, 
-      });
-
-      if (response.status === 200) {
-        alert("Xác thực email thành công!");
-        setIsLogin(true); 
-        setIsVerifying(false); 
-      } else {
-        alert("Mã xác thực không hợp lệ.");
-      }
-    } catch (error) {
-      console.error("Lỗi khi xác thực email:", error);
-      alert("Đã xảy ra lỗi khi xác thực email.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleForgotPasswordSubmit = async (
-    e: React.FormEvent
-  ): Promise<void> => {
+  const handleForgotPasswordSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     const emailInput = (e.target as HTMLFormElement).email.value;
@@ -214,169 +162,145 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       const response = await axios.post("/forgot-password", {
         email: emailInput,
       });
-      if (response.status === 200) {
+
         alert("Đã gửi yêu cầu khôi phục mật khẩu. Vui lòng kiểm tra email của bạn.");
-      } else {
-        alert("Yêu cầu khôi phục mật khẩu không thành công.");
-      }
-    } catch (error) {
+
+    } catch (error:any) {
       console.error("Lỗi khi yêu cầu khôi phục mật khẩu:", error);
-      alert("Đã xảy ra lỗi khi kết nối với server.");
+
+      if (error.response) {
+        if (error.response.status === 404) {
+          alert("Email không tồn tại. Vui lòng kiểm tra lại.");
+        } else {
+          alert("Đã xảy ra lỗi khi yêu cầu khôi phục mật khẩu.");
+        }
+      } else {
+        alert("Đã xảy ra lỗi khi kết nối với server.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
+
+
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popupContent}>
         {!isForgotPassword ? (
-          !isVerifying ? (
-            <>
-              <h2>{isLogin ? "Đăng nhập vào Groove" : "Đăng ký vào Groove"}</h2>
-              <form>
-                {isLogin ? (
-                  <>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="email">Email</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Email"
-                        value={user.email}
-                        onChange={handleChange}
-                        required
-                      />
-                      {errors.email && <p className={styles.errorText}>{errors.email}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="password">Mật khẩu</label>
-                      <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Mật khẩu"
-                        value={user.password}
-                        onChange={handleChange}
-                        required
-                      />
-                      {errors.password && <p className={styles.errorText}>{errors.password}</p>}
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.loginBtn}
-                      onClick={handleLogin}
-                      disabled={loading}
-                    >
-                      {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="fullname">Họ và tên</label>
-                      <input
-                        type="text"
-                        id="fullname"
-                        name="fullname"
-                        placeholder="Họ và tên"
-                        value={user.fullname}
-                        onChange={handleChange}
-                        required
-                      />
-                      {errors.fullname && <p className={styles.errorText}>{errors.fullname}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="email">Email</label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Email"
-                        value={user.email}
-                        onChange={handleChange}
-                        required
-                      />
-                      {errors.email && <p className={styles.errorText}>{errors.email}</p>}
-                    </div>
-                    <div className={styles.formGroup}>
-                      <label htmlFor="password">Mật khẩu</label>
-                      <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Mật khẩu"
-                        value={user.password}
-                        onChange={handleChange}
-                        required
-                      />
-                      {errors.password && <p className={styles.errorText}>{errors.password}</p>}
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.loginBtn}
-                      onClick={handleRegister}
-                      disabled={loading}
-                    >
-                      {loading ? "Đang gửi..." : "Đăng ký"}
-                    </button>
-                  </>
-                )}
-              </form>
-              <p className={styles.forgotPassword}>
-                {isLogin && (
-                  <a href="#" onClick={handleForgotPassword}>
-                    Quên mật khẩu của bạn?
-                  </a>
-                )}
-              </p>
-              <p className={styles.additionalInfo}>
-                {isLogin ? (
-                  <>
-                    Bạn chưa có tài khoản?{" "}
-                    <a href="#" onClick={toggleForm}>Đăng ký Groove</a>
-                  </>
-                ) : (
-                  <>
-                    Bạn đã có tài khoản?{" "}
-                    <a href="#" onClick={toggleForm}>Đăng nhập vào Groove</a>
-                  </>
-                )}
-              </p>
-            </>
-          ) : (
-            <>
-              <h2>Xác thực Email</h2>
-              <form>
-                <div className={styles.formGroup}>
-                  <label htmlFor="verificationCode">Mã xác thực</label>
-                  <input
-                    type="text"
-                    id="verificationCode"
-                    name="verificationCode"
-                    placeholder="Nhập mã xác thực"
-                    value={verificationCode}
-                    onChange={handleCodeChange}
-                    required
-                  />
-                </div>
-                <button
-                  type="button"
-                  className={styles.loginBtn}
-                  onClick={handleVerifyEmail}
-                  disabled={loading}
-                >
-                  {loading ? "Đang xác thực..." : "Xác thực"}
-                </button>
-              </form>
-              <p className={styles.backToLogin}>
-                <a href="#" onClick={() => setIsVerifying(false)}>
-                  Trở lại đăng ký
+          <>
+            <h2>{isLogin ? "Đăng nhập vào Groove" : "Đăng ký vào Groove"}</h2>
+            <form>
+              {isLogin ? (
+                <>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="Email"
+                      value={user.email}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.email && <p className={styles.errorText}>{errors.email}</p>}
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="password">Mật khẩu</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Mật khẩu"
+                      value={user.password}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.password && <p className={styles.errorText}>{errors.password}</p>}
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.loginBtn}
+                    onClick={handleLogin}
+                    disabled={loading}
+                  >
+                    {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="fullname">Họ và tên</label>
+                    <input
+                      type="text"
+                      id="fullname"
+                      name="fullname"
+                      placeholder="Họ và tên"
+                      value={user.fullname}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.fullname && <p className={styles.errorText}>{errors.fullname}</p>}
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      placeholder="Email"
+                      value={user.email}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.email && <p className={styles.errorText}>{errors.email}</p>}
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label htmlFor="password">Mật khẩu</label>
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Mật khẩu"
+                      value={user.password}
+                      onChange={handleChange}
+                      required
+                    />
+                    {errors.password && <p className={styles.errorText}>{errors.password}</p>}
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.loginBtn}
+                    onClick={handleRegister}
+                    disabled={loading}
+                  >
+                    {loading ? "Đang gửi..." : "Đăng ký"}
+                  </button>
+                </>
+              )}
+            </form>
+            <p className={styles.forgotPassword}>
+              {isLogin && (
+                <a href="#" onClick={handleForgotPassword}>
+                  Quên mật khẩu của bạn?
                 </a>
-              </p>
-            </>
-          )
+              )}
+            </p>
+            <p className={styles.additionalInfo}>
+              {isLogin ? (
+                <>
+                  Bạn chưa có tài khoản?{" "}
+                  <a href="#" onClick={toggleForm}>Đăng ký Groove</a>
+                </>
+              ) : (
+                <>
+                  Bạn đã có tài khoản?{" "}
+                  <a href="#" onClick={toggleForm}>Đăng nhập vào Groove</a>
+                </>
+              )}
+            </p>
+          </>
         ) : (
           <>
             <h2>Khôi phục mật khẩu</h2>

@@ -9,7 +9,6 @@ export default function Sidebar() {
     const [activeItem, setActiveItem] = useState<string>('Khám Phá');
     const pathname = usePathname();
 
-    console.log(pathname);
     const handleMenuClick = (item: string, path: string) => {
         setActiveItem(item);
         if (typeof window !== 'undefined') {
