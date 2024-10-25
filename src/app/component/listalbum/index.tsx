@@ -32,7 +32,7 @@ export default function ListAlbum() {
             })
             .finally(() => {
                 setLoading(false); 
-            });
+            })  ;
     }, []);
 
     return (

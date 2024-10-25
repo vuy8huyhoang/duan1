@@ -8,7 +8,6 @@ interface Album {
     name: string;
     url_cover: string;
     artist: string;
-    genre: string;
     created_at: string;
     composer: string;
     url_path: string;

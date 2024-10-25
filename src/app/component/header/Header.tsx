@@ -1,12 +1,17 @@
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import styles from './Header.module.scss'; // Import SCSS
-import Login from '../login';
+import Login from '../auth';
 const Header: React.FC = () => {
-  const [showLogin, setShowLogin] = useState(false); // State to control the popup
+  const [showLogin, setShowLogin] = useState(false);
+  const [userFullname, setUserFullname] = useState<string | null>(null);
 
   const toggleLoginPopup = () => {
-    setShowLogin((prev) => !prev); // Toggle the popup visibility
+    setShowLogin((prev) => !prev);
   };
+  useEffect(() => {
+    const fullname = localStorage.getItem("fullname");
+    setUserFullname(fullname);
+  }, [showLogin]);
   return (
     
     <header className={styles.zingHeader}>
@@ -29,6 +34,8 @@ const Header: React.FC = () => {
           onClick={toggleLoginPopup}
           style={{ cursor: 'pointer' }}
         />
+        {userFullname && <span className={styles.username}>{userFullname}</span>}
+
       </div>
       {showLogin && <Login closePopup={toggleLoginPopup} />}
     </header>
