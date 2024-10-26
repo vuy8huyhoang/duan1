@@ -49,11 +49,11 @@ export default function EditComposer({ params }: { params: { id: string } }) {
 
         setLoading(true);
 
-        const slug = composer.name.toLowerCase().replace(/\s+/g, '-');
+        
+        const composerData = { ...composer };
 
         try {
-            console.log(composer);
-            const response = await axios.patch(`/composer/${composer.id_composer}`, {
+            const response = await axios.patch(`/composer/${composer.id_composer}`, composerData, {
                 headers: { "Content-Type": "application/json" },
             });
 
