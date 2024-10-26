@@ -10,7 +10,7 @@ interface Composer {
     last_update:string;
 }
 
-export default function EditArtist({ params }: { params: { id: string } }) {
+export default function EditComposer({ params }: { params: { id: string } }) {
     const [composer, setComposer] = useState<Composer | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -50,16 +50,16 @@ export default function EditArtist({ params }: { params: { id: string } }) {
         setLoading(true);
 
         const slug = composer.name.toLowerCase().replace(/\s+/g, '-');
-        const artistData = { ...composer, slug };
 
         try {
-            const response = await axios.patch(`/composer/${composer.id_composer}`, artistData, {
+            console.log(composer);
+            const response = await axios.patch(`/composer/${composer.id_composer}`, {
                 headers: { "Content-Type": "application/json" },
             });
 
             if (response.status === 200 || response.status === 204) {
                 alert("Nghệ sĩ đã được cập nhật thành công!");
-                window.location.href = "/admin/adminartist";
+                window.location.href = "/admin/admincomposer";
             } else {
                 alert("Cập nhật nghệ sĩ không thành công.");
             }
