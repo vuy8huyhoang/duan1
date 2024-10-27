@@ -1,49 +1,79 @@
-"use client";
-import { useEffect, useState } from "react";
-import axios from "@/lib/axios";
-import { useRouter } from "next/router";
+// app/type/[slug]/page.tsx
+"use client"; // Đánh dấu đây là một Client Component
 
-interface Type {
-  id_type: string;
-  name: string;
-  slug: string;
-  created_at: string;
-  is_show: number;
-}
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation'; // Sử dụng useParams để lấy id_type
+import axios from '@/lib/axios';
+import styles from './ct.module.scss'; 
 
-const TypeDetail = () => {
-  const router = useRouter();
-  const { id } = router.query; // Lấy id từ URL
-  const [type, setType] = useState<Type | null>(null); // Khai báo kiểu cho state
+const TypeDetailPage = ({ params }) => {
+  const idType = params.id; 
+  const [musicList, setMusicList] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      axios.get(`/type/${id}`)
-        .then(response => {
-          setType(response.data.data);
-        })
-        .catch(err => {
-          setError(err.response?.data || "An error occurred");
-        });
+  const fetchMusicList = async () => {
+    try {
+      const response: any = await axios.get(`/music?id_type=${idType}`); 
+      console.log(response.result);
+      setMusicList(response.result.data || []); 
+    } catch (err) {
+      console.error("Error fetching music list:", err);
+      setError("Có lỗi xảy ra khi tải danh sách nhạc.");
+    } finally {
+      setLoading(false);
     }
-  }, [id]);
+  };
 
-  if (error) return <div>Error: {error}</div>;
-  if (!type) return <div>Loading...</div>;
+  useEffect(() => {
+    if (idType) {
+      fetchMusicList();
+    }
+  }, [idType]); 
+
+  if (loading) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>
-      <h1>Type Details</h1>
-      <p>ID: {type.id_type}</p>
-      <p>Name: {type.name}</p>
-      <p>Slug: {type.slug}</p>
-      <p>Created At: {new Date(type.created_at).toLocaleString()}</p>
-      <p>Is Show: {type.is_show ? "Yes" : "No"}</p>
+      <h1>Danh Sách Nhạc Thể Loại: {idType}</h1>
+      <div className={styles.albumList}>
+        {Array.isArray(musicList) && musicList.length > 0 ? (
+          musicList.map((music: any) => (
+            <div key={music.id_music} className={styles.songCard}>
+              <div className={styles.albumCoverWrapper}>
+                <img src={music.url_cover} alt={music.name} className={styles.albumCover} />
+                <div className={styles.overlay}>
+                  <button className={styles.playButton}>
+                    <i className="fas fa-play"></i>
+                  </button>
+                </div>
+              </div>
+              <div className={styles.songInfo}>
+                <div className={styles.songName}>
+                  <a href={`/musicdetail/${music.id_music}`}>{music.name}</a>
+                </div>
+                <div className={styles.composerName}>
+                  <a href={`/musicdetail/${music.id_music}`}>{music.composer}</a>
+                </div>
+              </div>
+              <div className={styles.songControls}>
+                <i className="fas fa-heart"></i>
+                <i className="fas fa-ellipsis-h"></i>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div>Không có nhạc nào trong thể loại này.</div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default TypeDetail;
-
-
+export default TypeDetailPage;

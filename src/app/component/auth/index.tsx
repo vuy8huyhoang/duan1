@@ -16,6 +16,12 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     password: "",
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    fullname: "",
+    password: "",
+  });
+
   const toggleForm = () => {
     setIsLogin(!isLogin);
   };
@@ -31,13 +37,61 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
+    setErrors({ ...errors, [name]: "" }); 
+  };
+
+  const validateEmail = (email: string): boolean => {
+    if (!email) {
+      setErrors((prev) => ({ ...prev, email: "Email là bắt buộc." }));
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrors((prev) => ({ ...prev, email: "Email không hợp lệ." }));
+      return false;
+    }
+
+    return true;
+  };
+
+  const validatePassword = (password: string): boolean => {
+    if (password.length < 6) {
+      setErrors((prev) => ({
+        ...prev,
+        password: "Mật khẩu phải có ít nhất 6 ký tự.",
+      }));
+      return false;
+    }
+    return true;
+  };
+
+  const validateRegisterForm = (): boolean => {
+    let isValid = true;
+
+    if (!user.fullname) {
+      setErrors((prev) => ({ ...prev, fullname: "Họ và tên là bắt buộc." }));
+      isValid = false;
+    }
+
+    if (!validateEmail(user.email)) {
+      isValid = false;
+    }
+
+    if (!validatePassword(user.password)) {
+      isValid = false;
+    }
+
+    return isValid;
   };
 
   const handleLogin = async (): Promise<void> => {
+    if (!validateEmail(user.email) || !validatePassword(user.password)) {
+      return;
+    }
+
     setLoading(true);
     try {
-      console.log("Login data to submit:", user);
-
       const response = await axios.post("/login", {
         email: user.email,
         password: user.password,
@@ -50,15 +104,8 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
         const { accessToken } = result;
         localStorage.setItem("accessToken", accessToken);
         alert("Đăng nhập thành công!");
-        const userProfile = await fetchUserProfile();
-        if (userProfile && userProfile.fullname) {
-          localStorage.setItem("fullname", userProfile.fullname);
-        } else {
-          console.error("Error fetching the fullname from userProfile");
-        }
 
-
-        closePopup(); 
+        closePopup();
       } else {
         console.error("Phản hồi không như mong đợi:", data);
         alert("Đăng nhập không thành công: Phản hồi không như mong đợi.");
@@ -67,7 +114,9 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       console.error("Lỗi khi đăng nhập:", error);
 
       if (error.response) {
-        alert(`Lỗi đăng nhập: ${error.response.data?.message || "Kiểm tra lại thông tin đăng nhập."}`);
+        alert(
+          `Lỗi đăng nhập: ${error.response.data?.message || "Kiểm tra lại thông tin đăng nhập."}`
+        );
       } else {
         alert("Đã xảy ra lỗi khi kết nối với server.");
       }
@@ -76,54 +125,11 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     }
   };
 
+  const handleRegister = async (): Promise<void> => {
+    if (!validateRegisterForm()) return;
 
-
-  const fetchUserProfile = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-
-      if (!token) {
-        alert("Vui lòng đăng nhập.");
-        return null;
-      }
-
-      const response = await axios.get("/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log("Full Profile Response:", response);
-
-      const profileData = response?.data?.result;
-      console.log("User Profile Data:", profileData);
-
-      if (profileData && profileData.fullname) {
-        return profileData;  
-      } else {
-        console.error("Fullname không tồn tại trong phản hồi:", profileData);
-        return null;
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      alert("Không thể lấy thông tin người dùng.");
-      return null;
-    }
-  };
-
-
-
-
-
-
-
-
-
-  const handleRegister = async () => {
     setLoading(true);
     try {
-      console.log("User data to submit:", user); 
-
       const response = await axios.post("/register", user, {
         headers: { "Content-Type": "application/json" },
       });
@@ -141,6 +147,42 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       setLoading(false);
     }
   };
+
+  const handleForgotPasswordSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+
+    const emailInput = (e.target as HTMLFormElement).email.value;
+
+    if (!validateEmail(emailInput)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post("/forgot-password", {
+        email: emailInput,
+      });
+
+        alert("Đã gửi yêu cầu khôi phục mật khẩu. Vui lòng kiểm tra email của bạn.");
+
+    } catch (error:any) {
+      console.error("Lỗi khi yêu cầu khôi phục mật khẩu:", error);
+
+      if (error.response) {
+        if (error.response.status === 404) {
+          alert("Email không tồn tại. Vui lòng kiểm tra lại.");
+        } else {
+          alert("Đã xảy ra lỗi khi yêu cầu khôi phục mật khẩu.");
+        }
+      } else {
+        alert("Đã xảy ra lỗi khi kết nối với server.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   return (
     <div className={styles.popupOverlay}>
@@ -162,6 +204,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                       onChange={handleChange}
                       required
                     />
+                    {errors.email && <p className={styles.errorText}>{errors.email}</p>}
                   </div>
                   <div className={styles.formGroup}>
                     <label htmlFor="password">Mật khẩu</label>
@@ -174,6 +217,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                       onChange={handleChange}
                       required
                     />
+                    {errors.password && <p className={styles.errorText}>{errors.password}</p>}
                   </div>
                   <button
                     type="button"
@@ -197,6 +241,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                       onChange={handleChange}
                       required
                     />
+                    {errors.fullname && <p className={styles.errorText}>{errors.fullname}</p>}
                   </div>
                   <div className={styles.formGroup}>
                     <label htmlFor="email">Email</label>
@@ -209,6 +254,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                       onChange={handleChange}
                       required
                     />
+                    {errors.email && <p className={styles.errorText}>{errors.email}</p>}
                   </div>
                   <div className={styles.formGroup}>
                     <label htmlFor="password">Mật khẩu</label>
@@ -221,6 +267,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                       onChange={handleChange}
                       required
                     />
+                    {errors.password && <p className={styles.errorText}>{errors.password}</p>}
                   </div>
                   <button
                     type="button"
@@ -257,12 +304,13 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
         ) : (
           <>
             <h2>Khôi phục mật khẩu</h2>
-            <form>
+            <form onSubmit={handleForgotPasswordSubmit}>
               <div className={styles.formGroup}>
                 <label htmlFor="email">Email hoặc tên người dùng</label>
                 <input
                   type="text"
                   id="email"
+                  name="email"
                   placeholder="Email hoặc tên người dùng"
                 />
               </div>

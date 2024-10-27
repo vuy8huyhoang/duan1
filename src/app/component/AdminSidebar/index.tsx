@@ -81,6 +81,15 @@ const AdminSidebar: React.FC = () => {
                 </li>
                 <li>
                     <Link
+                        href="/admin/admincomposer"
+                        className={clsx(styles.menuItem, { [styles.active]: pathname === "/admin/admincomposer" })}
+                    >
+                        <ReactSVG className={styles.csvg} src="/iconamoon_music-artist.svg" />
+                        <div className={styles.menuText}>Quản lý nhạc sĩ</div>
+                    </Link>
+                </li>
+                <li>
+                    <Link
                         href="/admin/adminuser"
                         className={clsx(styles.menuItem, { [styles.active]: pathname === "/admin/adminuser" })}
                     >

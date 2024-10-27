@@ -1,73 +1,72 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "@/lib/axios";
-import styles from "./AdminArtist.module.scss";
 import { ReactSVG } from "react-svg";
 import Link from 'next/link';
+import styles from "./AdminComposer.module.scss";
 
-interface Artist {
-    id_artist: string;
+interface Composer {
+    id_composer: string;
     name: string;
-    slug: string | null;
-    url_cover: string;
     created_at: string;
     last_update: string;
-    is_show: number;
-    followers: number;
 }
 
-export default function AdminArtist() {
-    const [artists, setArtists] = useState<Artist[]>([]);
+export default function AdminComposer() {
     const [loading, setLoading] = useState<boolean>(true);
+    const [composers, setComposers] = useState<Composer[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const artistsPerPage = 10; // Số lượng nghệ sĩ mỗi trang
+    const [itemsPerPage] = useState<number>(10);
 
     useEffect(() => {
         axios
-            .get("/artist")
+            .get("/composer")
             .then((response: any) => {
                 console.log("Full API response:", response);
                 if (response && response.result && response.result.data) {
-                    setArtists(response.result.data);
+                    setComposers(response.result.data);
                 } else {
                     console.error("Response data is undefined or empty:", response);
-                    setArtists([]);
+                    setComposers([]);
                 }
             })
             .catch((error: any) => {
                 console.error("Lỗi fetch ca sĩ:", error);
-                setArtists([]);
+                setComposers([]);
             })
             .finally(() => {
                 setLoading(false);
             });
     }, []);
 
-    const handleDeleteArtist = async (id_artist: string) => {
+    const handleDeleteArtist = async (id_composer: string) => {
         try {
-            await axios.delete(`/artist/${id_artist}`);
-            setArtists(artists.filter((artist) => artist.id_artist !== id_artist));
+            await axios.delete(`/composer/${id_composer}`);
+            setComposers(composers.filter((composer) => composer.id_composer !== id_composer));
         } catch (error) {
             console.error("Lỗi xóa ca sĩ:", error);
         }
     };
 
-    // Tính toán chỉ số
-    const indexOfLastArtist = currentPage * artistsPerPage;
-    const indexOfFirstArtist = indexOfLastArtist - artistsPerPage;
-    const currentArtists = artists.slice(indexOfFirstArtist, indexOfLastArtist);
-    const totalPages = Math.ceil(artists.length / artistsPerPage);
+    // Tính toán phân trang
+    const indexOfLastComposer = currentPage * itemsPerPage;
+    const indexOfFirstComposer = indexOfLastComposer - itemsPerPage;
+    const currentComposers = composers.slice(indexOfFirstComposer, indexOfLastComposer);
 
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+    // Tạo các số trang
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(composers.length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>Quản lý ca sĩ</h1>
-                <Link href="/admin/addartist" passHref>
+                <h1>Quản lý nghệ sĩ</h1>
+                <Link href="/admin/addcomposer" passHref>
                     <button className={styles.addButton}>
                         <ReactSVG className={styles.csvg} src="/plus.svg" />
-                        <div className={styles.addText}>Tạo ca sĩ mới</div>
+                        <div className={styles.addText}>Tạo nhạc sĩ mới</div>
                     </button>
                 </Link>
             </div>
@@ -80,8 +79,7 @@ export default function AdminArtist() {
                                 <input type="checkbox" />
                             </th>
                             <th>ID</th>
-                            <th>Hình ảnh</th>
-                            <th>Tên ca sĩ</th>
+                            <th>Tên nghệ sĩ</th>
                             <th>Ngày tạo</th>
                             <th>Tính năng</th>
                         </tr>
@@ -94,15 +92,14 @@ export default function AdminArtist() {
                                 </td>
                             </tr>
                         ) : (
-                            currentArtists.map((artist) => (
-                                <tr key={artist.id_artist}>
+                            currentComposers.map((composer) => (
+                                <tr key={composer.id_composer}>
                                     <td>
                                         <input type="checkbox" />
                                     </td>
-                                    <td>#{artist.id_artist}</td>
-                                    <td><img src={artist.url_cover} alt={artist.name} /></td>
-                                    <td>{artist.name}</td>
-                                    <td>{new Date(artist.created_at).toLocaleString('vi-VN', {
+                                    <td>#{composer.id_composer}</td>
+                                    <td>{composer.name}</td>
+                                    <td>{new Date(composer.created_at).toLocaleString('vi-VN', {
                                         year: 'numeric',
                                         month: '2-digit',
                                         day: '2-digit',
@@ -110,11 +107,11 @@ export default function AdminArtist() {
                                     })}</td>
                                     <td className={styles.actions}>
                                         <button className={styles.editButton}>
-                                            <Link href={`/admin/editartist/${artist.id_artist}`} passHref>
+                                            <Link href={`/admin/editcomposer/${composer.id_composer}`} passHref>
                                                 <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
                                             </Link>
                                         </button>
-                                        <button className={styles.deleteButton} onClick={() => handleDeleteArtist(artist.id_artist)}>
+                                        <button className={styles.deleteButton} onClick={() => handleDeleteArtist(composer.id_composer)}>
                                             <ReactSVG className={styles.csvg} src="/Rectangle 79.svg" />
                                         </button>
                                     </td>
@@ -127,13 +124,9 @@ export default function AdminArtist() {
 
             {/* Phân trang */}
             <div className={styles.pagination}>
-                {[...Array(totalPages)].map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => paginate(index + 1)}
-                        className={currentPage === index + 1 ? styles.activePage : ''}
-                    >
-                        {index + 1}
+                {pageNumbers.map(number => (
+                    <button key={number} onClick={() => setCurrentPage(number)} className={currentPage === number ? styles.active : ''}>
+                        {number}
                     </button>
                 ))}
             </div>

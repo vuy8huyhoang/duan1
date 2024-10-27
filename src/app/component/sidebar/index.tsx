@@ -9,24 +9,10 @@ export default function Sidebar() {
     const [activeItem, setActiveItem] = useState<string>('Khám Phá');
     const pathname = usePathname();
 
-    console.log(pathname);
-    const handleMenuClick = (item: string, path: string) => {
-        setActiveItem(item);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('activeItem', item);
-            window.location.href = path;
-        }
-    };
+    
 
 
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const storedItem = localStorage.getItem('activeItem');
-            if (storedItem) {
-                setActiveItem(storedItem);
-            }
-        }
-    }, []);
+    
 
     return (
         <div className={styles.sidebar}>

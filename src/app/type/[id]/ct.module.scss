@@ -1,0 +1,59 @@
+.albumList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 40px;
+}
+
+.songCard {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.albumCoverWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.albumCover {
+    width: 135%;
+    height: 135%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.songInfo {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.songName {
+    a {
+        color: white;
+        font-size: 16px;
+        font-weight: bold; /* In đậm */
+        text-decoration: none;
+    }
+}
+.composerName {
+    a {
+        color: #b3b3b3;
+        font-size: 14px;
+        margin-top: 5px;
+        text-decoration: none;
+    }
+}

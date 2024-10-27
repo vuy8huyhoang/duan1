@@ -11,7 +11,6 @@ interface Album {
         name: string;
     };
 }
-
 export default function AlbumHot() {
     const [albumData, setAlbumData] = useState<Album[]>([]);
     const [loading, setLoading] = useState(true);
