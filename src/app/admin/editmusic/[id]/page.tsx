@@ -27,7 +27,7 @@ interface Song {
     url_cover: string;
     total_duration: string | null;
     producer: string;
-    composer: string;
+    composer: string | null;
     release_date: string | null;
     created_at: string;
     last_update: string;
@@ -126,18 +126,21 @@ export default function EditMusic({ params }: { params: { id: string } }) {
         setLoading(true);
 
         const slug = song?.name.toLowerCase().replace(/\s+/g, "-");
+
         const songData = {
             name: song?.name,
             slug,
             url_path: song?.url_path || "",
             url_cover: song?.url_cover || "",
             producer: song?.producer || "",
-            composer: song?.composer || "",
+            composer: song?.composer || null,
             release_date: song?.release_date || null,
             last_update: new Date().toISOString(),
-            artists: song.artists.map(artist => ({ id_artist: artist.id_artist })),
-            types: song.types.map(type => ({ id_type: type.id_type })),
+            artists: song?.artists.map(artist => artist.id_artist),  
+            types: song?.types.map(type => type.id_type), 
         };
+
+        console.log("Data to be sent:", songData);
 
         try {
             const response = await axios.patch(`/music/${params.id}`, songData, {
@@ -159,6 +162,8 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             setLoading(false);
         }
     };
+
+
 
 
 
@@ -194,13 +199,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     value={song?.producer || ""}
                     onChange={handleChange}
                 />
-                <input
-                    type="text"
-                    name="composer"
-                    placeholder="Người sáng tác"
-                    value={song.composer || ""}
-                    onChange={handleChange}
-                />
+                
 
                 <select
                     value={song?.artists && song.artists.length > 0 ? song.artists[0].id_artist : ""}
