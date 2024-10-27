@@ -19,7 +19,6 @@ export default function ListAlbum() {
     useEffect(() => {
         axios.get("/album")
             .then((response: any) => {
-                console.log(response);
                 if (response && response.result && response.result.data) {
                     const albumObj = response.result.data;
                     setAlbumData(albumObj.slice(0, 5));

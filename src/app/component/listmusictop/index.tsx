@@ -21,7 +21,6 @@ const ListMusicTop: React.FC = () => {
     useEffect(() => {
         axios.get('/music')
             .then((response: any) => {
-                console.log('Full API response:', response); 
                 if (response && response.result && response.result.data) {
                     setAlbums(response.result.data.slice(15, 60)); 
                 } else {

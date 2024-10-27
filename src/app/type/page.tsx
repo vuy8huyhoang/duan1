@@ -1,8 +1,8 @@
-// app/type/route.ts
 "use client";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import style from './type.module.scss';
 
 const TypePage = () => {
   const [typeList, setTypeList] = useState<any[]>([]);
@@ -27,25 +27,27 @@ const TypePage = () => {
   }, []); 
 
   if (loading) {
-    return <div>Đang tải dữ liệu...</div>;
+    return <div className={style.loading}>Đang tải dữ liệu...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div className={style.error}>{error}</div>;
   }
 
   return (
-    <div>
-      <h1>Danh Sách Thể Loại</h1>
-      <ul>
+    <div className={style.container}>
+      <h1 className={style.title}>Danh Sách Thể Loại</h1>
+      <ul className={style.typeList}>
         {Array.isArray(typeList) && typeList.length > 0 ? (
           typeList.map((type: any) => (
-            <li key={type.id_type}>
-              <Link href={`/type/${type.id_type}`}>{type.name}</Link>
+            <li key={type.id_type} className={style.typeItem}>
+              <Link href={`/type/${type.id_type}`} className={style.typeLink}>
+                {type.name}
+              </Link>
             </li>
           ))
         ) : (
-          <li>Không có thể loại nào.</li>
+          <li className={style.typeItem}>Không có thể loại nào.</li>
         )}
       </ul>
     </div>

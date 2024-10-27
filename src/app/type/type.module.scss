@@ -1,262 +1,55 @@
-.headerSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 40px;
-  padding-right: 40px;
-  margin-bottom: 5px;
-}
-
-.headerSection h2 {
-  color: white;
-  font-size: 24px;
+.title {
+  font-size: 28px;
   font-weight: bold;
-}
-
-.all {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.viewAllButton {
-  color: #89858F;
-  font-size: 16px;
-  text-decoration: none;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-  transition: color 0.3s ease;
-}
-
-.viewAllButton:hover {
   color: #6c63ff;
+  margin-bottom: 20px;
+  text-align: center;
 }
-
-.csvg {
-  fill: #ffffff;
-  transition: fill 0.3s ease;
-}
-
-.csvg:hover {
-  fill: #6c63ff;
-}
-
-.albumGrid {
+.typeList {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  /* 4 album theo hàng ngang */
-  grid-gap: 20px;
-  /* Khoảng cách giữa các album */
-  justify-items: center;
-  padding: 20px 40px;
-}
-
-.albumCard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  /* Đặt kích thước cố định cho mỗi card */
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  /* Căn giữa nội dung */
-  margin-top: 20px;
-  /* Khoảng cách trên để tạo khoảng cách với các ô album */
-  margin-top: 20px;
-}
-
-.button {
-  background-color: transparent;
-  /* Nền trong suốt */
-  border: 2px solid #2B2335;
-  /* Thêm viền màu đen */
-  border-radius: 20px;
-  /* Thêm bo góc cho nút */
-  padding: 8px 20px;
-  /* Thêm khoảng cách bên trong nút */
-  font-size: 16px;
-  /* Kích thước chữ trong nút */
-  transition: background-color 0.3s ease, color 0.3s ease;
-  /* Thêm hiệu ứng chuyển đổi */
-}
-
-.albumWrapper {
-  position: relative;
-  width: 100%;
-  /* Cập nhật để sử dụng toàn bộ chiều rộng */
-  border-radius: 10px;
-}
-
-.albumCover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  transition: transform 0.8s ease;
-}
-
-.albumCard:hover .albumCover {
-  transform: scale(1.1);
-}
-
-.albumTitle {
-  position: absolute;
-  /* Đặt vị trí tuyệt đối để hiển thị trên hình ảnh */
-  top: 50%;
-  /* Căn giữa theo chiều dọc */
-  left: 50%;
-  /* Căn giữa theo chiều ngang */
-  transform: translate(-50%, -50%);
-  color: #FFFFFF;
-  font-size: 19px;
-  font-weight: bold;
-  text-align: center;
+  grid-template-columns: repeat(5, 210px); 
+  gap: 20px; /* Khoảng cách giữa các ô */
+  list-style-type: none;
+  padding: 0;
   margin: 0;
-
-
 }
 
-.banner {
-  width: calc(100% - 80px);
-  // height: 340px;
-  position: relative;
-  margin-left: 40px;
+.typeItem {
+
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    flex-basis: 30%;
+    height: 230px;
+    transition: transform 0.3s ease-in-out;
+    overflow: hidden;
+    margin-bottom: 20px;
+background-color: #ff6b6b;
 }
 
-.bannerImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+/* Link cho từng thể loại */
+.typeLink {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  display: block; /* Đảm bảo toàn bộ khối có thể nhấp */
+  height: 100%; /* Đảm bảo chiều cao 100% để có thể nhấp được */
 }
 
-.banner1 {
-  width: calc(100% - 320px);
-  height: 255px;
-  ;
-  margin-left: 155px;
+.typeItem:hover {
+  background-color: #6c63ff;
+}
 
-  position: relative;
+.typeLink:hover {
+  color: #e0e0e0;
+}
+
+/* Trạng thái tải dữ liệu và lỗi */
+.loading,
+.error {
   text-align: center;
-}
-
-.bannerImage1 {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: px;
-
-}
-
-.albumContainer {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 20px 40px;
-}
-
-.albumItem {
-  flex: 1 1 calc(20% - 10px);
-  margin: 5px;
-}
-
-.albumContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: calc(100% - 10px);
-  height: 218px;
-}
-
-.albumImage {
-  width: 100%;
-  height: 218px;
-  border-radius: 5px;
-  object-fit: cover;
-}
-
-.albumLabel {
-  text-align: center;
-  margin-top: 8px;
-  color: #FFFFFF;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Màu nền mờ */
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.albumWrapper:hover .overlay {
-  opacity: 1;
-}
-
-.playButton,
-.likeButton,
-.moreButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  /* Đảm bảo các nút này hiển thị phía trên overlay */
-}
-
-/* Điều chỉnh vị trí của từng nút nếu cần */
-.likeButton {
-  position: absolute;
-  top: 50%;
-  /* Giữa theo chiều dọc */
-  left: 20%;
-  /* Tùy chỉnh khoảng cách từ bên trái */
-  transform: translate(-50%, -50%);
-}
-
-.playButton {
-  position: absolute;
-  top: 50%;
-  /* Giữa theo chiều dọc */
-  left: 50%;
-  /* Giữa theo chiều ngang */
-  transform: translate(-50%, -50%);
-}
-
-.moreButton {
-  position: absolute;
-  top: 50%;
-  /* Giữa theo chiều dọc */
-  right: 20%;
-  /* Tùy chỉnh khoảng cách từ bên phải */
-  transform: translate(50%, -50%);
-}
-
-
-.playButton svg,
-.likeButton svg,
-.moreButton svg {
-  width: 30px;
-  height: 30px;
-  // stroke: #FFFFFF;
-
-
+  font-size: 18px;
+  margin-top: 20px;
+  color: #ff6b6b;
 }

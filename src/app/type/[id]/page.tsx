@@ -4,18 +4,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // Sử dụng useParams để lấy id_type
 import axios from '@/lib/axios';
+import styles from './ct.module.scss'; 
 
-const TypeDetailPage = () => {
-  const { slug: idType } = useParams(); // Lấy id_type từ params
+const TypeDetailPage = ({ params }) => {
+  const idType = params.id; 
   const [musicList, setMusicList] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchMusicList = async () => {
     try {
-      const response = await axios.get(`/music?id_type=${idType}`); // Thay đổi để fetch nhạc theo id_type
-      console.log(response.data);
-      setMusicList(response.data.data || []); 
+      const response: any = await axios.get(`/music?id_type=${idType}`); 
+      console.log(response.result);
+      setMusicList(response.result.data || []); 
     } catch (err) {
       console.error("Error fetching music list:", err);
       setError("Có lỗi xảy ra khi tải danh sách nhạc.");
@@ -41,18 +42,36 @@ const TypeDetailPage = () => {
   return (
     <div>
       <h1>Danh Sách Nhạc Thể Loại: {idType}</h1>
-      <ul>
+      <div className={styles.albumList}>
         {Array.isArray(musicList) && musicList.length > 0 ? (
           musicList.map((music: any) => (
-            <li key={music.id_music}>
-              <a href={music.url_path}>{music.name}</a>
-              {music.url_cover && <img src={music.url_cover} alt={`${music.name} cover`} />}
-            </li>
+            <div key={music.id_music} className={styles.songCard}>
+              <div className={styles.albumCoverWrapper}>
+                <img src={music.url_cover} alt={music.name} className={styles.albumCover} />
+                <div className={styles.overlay}>
+                  <button className={styles.playButton}>
+                    <i className="fas fa-play"></i>
+                  </button>
+                </div>
+              </div>
+              <div className={styles.songInfo}>
+                <div className={styles.songName}>
+                  <a href={`/musicdetail/${music.id_music}`}>{music.name}</a>
+                </div>
+                <div className={styles.composerName}>
+                  <a href={`/musicdetail/${music.id_music}`}>{music.composer}</a>
+                </div>
+              </div>
+              <div className={styles.songControls}>
+                <i className="fas fa-heart"></i>
+                <i className="fas fa-ellipsis-h"></i>
+              </div>
+            </div>
           ))
         ) : (
-          <li>Không có nhạc nào trong thể loại này.</li>
+          <div>Không có nhạc nào trong thể loại này.</div>
         )}
-      </ul>
+      </div>
     </div>
   );
 };

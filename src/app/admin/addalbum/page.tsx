@@ -274,8 +274,8 @@ export default function AddAlbum() {
         // Fetch nghệ sĩ
         axios.get("/artist")
             .then((response: any) => {
-                if (response && response.result && response.result.artistList) {
-                    setArtists(response.result.artistList);
+                if (response && response.result && response.result.data) {
+                    setArtists(response.result.data);
                 } else {
                     setArtists([]);
                 }
@@ -288,8 +288,8 @@ export default function AddAlbum() {
         // Fetch danh sách bài hát
         axios.get("/music") // Đường dẫn API để lấy danh sách bài hát
             .then((response: any) => {
-                if (response && response.result && response.result.musicList) {
-                    setMusics(response.result.musicList);
+                if (response && response.result && response.result.data) {
+                    setMusics(response.result.data);
                 } else {
                     setMusics([]);
                 }
@@ -312,6 +312,8 @@ export default function AddAlbum() {
 
     const handleMusicSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedMusics = Array.from(e.target.selectedOptions, option => option.value);
+        console.log(selectedMusics);
+        console.log({...album, musics: musics.filter(music => selectedMusics.includes(music.id_music))});
         setAlbum({ ...album, musics: musics.filter(music => selectedMusics.includes(music.id_music)) }); // Cập nhật danh sách bài hát đã chọn
     };
 
@@ -323,9 +325,17 @@ export default function AddAlbum() {
 
         setLoading(true);
         const slug = album.name.toLowerCase().replace(/\s+/g, '-');
-        const albumData = { ...album, slug };
+        const albumData :any = { ...album, slug };
 
         try {
+            console.log(albumData);
+            albumData.musics=albumData.musics.map((music :any)=>{return{id_music:music.id_music}})
+            albumData.id_artist=album.artists[0]
+            delete albumData.artists
+            delete albumData.id_album
+            if(!albumData.url_cover){
+                albumData.url_cover=null
+            }
             const response = await axios.post("/album", albumData, {
                 headers: { "Content-Type": "application/json" },
             });
@@ -368,7 +378,7 @@ export default function AddAlbum() {
                     value={album.release_date || ""}
                     onChange={handleChange}
                 />
-                <select onChange={handleArtistSelect} multiple>
+                <select onChange={handleArtistSelect} >
                     <option value="">Chọn nghệ sĩ</option>
                     {artists && artists.length > 0 ? (
                         artists.map(artist => (
@@ -383,10 +393,11 @@ export default function AddAlbum() {
 
                 <h3>Chọn bài hát</h3>
                 <select onChange={handleMusicSelect} multiple>
-                    <option value="">Chọn bài hát</option>
+                    <option  value="">Chọn bài hát</option>
+
                     {musics && musics.length > 0 ? (
                         musics.map(music => (
-                            <option key={music.id_music} value={music.id_music}>
+                            <option className={album.musics.map(music=>music.id_music).includes(music.id_music) ? "selected" : ""} key={music.id_music} value={music.id_music}>
                                 {music.name}
                             </option>
                         ))
