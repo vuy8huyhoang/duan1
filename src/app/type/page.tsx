@@ -67,9 +67,9 @@ const TypePage = () => {
             Tất cả
           </button>
         )}
-      </div>
       <ListMusicTop />
-      
+      </div>
+
     </>
   );
 };

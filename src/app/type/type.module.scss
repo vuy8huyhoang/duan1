@@ -1,3 +1,6 @@
+.container{
+  height: 100vh;
+}
 .title {
   font-size: 28px;
   font-weight: bold;
@@ -7,27 +10,28 @@
 }
 .typeList {
   display: grid;
-  grid-template-columns: repeat(5, 210px); 
-  gap: 20px; /* Khoảng cách giữa các ô */
+  grid-template-columns: repeat(5, 1fr); 
+  padding-left: 40px;
+  padding-right: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; 
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
 .typeItem {
-
+    height: 110px;
     border-radius: 10px;
     text-align: center;
     color: #fff;
-    flex-basis: 30%;
-    height: 130px;
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
     margin-bottom: 20px;
 background-color: #ff6b6b;
 }
 
-/* Link cho từng thể loại */
 .typeLink {
   color: #ffffff;
   text-decoration: none;
