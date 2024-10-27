@@ -45,7 +45,12 @@ interface Song {
     artists: string[];
     types: string[];
 }
-
+interface Composer{
+    id_composer: string;
+    name: string;
+    created_at: string;
+    last_update: string;
+}
 export default function AddMusic() {
     const [song, setSong] = useState<Song>({
         id_music: "",
@@ -65,10 +70,11 @@ export default function AddMusic() {
         artists: [],
         types: [],
     });
-
+    
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [composers, setComposers] = useState<Composer[]>([]);
 
     useEffect(() => {
         axios
