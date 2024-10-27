@@ -147,7 +147,7 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
             } else {
                 alert("Cập nhật album không thành công.");
             }
-        } catch (error) {
+        } catch (error:any) {
             console.error("Error updating album data:", error);
             alert("Đã xảy ra lỗi khi cập nhật dữ liệu.");
         } finally {
