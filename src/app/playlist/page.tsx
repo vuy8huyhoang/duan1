@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import style from "./playlist.module.scss";
+import { ReactSVG } from "react-svg";
 
 interface Playlist {
   id_playlist: string;
@@ -18,6 +19,7 @@ const PlaylistPage = () => {
   const [activeTab, setActiveTab] = useState<"all" | "mine">("all"); // Tab quản lý
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [creating, setCreating] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Trạng thái modal
 
   const fetchPlaylists = async () => {
     try {
@@ -50,6 +52,7 @@ const PlaylistPage = () => {
 
       if (response.data.success) {
         setNewPlaylistName("");
+        setIsModalOpen(false);
         fetchPlaylists();
       } else {
         setError("Failed to create playlist");
@@ -89,21 +92,38 @@ const PlaylistPage = () => {
       </div>
 
       <div className={style.playlistGrid}>
-  <button
-    onClick={createPlaylist}
-    disabled={creating}
-    className={style.createNewPlaylist}
-  >
-    {creating ? "Creating..." : "Tạo playlist mới"}
-  </button>
-  {playlists.map((playlist) => (
-    <div key={playlist.id_playlist} className={style.playlistItem}>
-      <img src="/playlist.png" alt="Playlist cover" />
-      <p>{playlist.name}</p>
-    </div>
-  ))}
-</div>
+        {/* Nút để mở modal tạo playlist */}
+        <div className={style.playlistItem} onClick={() => setIsModalOpen(true)}>
+        <ReactSVG className={style.csvg} src="/Group 282.svg" />
+          <p>Tạo playlist mới</p>
+        </div>
 
+        {/* Modal để nhập tên playlist */}
+        {isModalOpen && (
+          <div className={style.modal}>
+            <div className={style.modalContent}>
+              <h2>Tạo Playlist Mới</h2>
+              <input
+                type="text"
+                value={newPlaylistName}
+                onChange={(e) => setNewPlaylistName(e.target.value)}
+                placeholder="Tên playlist mới"
+              />
+              <button onClick={createPlaylist} disabled={creating}>
+                {creating ? "Creating..." : "Tạo playlist"}
+              </button>
+              <button onClick={() => setIsModalOpen(false)}>Đóng</button>
+            </div>
+          </div>
+        )}
+
+        {playlists.map((playlist) => (
+          <div key={playlist.id_playlist} className={style.playlistItem}>
+            <img src="/playlist.png" alt="Playlist cover" />
+            <p>{playlist.name}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
