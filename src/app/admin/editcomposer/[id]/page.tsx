@@ -53,12 +53,13 @@ export default function EditComposer({ params }: { params: { id: string } }) {
 
     const slug = composer.name.toLowerCase().replace(/\s+/g, "-");
 
-    try {
-      console.log(composer);
-      const response = await axios.patch(
-        `/composer/${composer.id_composer}`,
-        composer
-      );
+   
+        const composerData = { ...composer };
+
+        try {
+            const response = await axios.patch(`/composer/${composer.id_composer}`, composerData, {
+                headers: { "Content-Type": "application/json" },
+            });
 
       if (response.status === 200 || response.status === 204) {
         alert("Nghệ sĩ đã được cập nhật thành công!");

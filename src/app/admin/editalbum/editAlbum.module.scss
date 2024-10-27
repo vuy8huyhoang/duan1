@@ -1,7 +1,6 @@
 .container {
     max-width: 600px;
-    margin: 0 auto;
-    margin-top: 30px;
+    margin: 30px auto; /* Kết hợp lề trên và lề dưới để đơn giản hơn */
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -28,7 +27,7 @@
         }
 
         input[type="file"] {
-            grid-column: span 2;
+            grid-column: span 2; /* Cho phép trường nhập file chiếm toàn bộ chiều rộng */
         }
     }
 
@@ -43,17 +42,34 @@
     }
 
     button {
-        width: 100%;
-        padding: 10px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-
+        width: 100%; /* Chiều rộng đầy đủ */
+        padding: 10px; /* Khoảng cách bên trong */
+        background-color: #4CAF50; /* Màu nền */
+        color: white; /* Màu chữ */
+        border: none; /* Không viền */
+        border-radius: 5px; /* Bo góc */
+        font-size: 16px; /* Kích thước chữ */
+        cursor: pointer; /* Con trỏ khi rê chuột vào nút */
+    
+        /* Hiệu ứng chuyển tiếp cho màu nền */
+        transition: background-color 0.3s ease;
+    
+        /* Hiệu ứng hover */
         &:hover {
-            background-color: #45a049;
+            background-color: #45a049; /* Màu nền khi rê chuột vào */
+        }
+    
+        /* Hiệu ứng nhấn */
+        &:active {
+            background-color: #3e8e41; /* Màu nền khi nhấn */
+            transform: translateY(1px); /* Di chuyển xuống một chút khi nhấn */
+        }
+    
+        /* Vô hiệu hóa nút */
+        &:disabled {
+            background-color: #ccc; /* Màu nền khi vô hiệu hóa */
+            cursor: not-allowed; /* Con trỏ không cho phép */
         }
     }
+    
 }
