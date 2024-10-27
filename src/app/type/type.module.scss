@@ -20,7 +20,7 @@
     text-align: center;
     color: #fff;
     flex-basis: 30%;
-    height: 230px;
+    height: 130px;
     transition: transform 0.3s ease-in-out;
     overflow: hidden;
     margin-bottom: 20px;
@@ -33,13 +33,14 @@ background-color: #ff6b6b;
   text-decoration: none;
   font-size: 18px;
   font-weight: bold;
-  display: block; /* Đảm bảo toàn bộ khối có thể nhấp */
+  display: flex; /* Sử dụng flexbox */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang */
   height: 100%; /* Đảm bảo chiều cao 100% để có thể nhấp được */
 }
 
-.typeItem:hover {
-  background-color: #6c63ff;
-}
+
+
 
 .typeLink:hover {
   color: #e0e0e0;
@@ -52,4 +53,39 @@ background-color: #ff6b6b;
   font-size: 18px;
   margin-top: 20px;
   color: #ff6b6b;
+}
+.showAllButton {
+  display: block;
+  margin: 20px auto; /* Căn giữa nút */
+  padding: 10px 20px;
+  background-color: #6c63ff; /* Màu nền */
+  color: #fff; /* Màu chữ */
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.showAllButton:hover {
+  background-color: #ff6b6b; /* Màu khi hover */
+}
+.typeItem:nth-child(1) {
+  background: linear-gradient(135deg, #4c2e96, #a29bfe);
+}
+
+.typeItem:nth-child(2) {
+  background: linear-gradient(135deg, #2b6d47, #4ac29a);
+}
+
+.typeItem:nth-child(3) {
+  background: linear-gradient(135deg, #9c2c2c, #f39c9c);
+}
+
+.typeItem:nth-child(4) {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+}
+
+.typeItem:nth-child(5) {
+  background: linear-gradient(135deg, #9333ea, #d8b4fe);
 }
