@@ -118,3 +118,45 @@
   font-size: 14px;
   color: gray;
 }
+
+// playlist.module.scss
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Đảm bảo modal ở trên cùng
+}
+
+.modalContent {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px; // Đặt chiều rộng của modal
+  text-align: center; // Căn giữa nội dung trong modal
+}
+
+.modalContent input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+.modalContent button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+}
+

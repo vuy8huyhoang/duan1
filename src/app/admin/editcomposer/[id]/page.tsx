@@ -4,15 +4,15 @@ import axios from "@/lib/axios";
 import styles from "../EditComposer.module.scss";
 
 interface Composer {
-    id_composer: string;
-    name: string;
-    created_at: string;
-    last_update:string;
+  id_composer: string;
+  name: string;
+  created_at: string;
+  last_update: string;
 }
 
 export default function EditComposer({ params }: { params: { id: string } }) {
-    const [composer, setComposer] = useState<Composer | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+  const [composer, setComposer] = useState<Composer | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (params.id) {
@@ -37,19 +37,23 @@ export default function EditComposer({ params }: { params: { id: string } }) {
         }
     }, [params.id]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        if (composer) {
-            setComposer({ ...composer, [name]: value });
-        }
-    };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    if (composer) {
+      setComposer({ ...composer, [name]: value });
+    }
+  };
 
-    const handleSubmit = async () => {
-        if (!composer) return;
+  const handleSubmit = async () => {
+    if (!composer) return;
 
-        setLoading(true);
+    setLoading(true);
 
-        
+    const slug = composer.name.toLowerCase().replace(/\s+/g, "-");
+
+   
         const composerData = { ...composer };
 
         try {

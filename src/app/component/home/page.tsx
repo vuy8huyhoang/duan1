@@ -14,7 +14,6 @@ interface Album {
     url_cover: string;
 }
 
-
 export default function Home() {
     const [albumData, setAlbumData] = useState<Album[]>([]);
     const [loading, setLoading] = useState(true);

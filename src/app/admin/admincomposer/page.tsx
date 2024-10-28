@@ -5,17 +5,19 @@ import { ReactSVG } from "react-svg";
 import Link from 'next/link';
 import styles from "./AdminComposer.module.scss";
 
-
 interface Composer {
     id_composer: string;
     name: string;
     created_at: string;
-    last_update:string;
+    last_update: string;
 }
+
 export default function AdminComposer() {
     const [loading, setLoading] = useState<boolean>(true);
     const [composers, setComposers] = useState<Composer[]>([]);
-   
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [itemsPerPage] = useState<number>(10);
+
     useEffect(() => {
         axios
             .get("/composer")
@@ -36,6 +38,7 @@ export default function AdminComposer() {
                 setLoading(false);
             });
     }, []);
+
     const handleDeleteArtist = async (id_composer: string) => {
         try {
             await axios.delete(`/composer/${id_composer}`);
@@ -44,6 +47,18 @@ export default function AdminComposer() {
             console.error("Lỗi xóa ca sĩ:", error);
         }
     };
+
+    // Tính toán phân trang
+    const indexOfLastComposer = currentPage * itemsPerPage;
+    const indexOfFirstComposer = indexOfLastComposer - itemsPerPage;
+    const currentComposers = composers.slice(indexOfFirstComposer, indexOfLastComposer);
+
+    // Tạo các số trang
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(composers.length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -78,13 +93,12 @@ export default function AdminComposer() {
                                 </td>
                             </tr>
                         ) : (
-                            composers.map((composer) => (
+                            currentComposers.map((composer) => (
                                 <tr key={composer.id_composer}>
                                     <td>
                                         <input type="checkbox" />
                                     </td>
                                     <td>#{composer.id_composer}</td>
-                                    {/* <td><img src={composer.url_cover} alt={composer.name} /></td> */}
                                     <td>{composer.name}</td>
                                     <td>{new Date(composer.created_at).toLocaleString('vi-VN', {
                                         year: 'numeric',
@@ -107,6 +121,15 @@ export default function AdminComposer() {
                         )}
                     </tbody>
                 </table>
+            </div>
+
+            {/* Phân trang */}
+            <div className={styles.pagination}>
+                {pageNumbers.map(number => (
+                    <button key={number} onClick={() => setCurrentPage(number)} className={currentPage === number ? styles.active : ''}>
+                        {number}
+                    </button>
+                ))}
             </div>
         </div>
     );

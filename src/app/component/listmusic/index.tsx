@@ -115,8 +115,6 @@ const ListMusic: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>             
-                                      
-                                
                                 <div className={style.songInfo}>
                                     <div className={style.songName}><Link href={`/musicdetail/${album.id_music}`}>{album.name}</Link></div>
                                     <div className={style.composerName}><Link href={`/musicdetail/${album.id_music}`}>{album.composer}</Link></div>
@@ -126,7 +124,6 @@ const ListMusic: React.FC = () => {
                                     <i className="fas fa-ellipsis-h"></i>
                                 </div>
                             </div>
-
                         )
                     )
                 }

@@ -9,7 +9,7 @@ interface Artist {
     id_artist: string;
     name: string;
     slug: string | null;
-    url_cover: string ;
+    url_cover: string;
     created_at: string;
     last_update: string;
     is_show: number;
@@ -19,6 +19,8 @@ interface Artist {
 export default function AdminArtist() {
     const [artists, setArtists] = useState<Artist[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const artistsPerPage = 10; // Số lượng nghệ sĩ mỗi trang
 
     useEffect(() => {
         axios
@@ -50,6 +52,14 @@ export default function AdminArtist() {
             console.error("Lỗi xóa ca sĩ:", error);
         }
     };
+
+    // Tính toán chỉ số
+    const indexOfLastArtist = currentPage * artistsPerPage;
+    const indexOfFirstArtist = indexOfLastArtist - artistsPerPage;
+    const currentArtists = artists.slice(indexOfFirstArtist, indexOfLastArtist);
+    const totalPages = Math.ceil(artists.length / artistsPerPage);
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
         <div className={styles.container}>
@@ -85,7 +95,7 @@ export default function AdminArtist() {
                                 </td>
                             </tr>
                         ) : (
-                            artists.map((artist) => (
+                            currentArtists.map((artist) => (
                                 <tr key={artist.id_artist}>
                                     <td>
                                         <input type="checkbox" />
@@ -114,6 +124,17 @@ export default function AdminArtist() {
                         )}
                     </tbody>
                 </table>
+            </div>
+            <div className={styles.pagination}>
+                {[...Array(totalPages)].map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => paginate(index + 1)}
+                        className={currentPage === index + 1 ? styles.activePage : ''}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
             </div>
         </div>
     );

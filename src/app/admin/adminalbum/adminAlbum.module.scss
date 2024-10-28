@@ -8,9 +8,11 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+
     a {
-            text-decoration: none;
-        }
+        text-decoration: none;
+    }
+
     h1 {
         margin: 0;
     }
@@ -26,7 +28,6 @@
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
-        
 
         .csvg {
             width: 20px;
@@ -99,8 +100,6 @@
             flex-wrap: wrap;
             align-items: center;
             transition: transform 0.2s ease-in-out;
-
-            
         }
 
         .deleteButton {
@@ -114,7 +113,6 @@
             transition: transform 0.2s ease-in-out;
         }
 
-
         .loading {
             text-align: center;
             padding: 20px;
@@ -122,7 +120,65 @@
     }
 }
 
+.songList {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+
+    li {
+        margin: 5px 0; 
+
+        a {
+            text-decoration: none;
+            color: #007bff; 
+            transition: color 0.3s; 
+
+            &:hover {
+                color: #0056b3; 
+                text-decoration: underline; 
+            }
+        }
+    }
+}
+
 .csvg {
     width: 30px;
     height: 30px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.pagination button:hover {
+    background-color: #e2e2e2;
+}
+
+.pagination button:focus {
+    outline: none;
+}
+
+.pagination .activePage {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+    font-weight: bold;
+}
+
+.pagination button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }

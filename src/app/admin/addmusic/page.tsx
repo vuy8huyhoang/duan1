@@ -9,7 +9,7 @@ interface Artist {
     slug: string;
     url_cover: string;
 
-    
+
 }
 interface Lyrics {
     id_lyrics: string;
@@ -35,17 +35,22 @@ interface Song {
     url_cover: string;
     total_duration: string | null;
     producer: string;
-    composer: string;
+    composer: string | null;
     release_date: string | null;
     created_at: string;
     last_update: string;
     is_show: number;
     view: number;
     favorite: number;
-    artists: string[]; 
-    types: string[];  
+    artists: string[];
+    types: string[];
 }
-
+interface Composer{
+    id_composer: string;
+    name: string;
+    created_at: string;
+    last_update: string;
+}
 export default function AddMusic() {
     const [song, setSong] = useState<Song>({
         id_music: "",
@@ -55,7 +60,7 @@ export default function AddMusic() {
         url_cover: "",
         total_duration: null,
         producer: "",
-        composer: "",
+        composer: null,
         release_date: null,
         created_at: new Date().toISOString(),
         last_update: new Date().toISOString(),
@@ -65,10 +70,11 @@ export default function AddMusic() {
         artists: [],
         types: [],
     });
-
+    
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [composers, setComposers] = useState<Composer[]>([]);
 
     useEffect(() => {
         axios
@@ -79,12 +85,12 @@ export default function AddMusic() {
                     setArtists(response.result.data);
                 } else {
                     console.error("Response data for artists is undefined or empty:", response);
-                    setArtists([]); 
+                    setArtists([]);
                 }
             })
             .catch((error: any) => {
                 console.error("Lỗi fetch nghệ sĩ:", error);
-                setArtists([]); 
+                setArtists([]);
             });
     }, []);
 
@@ -100,14 +106,14 @@ export default function AddMusic() {
                     setTypes(response.result.data);
                 } else {
                     console.error("Response data for types is undefined or empty:", response);
-                    setTypes([]); 
+                    setTypes([]);
                 }
             })
             .catch((error: any) => {
                 console.error("Lỗi fetch thể loại:", error);
                 setTypes([]);
             });
-    }, []); 
+    }, []);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -187,14 +193,14 @@ export default function AddMusic() {
                     value={song.producer}
                     onChange={handleChange}
                 />
-                <input
+                {/* <input
                     type="text"
                     name="composer"
                     placeholder="Người sáng tác"
                     value={song.composer}
                     onChange={handleChange}
-                />
-                
+                /> */}
+
                 <select onChange={handleArtistSelect}>
                     <option value="">Chọn nghệ sĩ</option>
                     {artists && artists.length > 0 ? (
@@ -208,7 +214,7 @@ export default function AddMusic() {
                     )}
                 </select>
 
-                <select  onChange={handleTypeSelect}>
+                <select onChange={handleTypeSelect}>
                     <option value="">Chọn thể loại</option>
                     {types && types.length > 0 ? (
                         types.map(type => (
