@@ -4,7 +4,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import style from './type.module.scss';
 import ListMusicTop from '../component/listmusictop';
-
+import ListMusicType from '../component/listmusicType';
 interface Type {
   id_type: string;
   name: string;
@@ -47,11 +47,14 @@ const TypePage = () => {
 
   return (
     <>
+    <div className={style.banner}>
+        <img src="https://photo-zmp3.zmdcdn.me/cover/3/f/4/1/3f41f32d1ca9baeb2206137e5f2eab5c.jpg" alt="Banner" className={style.bannerImage} />
+      </div>
       <div className={style.container}>
         <h1 className={style.title}>Danh Sách Thể Loại</h1>
         <ul className={style.typeList}>
           {Array.isArray(typeList) && typeList.length > 0 ? (
-            typeList.slice(0, showAll ? typeList.length : 5).map((type) => (
+            typeList.slice(0, showAll ? typeList.length : 4).map((type) => (
               <li key={type.id_type} className={style.typeItem}>
                 <Link href={`/type/${type.id_type}`} className={style.typeLink}>
                   {type.name}
@@ -67,7 +70,9 @@ const TypePage = () => {
             Tất cả
           </button>
         )}
+      <ListMusicType />
       <ListMusicTop />
+
       </div>
 
     </>
