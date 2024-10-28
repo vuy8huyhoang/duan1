@@ -213,6 +213,7 @@
 .playing .playButton i.fa-pause {
     display: inline;
 }
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -222,12 +223,11 @@
     button {
         padding: 5px 10px;
         margin: 0 5px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
+        color: #fff;
+        background-color: transparent;
+        border: 2px solid #2B2335;
+        border-radius: 10px;
         cursor: pointer;
-        
         &:disabled {
             background-color: #cccccc;
             cursor: not-allowed;

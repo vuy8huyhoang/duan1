@@ -1,46 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router';
+'use client';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-const SearchPage: React.FC = () => {
+const Search: React.FC = () => {
+  const [query, setQuery] = useState('');
   const router = useRouter();
-  const { search_text } = router.query; // Lấy từ khóa tìm kiếm từ query
-  const [musicList, setMusicList] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (search_text) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`https://api-groove.vercel.app/search?search_text=${search_text}`);
-          setMusicList(response.data.data.musicList); // Lưu danh sách bài hát vào state
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchData();
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter' && query) {
+      router.push(`/search?query=${encodeURIComponent(query)}`);
     }
-  }, [search_text]);
-
-  if (loading) {
-    return <div>Loading...</div>; // Hiển thị thông báo loading
-  }
+  };
 
   return (
-    <div>
-      <h1>Kết quả tìm kiếm cho: {search_text}</h1>
-      <ul>
-        {musicList.map(music => (
-          <li key={music.id_music}>
-            <h2>{music.name}</h2>
-            {/* Hiển thị thêm thông tin bài hát nếu cần */}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <input
+      type="text"
+      value={query}
+      onChange={handleSearch}
+      onKeyDown={handleKeyDown}
+      placeholder="Tìm kiếm bài hát..."
+      style={{ padding: '8px', width: '100%' }}
+    />
   );
 };
 
-export default SearchPage;
+export default Search;
