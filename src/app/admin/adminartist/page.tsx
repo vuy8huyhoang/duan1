@@ -47,7 +47,7 @@ export default function AdminArtist() {
         try {
             await axios.delete(`/artist/${id_artist}`);
             setArtists(artists.filter((artist) => artist.id_artist !== id_artist));
-            await axios.delete("/delete-image", {url: url})
+            await axios.delete(`/upload-image?url=${url}` )
         } catch (error) {
             console.error("Lỗi xóa ca sĩ:", error);
         }
