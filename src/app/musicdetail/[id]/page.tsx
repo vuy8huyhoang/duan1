@@ -68,15 +68,15 @@ const SongDetailPage: React.FC = ({params}) => {
                         
                         <img src={musicdetail.url_cover} alt={musicdetail.name} className={style.coverImage} />
                         <h2>{musicdetail.name}</h2>
-                        <p><strong>Ca sĩ:</strong> {musicdetail.artists.map(artist=>artist.name).join(",")}</p>
+                        <p><strong>Nghệ sĩ:</strong> {musicdetail.artists.map(artist=>artist.name).join(",")}</p>
                         </div>
 
                        <div className={style.modalContentLeft}>
                         <p>Bài Hát</p>
                         <div className={style.songContent}>
-                            <p className={style.songTitle}> {musicdetail.name}</p>
+                            <p className={style.songTitle}> Ca sĩ: {musicdetail.name}</p>
                             {musicdetail.release_date && <p className={style.songArtist}> {formatDate(musicdetail.release_date)}</p>}
-                            <p className={style.songDuration}> {musicdetail.composer}</p>
+                            <p className={style.songDuration}> Nhạc sĩ: {musicdetail.composer}</p>
                            
                         </div>
                         <audio controls src={musicdetail.url_path}></audio>

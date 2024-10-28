@@ -38,10 +38,10 @@ export default function AddComposer() {
 
     const handleSubmit = async () => {
         setLoading(true);
-        const slug = removeVietnameseTones(composer.name);  // Tạo slug không dấu từ tên nghệ sĩ
+        const slug = removeVietnameseTones(composer.name);  
         const composerData = { ...composer, slug };
 
-        console.log("Artist data to submit:", composerData);  // Log để kiểm tra dữ liệu trước khi gửi
+        console.log("Composer data to submit:", composerData); 
 
         try {
             const response = await axios.post("/composer", composerData, {
@@ -52,13 +52,13 @@ export default function AddComposer() {
             });
 
             if (response.status === 200 || response.status === 201) {
-                alert("Nghệ sĩ đã được thêm thành công!");
-                window.location.href = "/admin/admincomposer";  // Điều hướng về trang quản lý nghệ sĩ
+                alert("Nhạc sĩ đã được thêm thành công!");
+                window.location.href = "/admin/admincomposer";  
             } else {
-                alert("Thêm nghệ sĩ không thành công.");
+                alert("Thêm nhạc sĩ không thành công.");
             }
         } catch (error) {
-            console.error("Lỗi khi gửi dữ liệu nghệ sĩ:", error);
+            console.error("Lỗi khi gửi dữ liệu nhạc sĩ:", error);
             alert("Đã xảy ra lỗi khi gửi dữ liệu.");
         } finally {
             setLoading(false);
@@ -74,12 +74,12 @@ export default function AddComposer() {
                 <input
                     type="text"
                     name="name"
-                    placeholder="Tên nghệ sĩ"
+                    placeholder="Tên nhạc sĩ"
                     value={composer.name}
                     onChange={handleChange}
                 />
                 <button onClick={handleSubmit} disabled={loading}>
-                    {loading ? "Đang gửi..." : "Thêm nghệ sĩ"}
+                    {loading ? "Đang gửi..." : "Thêm nhạc sĩ"}
                 </button>
             </div>
         </div>

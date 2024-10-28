@@ -65,7 +65,7 @@ export default function AdminComposer() {
                             </th>
                             <th>ID</th>
                             {/* <th>Hình ảnh</th> */}
-                            <th>Tên nghệ sĩ</th>
+                            <th>Tên nhạc sĩ</th>
                             <th>Ngày tạo</th>
                             <th>Tính năng</th>
                         </tr>

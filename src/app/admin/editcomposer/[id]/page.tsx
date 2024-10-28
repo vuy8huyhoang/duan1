@@ -19,16 +19,16 @@ export default function EditComposer({ params }: { params: { id: string } }) {
             axios
                 .get(`/composer/${params.id}`)
                 .then((response: any) => {
-                    console.log("Full API response for artist:", response);
+                    console.log("Full API response for composer:", response);
                     if (response?.result?.data) {
                         setComposer(response.result.data); 
                     } else {
-                        console.error("Không tìm thấy nghệ sĩ:", response);
+                        console.error("Không tìm thấy nhạc sĩ:", response);
                         setComposer(null);
                     }
                 })
                 .catch((error: any) => {
-                    console.error("Lỗi fetch nghệ sĩ:", error);
+                    console.error("Lỗi fetch nhạc sĩ:", error);
                     setComposer(null);
                 })
                 .finally(() => {
@@ -58,13 +58,13 @@ export default function EditComposer({ params }: { params: { id: string } }) {
             });
 
             if (response.status === 200 || response.status === 204) {
-                alert("Nghệ sĩ đã được cập nhật thành công!");
+                alert("Nhạc sĩ đã được cập nhật thành công!");
                 window.location.href = "/admin/admincomposer";
             } else {
-                alert("Cập nhật nghệ sĩ không thành công.");
+                alert("Cập nhật nhạc sĩ không thành công.");
             }
         } catch (error) {
-            console.error("Lỗi khi cập nhật dữ liệu nghệ sĩ:", error);
+            console.error("Lỗi khi cập nhật dữ liệu nhạc sĩ:", error);
             alert("Đã xảy ra lỗi khi gửi dữ liệu.");
         } finally {
             setLoading(false);
@@ -72,21 +72,21 @@ export default function EditComposer({ params }: { params: { id: string } }) {
     };
 
     if (loading) return <div>Đang tải...</div>;
-    if (!composer) return <div>Không tìm thấy nghệ sĩ.</div>;
+    if (!composer) return <div>Không tìm thấy nhạc sĩ.</div>;
 
     return (
         <div className={styles.container}>
-            <h2>Sửa thông tin nghệ sĩ</h2>
+            <h2>Sửa thông tin nhạc sĩ</h2>
             <div className={styles.formGroup}>
                 <input
                     type="text"
                     name="name"
-                    placeholder="Tên nghệ sĩ"
+                    placeholder="Tên nhạc sĩ"
                     value={composer.name}
                     onChange={handleChange}
                 />
                 <button onClick={handleSubmit} disabled={loading}>
-                    {loading ? "Đang gửi..." : "Cập nhật nghệ sĩ"}
+                    {loading ? "Đang gửi..." : "Cập nhật nhạc sĩ"}
                 </button>
             </div>
         </div>
