@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import style from "./sildeshow.module.scss"; // Tạo một file CSS riêng nếu cần
+import style from "./sildeshow.module.scss"; 
 
 const Slideshow = () => {
     const images = [
@@ -13,9 +13,9 @@ const Slideshow = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 2000); // Thời gian chuyển ảnh là 3 giây
+        }, 2000); 
 
-        return () => clearInterval(interval); // Dọn dẹp bộ đếm
+        return () => clearInterval(interval);
     }, [images.length]);
 
     return (
