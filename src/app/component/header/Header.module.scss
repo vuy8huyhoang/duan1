@@ -1,16 +1,19 @@
 .zingHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(18, 18, 18,0.9); // Nền đen
-    backdrop-filter: blur(6px) ;
-    padding: 10px 20px;
-    color: white;
-    height: 60px;
-    width: 85%;
-    position: fixed;
-    right: 0;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(18, 18, 18, 0.9); // Nền đen với độ mờ
+  backdrop-filter: blur(6px);
+  padding: 10px 20px;
+  color: white;
+  height: 60px;
+  width: 84.2%;
+  position: fixed;
+  top: 0; 
+  right: 0;
+  z-index: 9999; // Đảm bảo header nằm trên tất cả các phần tử khác
+}
+
   
   .headerLeft i, .headerRight i {
     font-size: 20px;
@@ -75,8 +78,14 @@
           cursor: pointer;
           transition: background-color 0.3s ease;
           color: #333;
+          border-radius: 5px;
+          a{
+            text-decoration: none;
+            color: #333;
+          }
           &:hover {
-            background-color: #f0f0f0;
+            background-color: #b3b2b2;
+            border-radius: 5px;
           }
         }
       }

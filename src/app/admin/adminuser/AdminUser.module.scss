@@ -1,0 +1,124 @@
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    h1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+    }
+}
+
+.tableContainer {
+    overflow-x: auto;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+        background-color: #f5f5f5;
+        font-weight: 600;
+        color: #555;
+    }
+
+    td img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .banButton, .editButton {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        .csvg {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+    }
+
+    .banButton {
+        background-color: #e74c3c;
+
+        &:hover {
+            background-color: #c0392b;
+        }
+    }
+
+    .editButton {
+        background-color: #3498db;
+
+        &:hover {
+            background-color: #2980b9;
+        }
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+        padding: 8px 12px;
+        margin: 0 5px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        color: #333;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+
+        &.activePage {
+            background-color: #3498db;
+            color: #fff;
+            border-color: #3498db;
+        }
+
+        &:hover {
+            background-color: #e0e0e0;
+        }
+    }
+}
+
+.loading {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    padding: 20px;
+}

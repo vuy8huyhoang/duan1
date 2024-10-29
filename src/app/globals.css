@@ -91,12 +91,12 @@ body {
 }
 .admin-container {
     display: flex;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     background-color: #011E40;
 }
 
 .admin-content {
-    width: 88%;
+    width: 85%;
     background-color: #F5F5F5;
     
 }
