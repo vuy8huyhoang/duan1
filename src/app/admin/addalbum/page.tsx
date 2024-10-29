@@ -46,7 +46,7 @@ export default function AddAlbum() {
         musics: [], // Sửa lại từ songs thành musics
     });
 
-    const [musics, setMusics] = useState<Music[]>([]); // Danh sách các bài hát
+    const [musics, setMusics] = useState<Music[]>([]); 
     const [artists, setArtists] = useState<Artist[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
