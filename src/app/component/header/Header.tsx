@@ -47,7 +47,7 @@ const Header: React.FC = () => {
         <i className="fa fa-arrow-right"></i>
       </div>
       <div className={styles.headerCenter}>
-        <Search /> {/* Search component */}
+        <Search /> 
       </div>
       <div className={styles.headerRight}>
         <img src="/Vector.svg" alt="" />
