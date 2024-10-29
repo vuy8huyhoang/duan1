@@ -53,7 +53,6 @@ export default function AdminArtist() {
         }
     };
 
-    // Tính toán chỉ số
     const indexOfLastArtist = currentPage * artistsPerPage;
     const indexOfFirstArtist = indexOfLastArtist - artistsPerPage;
     const currentArtists = artists.slice(indexOfFirstArtist, indexOfLastArtist);

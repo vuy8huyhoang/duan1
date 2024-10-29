@@ -8,8 +8,6 @@ interface Artist {
     name: string;
     slug: string;
     url_cover: string;
-
-
 }
 interface Lyrics {
     id_lyrics: string;

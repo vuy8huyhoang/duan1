@@ -1,10 +1,18 @@
-    "use client";
-    import { useEffect, useState } from "react";
-    import axios from "@/lib/axios"; 
-    import styles from "./AdminMusic.module.scss";
-    import { ReactSVG } from "react-svg";
-    import Link from 'next/link';
+"use client";
+import { useEffect, useState } from "react";
+import axios from "@/lib/axios"; 
+import styles from "./AdminMusic.module.scss";
+import { ReactSVG } from "react-svg";
+import Link from 'next/link';
+    
+    interface Artist {
+        id_artist: string;
+        name: string;
+        slug: string;
+        url_cover: string;
 
+
+}
     interface Song {
         id_music: string;
         name: string;
@@ -13,13 +21,16 @@
         created_at: string;
         producer: string;
         url_cover: string;
-        
-    }
+        artists: {
+            artist: Artist; 
+        }[];    }
 
     export default function AdminMusic() {
         const [songs, setSongs] = useState<Song[]>([]);
+        const [artists, setArtists] = useState<Artist[]>([]);
         const [loading, setLoading] = useState<boolean>(true);
         const [currentPage, setCurrentPage] = useState<number>(1);
+        
         const songsPerPage = 10;
 
         useEffect(() => {
@@ -98,7 +109,16 @@
                                         <td>#{song.id_music}</td>
                                         <td><img src={song.url_cover} alt="" /></td>
                                         <td>{song.name}</td>
-                                        <td>{song.composer}</td>
+                                        <td>
+                                            {song.artists
+                                                .map((artistWrapper) => artistWrapper.artist.name) 
+                                                .join(', ')}
+                                        </td>
+
+
+
+
+
                                         <td>{new Date(song.created_at).toLocaleString('vi-VN', {
                                             year: 'numeric',
                                             month: '2-digit',

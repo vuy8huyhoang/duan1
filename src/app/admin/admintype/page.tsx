@@ -17,7 +17,7 @@ const TypeManagement = () => {
     const [categories, setCategories] = useState<Type[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const typesPerPage = 10; // Số lượng loại mỗi trang
+    const typesPerPage = 10; 
 
     useEffect(() => {
         fetchType();
@@ -43,7 +43,6 @@ const TypeManagement = () => {
         }
     };
 
-    // Tính toán chỉ số
     const indexOfLastType = currentPage * typesPerPage;
     const indexOfFirstType = indexOfLastType - typesPerPage;
     const currentTypes = categories.slice(indexOfFirstType, indexOfLastType);
@@ -120,7 +119,6 @@ const TypeManagement = () => {
                 </table>
             </div>
 
-            {/* Phân trang */}
             <div className={styles.pagination}>
                 {[...Array(totalPages)].map((_, index) => (
                     <button
