@@ -1,0 +1,82 @@
+.searchResultsContainer {
+    padding: 20px;
+    color: white; /* Màu chữ trắng để nổi bật trên nền tối */
+}
+
+.searchResultsContainer h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+}
+.searchResultsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+    padding: 20px; 
+}
+
+
+.albumItem {
+
+    border-radius: 10px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+
+.albumImage {
+    width: 80px; /* Chiều rộng cố định cho hình ảnh */
+    height: 80px; /* Chiều cao cố định cho hình ảnh */
+    border-radius: 8px; /* Bo góc cho hình ảnh */
+    object-fit: cover; /* Giữ tỉ lệ hình ảnh */
+    margin-right: 15px; /* Khoảng cách bên phải hình ảnh */
+}
+
+.albumInfo {
+    flex-grow: 1; /* Chiếm không gian còn lại */
+}
+
+.albumName {
+    font-size: 18px;
+    font-weight: bold; /* Đậm tên album */
+    margin: 0; /* Xóa khoảng cách mặc định */
+}
+
+.composerName {
+    font-size: 14px;
+    color: #b3b3b3; /* Màu chữ nhạc sĩ nhẹ hơn */
+    margin: 5px 0 0 0; /* Khoảng cách giữa tên bài hát và nhạc sĩ */
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    button {
+        padding: 5px 10px;
+        margin: 0 5px;
+        color: #fff;
+        background-color: transparent;
+        border: 2px solid #2B2335;
+        border-radius: 10px;
+        cursor: pointer;
+        &:disabled {
+            background-color: #20bfcd50;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        margin: 0 10px;
+        font-size: 1rem;
+        color: white;
+    }
+}

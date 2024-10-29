@@ -8,12 +8,6 @@ import { clsx } from 'clsx';
 export default function Sidebar() {
     const [activeItem, setActiveItem] = useState<string>('Khám Phá');
     const pathname = usePathname();
-
-    
-
-
-    
-
     return (
         <div className={styles.sidebar}>
             <div className={styles.logo}>

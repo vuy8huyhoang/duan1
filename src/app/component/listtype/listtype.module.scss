@@ -26,13 +26,24 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.albumTitle {
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
+
+.typeLink {
+    color: #ffffff;
     text-decoration: none;
-    text-transform: uppercase;
-}
+    font-size: 18px;
+    font-weight: bold;
+    display: flex; /* Sử dụng flexbox */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    height: 100%; /* Đảm bảo chiều cao 100% để có thể nhấp được */
+  }
+  
+  
+  
+  
+  .typeLink:hover {
+    color: #e0e0e0;
+  }
 
 .albumCard:nth-child(1) {
     background: linear-gradient(135deg, #4c2e96, #a29bfe);

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import styles from './Header.module.scss';
 import Login from '../auth';
 import Link from 'next/link';
+import Search from '../search';
+
 const Header: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [showDropdown, setShowDropdown] = useState(false); 
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleLoginPopup = () => {
     if (!isLoggedIn) {
@@ -15,7 +18,7 @@ const Header: React.FC = () => {
 
   const toggleDropdown = () => {
     if (isLoggedIn) {
-      setShowDropdown((prev) => !prev); 
+      setShowDropdown((prev) => !prev);
     }
   };
   const closeDropdown=()=>{
@@ -31,7 +34,7 @@ const Header: React.FC = () => {
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       setIsLoggedIn(true);
-      setShowLogin(false); 
+      setShowLogin(false);
     } else {
       setIsLoggedIn(false);
     }
@@ -44,7 +47,7 @@ const Header: React.FC = () => {
         <i className="fa fa-arrow-right"></i>
       </div>
       <div className={styles.headerCenter}>
-        <input type="text" placeholder="Tìm kiếm bài hát, tác giả..." />
+        <Search /> {/* Search component */}
       </div>
       <div className={styles.headerRight}>
         <img src="/Vector.svg" alt="" />
