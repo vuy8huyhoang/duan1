@@ -44,7 +44,7 @@ interface Album {
     created_at: string;
     last_update: string;
     is_show: number;
-    artists: string[];  
+    artists: string[];
     types: { id_type: string; name: string }[];
     musics: Song[]; // Danh sách bài hát
 }
@@ -57,31 +57,19 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
     const [loading, setLoading] = useState<boolean>(true);
     const [selectedSongs, setSelectedSongs] = useState<string[]>([]); // Trạng thái cho bài hát đã chọn
 
-    // Lấy danh sách nghệ sĩ, thể loại và tất cả bài hát
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const artistResponse = await axios.get("/artist");
-                const typeResponse = await axios.get("/type");
-                const musicResponse = await axios.get("/music"); 
-
-                if (artistResponse?.result?.artistList) {
-                    setArtists(artistResponse.result.artistList);
-                }
-                if (typeResponse?.result?.data) {
-                    setTypes(typeResponse.result.data);
-                }
-                if (musicResponse?.result?.data) {
-                    setMusics(musicResponse.result.data); 
-                }
-            } catch (error) {
-                console.error("Lỗi fetch dữ liệu:", error);
+        axios.get("/type").then((response: any) => {
+            if (response?.result?.data) {
+                setTypes(response.result.data);
             }
-        };
-
-        fetchData();
-    }, []);
-     axios.get("/artist")
+        });
+        axios.get("/music").then((response: any) => {
+            if (response?.result?.data) {
+                setMusics(response.result.data);
+            }
+        });
+        axios.get("/artist")
             .then((response: any) => {
                 if (response && response.result && response.result.data) {
                     setArtists(response.result.data);
@@ -93,12 +81,10 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
                 console.error("Lỗi fetch nghệ sĩ:", error);
                 setArtists([]);
             });
-
-    // Fetch dữ liệu album
+    }, []);
     useEffect(() => {
         if (params.id) {
-            axios
-                .get(`/album/${params.id}`)
+            axios.get(`/album/${params.id}`)
                 .then((response: any) => {
                     if (response && response.result && response.result.data) {
                         const albumData = response.result.data;
@@ -172,11 +158,11 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
             release_date: album?.release_date ? album.release_date : undefined,
             last_update: new Date().toISOString(),
             musics: musics.filter(music => selectedSongs.includes(music.id_music)),
-            artists: album?.artists || [], 
+            artists: album?.artists || [],
         };
-        
 
-        console.log("Data being sent:", albumData); 
+
+        console.log("Data being sent:", albumData);
 
         try {
             const response = await axios.patch(`/album/${params.id}`, albumData, {
@@ -201,7 +187,7 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
 
     const handleMusicSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedMusics = Array.from(e.target.selectedOptions, option => option.value);
-        setSelectedSongs(selectedMusics); 
+        setSelectedSongs(selectedMusics);
     };
 
     return (
@@ -229,18 +215,18 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
                         value={album?.release_date?.split("T")[0] || ""}
                         onChange={handleReleaseDateChange}
                     />
-                     <select onChange={handleArtistSelect} >
-                    <option value="">Chọn nghệ sĩ</option>
-                    {artists && artists.length > 0 ? (
-                        artists.map(artist => (
-                            <option key={artist.id_artist} value={artist.id_artist}>
-                                {artist.name}
-                            </option>
-                        ))
-                    ) : (
-                        <option>Đang tải nghệ sĩ...</option>
-                    )}
-                </select>
+                    <select onChange={handleArtistSelect} >
+                        <option value="">Chọn nghệ sĩ</option>
+                        {artists && artists.length > 0 ? (
+                            artists.map(artist => (
+                                <option key={artist.id_artist} value={artist.id_artist}>
+                                    {artist.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option>Đang tải nghệ sĩ...</option>
+                        )}
+                    </select>
 
                     <select
                         value={album && album.types && album.types.length ? album.types[0].id_type : ""}
