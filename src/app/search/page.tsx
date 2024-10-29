@@ -40,7 +40,7 @@ const SearchResultsPage: React.FC = () => {
 
     return (
         <div className={styles.searchResultsContainer}>
-            <h1>Kết quả tìm kiếm cho: {query}</h1>
+            <h1>Kết quả tìm kiếm: {query}</h1>
             <div className={styles.searchResultsGrid}>
                 {paginatedResults.map((album) => (
                     <div key={album.id_music} className={styles.albumItem}>

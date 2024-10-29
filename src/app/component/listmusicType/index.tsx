@@ -26,7 +26,7 @@ const ListMusic: React.FC = () => {
     const [hoveredSong, setHoveredSong] = useState<number | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>('Tất cả');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 9; // Số mục trên mỗi trang
+    const itemsPerPage = 15; 
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -76,10 +76,6 @@ const ListMusic: React.FC = () => {
         <>
             <div className={style.headerSection}>
                 <h2>Mới phát hành</h2>
-                <div className={style.all}>
-                    <a href="#" className={style.viewAllButton}>Tất cả</a>
-                    <ReactSVG className={style.csvg} src="/all.svg" />
-                </div>
             </div>
 
             <div className={style.filterBar}>
