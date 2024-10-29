@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "@/lib/axios";
 import { v4 as uuidv4 } from 'uuid';
 import styles from "./AddArtist.module.scss";
@@ -29,8 +29,9 @@ export default function AddArtist() {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [file, setFile] = useState<File | null>(null);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null); 
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [message, setMessage] = useState<string>("");
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setArtist({ ...artist, [name]: value });
@@ -47,6 +48,16 @@ export default function AddArtist() {
             .toLowerCase();
     };
 
+    useEffect(() => {
+        // Update slug whenever the name changes
+        if (artist.name) {
+            setArtist(prev => ({
+                ...prev,
+                slug: removeVietnameseTones(artist.name),
+            }));
+        }
+    }, [artist.name]);
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
@@ -57,51 +68,49 @@ export default function AddArtist() {
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+        event.preventDefault();
 
-    if (!file) {
-        setMessage("Vui lòng chọn một file.");
-        return;
-    }
+        if (!file) {
+            setMessage("Vui lòng chọn một file.");
+            return;
+        }
 
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("file", file);
+        setLoading(true);
+        const formData = new FormData();
+        formData.append("file", file);
 
-    try {
-        const response: any = await axios.post("/upload-image", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-
-        if (response && response.result && response.result.url) {
-            const imageUrl = response.result.url;
-            setMessage("Tải lên thành công: " + imageUrl);
-
-            const artistResponse: any = await axios.post("/artist", {
-                name,
-                url_cover: imageUrl,
+        try {
+            const response: any = await axios.post("/upload-image", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
-            if (artistResponse.status === 200 || artistResponse.status === 201) {
-                alert("Nghệ sĩ đã được thêm thành công!");
-                window.location.href = "/admin/adminartist";
+            if (response?.result?.url) {
+                const imageUrl = response.result.url;
+                setMessage("Tải lên thành công: " + imageUrl);
+
+                const artistResponse: any = await axios.post("/artist", {
+                    ...artist,
+                    url_cover: imageUrl,
+                });
+
+                if (artistResponse.status === 200 || artistResponse.status === 201) {
+                    alert("Nghệ sĩ đã được thêm thành công!");
+                    window.location.href = "/admin/adminartist";
+                } else {
+                    alert("Thêm nghệ sĩ không thành công.");
+                }
             } else {
-                alert("Thêm nghệ sĩ không thành công.");
+                setMessage("Dữ liệu trả về không đúng định dạng.");
             }
-        } else {
-            setMessage("Dữ liệu trả về không đúng định dạng.");
+        } catch (error: any) {
+            console.error("Lỗi khi gửi dữ liệu nghệ sĩ:", error);
+            setMessage("Đã xảy ra lỗi khi gửi dữ liệu.");
+        } finally {
+            setLoading(false);
         }
-    } catch (error: any) {
-        console.error("Lỗi khi gửi dữ liệu nghệ sĩ:", error);
-        setMessage("Đã xảy ra lỗi khi gửi dữ liệu.");
-    } finally {
-        setLoading(false);
-    }
-};
-
-
+    };
 
     return (
         <div className={styles.container}>
@@ -128,12 +137,10 @@ export default function AddArtist() {
                     style={{ display: 'none' }}
                     onChange={handleFileChange}
                 />
-
-                
-
                 <button onClick={handleSubmit} disabled={loading}>
                     {loading ? "Đang gửi..." : "Thêm nghệ sĩ"}
                 </button>
+                {message && <div className={styles.message}>{message}</div>}
             </div>
         </div>
     );
