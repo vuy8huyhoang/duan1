@@ -91,7 +91,7 @@ body {
 }
 .admin-container {
     display: flex;
-        flex-wrap: wrap;
+    flex-wrap: wrap;
     background-color: #011E40;
 }
 

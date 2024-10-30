@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import style from './type.module.scss';
-import ListMusicTop from '../component/listmusictop';
-import ListMusicType from '../component/listmusicType';
-import ListAlbum from '../component/listalbum';
-import MusicPartner from '../component/musicpartner';
-import SlideShow from '../component/slideshow';
+import ListMusicTop from '../listmusictop';
+import ListMusicType from '../listmusicType';
+import ListAlbum from '../listalbum';
+import MusicPartner from '../musicpartner';
 interface Type {
   id_type: string;
   name: string;
@@ -50,10 +49,7 @@ const TypePage = () => {
 
   return (
     <>
-    {/* <div className={style.banner}>
-        <img src="https://photo-zmp3.zmdcdn.me/cover/3/f/4/1/3f41f32d1ca9baeb2206137e5f2eab5c.jpg" alt="Banner" className={style.bannerImage} />
-      </div> */}
-      <SlideShow/>
+
       <div className={style.container}>
         <h1 className={style.title}>Danh Sách Thể Loại</h1>
         <ul className={style.typeList}>

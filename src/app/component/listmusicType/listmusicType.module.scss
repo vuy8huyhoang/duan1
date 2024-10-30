@@ -1,26 +1,23 @@
+.headerSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+    margin-bottom: 20px;
+}
+
+.headerSection h2 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
 .all {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.title {
-  text-align: left;
-  margin-bottom: 2.5%;
-  color: #fff;
-  font-size: 1.8rem;
-  font-weight: bold;
-  padding-left: 40px;
-  padding-right: 40px;
- 
-}
-.textloi {
-    text-align: left;
-    margin-bottom: 2.5%;
-    color: #ffee00;
-    padding-left: 40px;
-    padding-right: 40px;
-   
-  }
+
 .viewAllButton {
     color: #89858F;
     font-size: 16px;
@@ -121,24 +118,28 @@
 }
 
 .songName {
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+
+    a {
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+    }
 }
 
-.songName a {
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.composerName a {
-    color: #b3b3b3;
-    font-size: 14px;
-    margin-top: 5px;
-    text-decoration: none;
+.composerName {
+    a {
+        color: #b3b3b3;
+        font-size: 14px;
+        margin-top: 5px;
+        text-decoration: none;
+        z-index: 1;
+    }
 }
 
 .overlay {
@@ -211,4 +212,31 @@
 
 .playing .playButton i.fa-pause {
     display: inline;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+
+    button {
+        padding: 5px 10px;
+        margin: 0 5px;
+        color: #fff;
+        background-color: transparent;
+        border: 2px solid #2B2335;
+        border-radius: 10px;
+        cursor: pointer;
+        &:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        margin: 0 10px;
+        font-size: 1rem;
+        color: white;
+    }
 }
