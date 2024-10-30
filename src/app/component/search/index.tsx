@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
+import style from './sc.module.scss';
 const Search: React.FC = () => {
   const [query, setQuery] = useState('');
   const router = useRouter();
@@ -18,12 +18,13 @@ const Search: React.FC = () => {
 
   return (
     <input
+    
       type="text"
       value={query}
       onChange={handleSearch}
       onKeyDown={handleKeyDown}
-      placeholder="Tìm kiếm bài hát..."
-      style={{ padding: '8px', width: '100%' }}
+      placeholder="Tìm kiếm bài hát, album, nghệ sĩ..."
+      className={style.timkiem}
     />
   );
 };
