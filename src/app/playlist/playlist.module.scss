@@ -159,4 +159,30 @@
   color: white;
   cursor: pointer;
 }
+.musicList {
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 10px 0;
+  color: white;
+  text-align: left;
+}
+.musicList div {
+  display: flex;
+  align-items: center;
+}
+.musicList label {
+  margin-left: 5px;
+}
+.deleteButton {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
+.deleteButton:hover {
+  background-color: darkred;
+}
