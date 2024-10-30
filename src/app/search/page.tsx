@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import styles from './search.module.scss';
 import Link from 'next/link';
+import MusicPartner from '../component/musicpartner';
 
 const SearchResultsPage: React.FC = () => {
     const searchParams = useSearchParams();
@@ -53,6 +54,7 @@ const SearchResultsPage: React.FC = () => {
 
     const totalArtistPages = Math.ceil(artistList.length / itemsPerPage);
 
+
     const paginatedAlbums = albumList.slice(
         (currentAlbumPage - 1) * itemsPerPage1,
         currentAlbumPage * itemsPerPage1
@@ -61,6 +63,7 @@ const SearchResultsPage: React.FC = () => {
     const totalAlbumPages = Math.ceil(albumList.length / itemsPerPage1);
 
     return (
+        <>
         <div className={styles.searchResultsContainer}>
             <h1>Kết quả tìm kiếm: {query}</h1>
 
@@ -150,8 +153,14 @@ const SearchResultsPage: React.FC = () => {
                     </button>
                 </div>
             </section>
+            <MusicPartner/>
         </div>
+      
+
+        </>
     );
+   
 };
+
 
 export default SearchResultsPage;

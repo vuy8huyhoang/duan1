@@ -51,7 +51,12 @@
     align-items: center;
     gap: 15px;
 }
-
+.musicItem:hover {
+    background-color: #2b2b2b;
+}
+.artistItem:hover {
+    background-color: #2b2b2b;
+}
 /* Kích thước hình ảnh */
 .musicImage,
 .artistImage {
