@@ -1,41 +1,32 @@
-// import React, { useState } from 'react';
-// import styles from './slideshow.module.scss'; // Nhập CSS module của bạn
+import React, { useState, useEffect } from "react";
+import style from "./sildeshow.module.scss"; 
 
-// const images = [
-//     "https://photo-zmp3.zmdcdn.me/cover/3/f/4/1/3f41f32d1ca9baeb2206137e5f2eab5c.jpg",
-//     "https://photo-zmp3.zmdcdn.me/cover/1/4/b/d/14bde6474eb1bb1c3c3e04e6a6a619fc.jpg",
-//     "https://photo-zmp3.zmdcdn.me/cover/2/d/2/d/2d2d88326a507319335ffc2e2887c0b7.jpg",
-// ];
+const Slideshow = () => {
+    const images = [
+        "https://photo-zmp3.zmdcdn.me/cover/3/f/4/1/3f41f32d1ca9baeb2206137e5f2eab5c.jpg",
+        "https://photo-zmp3.zmdcdn.me/cover/d/0/6/4/d06469e7ceb051257efd91671ff2e698.jpg",
+        "https://photo-zmp3.zmdcdn.me/cover/1/4/b/d/14bde6474eb1bb1c3c3e04e6a6a619fc.jpg"
+    ];
+    
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-// const Slideshow: React.FC = () => {
-//     const [currentIndex, setCurrentIndex] = useState(0);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        }, 2000); 
 
-//     const nextSlide = () => {
-//         console.log("Next slide clicked");
-//         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-//     };
+        return () => clearInterval(interval);
+    }, [images.length]);
 
-//     const prevSlide = () => {
-//         console.log("Previous slide clicked");
-//         setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-//     };
+    return (
+        <div className={style.slideshow}>
+            <img 
+                src={images[currentIndex]} 
+                alt="Slideshow Banner" 
+                className={style.bannerImage} 
+            />
+        </div>
+    );
+};
 
-//     return (
-//         <div className={styles.slideshow}>
-//             <div className={styles.slides}>
-//                 {images.map((image, index) => (
-//                     <div
-//                         key={index}
-//                         className={`${styles.slide} ${index === currentIndex ? styles.active : ''}`}
-//                     >
-//                         <img src={image} alt={`Slide ${index + 1}`} className={styles.slideImage} />
-//                     </div>
-//                 ))}
-//             </div>
-//             <button className={styles.prev} onClick={prevSlide}>❮</button>
-//             <button className={styles.next} onClick={nextSlide}>❯</button>
-//         </div>
-//     );
-// };
-
-// export default Slideshow;
+export default Slideshow;

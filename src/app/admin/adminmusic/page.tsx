@@ -121,8 +121,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                {/* Phân trang */}
                 <div className={styles.pagination}>
                     {[...Array(totalPages)].map((_, index) => (
                         <button

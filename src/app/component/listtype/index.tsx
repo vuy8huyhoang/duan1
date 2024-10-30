@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
 import style from './listtype.module.scss'; // Import file CSS module
-import { ReactSVG } from 'react-svg';
-
+import Link from 'next/link';
 interface Type {
     id_type: string;
     name: string;
@@ -17,9 +16,14 @@ export default function ListType() {
     useEffect(() => {
         axios.get('/type')
             .then((response: any) => {
-
                 if (response && response.result && response.result.data) {
-                    setAlbumData(response.result.data.slice(0, 3)); 
+                    const data = response.result.data;
+    
+                    // Trộn dữ liệu ngẫu nhiên
+                    const shuffledData = data.sort(() => 0.5 - Math.random());
+    
+                    // Lấy 3 phần tử đầu tiên từ danh sách đã trộn
+                    setAlbumData(shuffledData.slice(0, 3)); 
                 } else {
                     console.error('Response data is undefined or null:', response);
                     setAlbumData([]); 
@@ -33,6 +37,7 @@ export default function ListType() {
                 setLoading(false); 
             });
     }, []);
+    
 
 
 
@@ -43,8 +48,11 @@ export default function ListType() {
                     <p>Đang tải album...</p>
                 ) : (
                     albumData.map((album) => (
-                        <div key={album.id_type} className={style.albumCard}>
-                            <a className={style.albumTitle}>{album.name}</a>
+                       
+                        <div className={style.albumCard}>
+                          <Link href={`/type/${album.id_type}`} className={style.typeLink} >
+                          {album.name}
+                        </Link>
                         </div>
                     ))
                 )}

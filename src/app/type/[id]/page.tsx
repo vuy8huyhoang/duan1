@@ -1,22 +1,34 @@
-// app/type/[slug]/page.tsx
 "use client"; // Đánh dấu đây là một Client Component
 
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation'; // Sử dụng useParams để lấy id_type
+import React, { useEffect, useState, useRef } from 'react';
 import axios from '@/lib/axios';
-import styles from './ct.module.scss'; 
+import styles from './ct.module.scss';
+import TypeCmt from '../../component/typecmt';
+
+interface Music {
+  id_music: number;
+  name: string;
+  url_cover: string;
+  url_path: string;
+  artist: string;
+  genre: string;
+  release: string;
+  composer: string;
+}
 
 const TypeDetailPage = ({ params }) => {
-  const idType = params.id; 
-  const [musicList, setMusicList] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const idType = params.id;
+  const [musicList, setMusicList] = useState<Music[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentSong, setCurrentSong] = useState<Music | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const fetchMusicList = async () => {
     try {
-      const response: any = await axios.get(`/music?id_type=${idType}`); 
-      console.log(response.result);
-      setMusicList(response.result.data || []); 
+      const response: any = await axios.get(`/music?id_type=${idType}`);
+      setMusicList(response.result.data || []);
     } catch (err) {
       console.error("Error fetching music list:", err);
       setError("Có lỗi xảy ra khi tải danh sách nhạc.");
@@ -29,28 +41,54 @@ const TypeDetailPage = ({ params }) => {
     if (idType) {
       fetchMusicList();
     }
-  }, [idType]); 
+  }, [idType]);
 
-  if (loading) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
+  useEffect(() => {
+    if (audioRef.current && currentSong) {
+      audioRef.current.src = currentSong.url_path;
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
+    return () => {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    };
+  }, [currentSong]);
+
+  const handlePlayPause = (music: Music) => {
+    if (currentSong?.id_music === music.id_music && isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    } else {
+      setCurrentSong(music);
+      setIsPlaying(true);
+    }
+  };
+
+  if (loading) return <div>Đang tải dữ liệu...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
+    <>
     <div>
-      <h1>Danh Sách Nhạc Thể Loại: {idType}</h1>
+      <h1 className={styles.title}>Danh Sách Nhạc Thể Loại:</h1>
       <div className={styles.albumList}>
         {Array.isArray(musicList) && musicList.length > 0 ? (
-          musicList.map((music: any) => (
+          musicList.map((music) => (
             <div key={music.id_music} className={styles.songCard}>
               <div className={styles.albumCoverWrapper}>
                 <img src={music.url_cover} alt={music.name} className={styles.albumCover} />
                 <div className={styles.overlay}>
-                  <button className={styles.playButton}>
-                    <i className="fas fa-play"></i>
+                  <button
+                    className={styles.playButton}
+                    onClick={() => handlePlayPause(music)}
+                  >
+                    {currentSong?.id_music === music.id_music && isPlaying ? (
+                      <i className="fas fa-pause"></i>
+                    ) : (
+                      <i className="fas fa-play"></i>
+                    )}
                   </button>
                 </div>
               </div>
@@ -69,10 +107,14 @@ const TypeDetailPage = ({ params }) => {
             </div>
           ))
         ) : (
-          <div>Không có nhạc nào trong thể loại này.</div>
+          <div className={styles.textloi}>Không có nhạc nào trong thể loại này.</div>
         )}
       </div>
+
+      <audio ref={audioRef}></audio>
     </div>
+    <TypeCmt/>
+    </>
   );
 };
 
