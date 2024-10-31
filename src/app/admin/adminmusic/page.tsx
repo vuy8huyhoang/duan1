@@ -21,6 +21,7 @@ import Link from 'next/link';
         created_at: string;
         producer: string;
         url_cover: string;
+        url_path: string;
         artists: {
             artist: Artist; 
         }[];    }
@@ -54,10 +55,12 @@ import Link from 'next/link';
                 });
         }, []);
 
-        const handleDeleteSong = async (id_music: string) => {
+        const handleDeleteSong = async (id_music: string,url:string) => {
             try {
                 await axios.delete(`/music/${id_music}`);
                 setSongs(songs.filter((song) => song.id_music !== id_music));
+                await axios.delete(`/upload-image?url=${url}`);
+                await axios.delete(`/upload-audio?url=${url}`);
             } catch (error) {
                 console.error("Lỗi xóa bài hát:", error);
             }
@@ -132,7 +135,7 @@ import Link from 'next/link';
                                                     <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
                                                 </Link>
                                             </button>
-                                            <button className={styles.deleteButton} onClick={() => handleDeleteSong(song.id_music)}>
+                                            <button className={styles.deleteButton} onClick={() => handleDeleteSong(song.id_music, song.url_cover||song.url_path)}>
                                                 <ReactSVG className={styles.csvg} src="/Rectangle 79.svg" />
                                             </button>
                                         </td>

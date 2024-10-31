@@ -163,9 +163,9 @@ export default function AddMusic() {
 
             const imageUrl = imageUploadResponse?.result?.url; 
             const audioFormData = new FormData();
-            console.log(audioFormData);
+            console.log(imageUrl);
 
-            audioFormData.append("audio", audioFile);
+            audioFormData.append("file", audioFile);
 
             console.log("Đang tải lên âm thanh...");
             const audioUploadResponse: any = await axios.post("/upload-audio", audioFormData, {
@@ -180,18 +180,7 @@ export default function AddMusic() {
             if (audioUrl) {
                 songData.url_path = audioUrl;
 
-                const response = await axios.post("/music", songData, {
-                    headers: { "Content-Type": "application/json" },
-                });
-
-                console.log("Phản hồi từ API (thêm bài hát):", response);
-
-                if (response.status === 200 || response.status === 201) {
-                    alert("Bài hát đã được thêm thành công!");
-                    window.location.href = "/admin/adminmusic";
-                } else {
-                    alert("Thêm bài hát không thành công.");
-                }
+                
             } else {
                 console.log("Không tìm thấy URL âm thanh trong phản hồi:", audioUploadResponse);
                 setMessage("Lỗi khi tải tệp âm thanh lên.");
@@ -204,6 +193,18 @@ export default function AddMusic() {
             } else {
                 console.log("Không tìm thấy URL ảnh trong phản hồi:", imageUploadResponse.data);
                 setMessage("Lỗi khi tải ảnh lên.");
+            }
+            const response = await axios.post("/music", songData, {
+                headers: { "Content-Type": "application/json" },
+            });
+
+            console.log("Phản hồi từ API (thêm bài hát):", response);
+
+            if (response.status === 200 || response.status === 201) {
+                alert("Bài hát đã được thêm thành công!");
+                window.location.href = "/admin/adminmusic";
+            } else {
+                alert("Thêm bài hát không thành công.");
             }
         } catch (error: any) {
             console.error("Lỗi khi gửi dữ liệu:", error);
@@ -265,14 +266,7 @@ export default function AddMusic() {
                     ))}
                 </select>
 
-                <select onChange={handleComposerSelect} >
-                    <option value="">Chọn nhạc sĩ</option>
-                    {composers.map(composer => (
-                        <option key={composer.id_composer} value={composer.id_composer}>
-                            {composer.name}
-                        </option>
-                    ))}
-                </select>
+                
 
                 {previewUrl && (
                     <div className={styles.preview}>
