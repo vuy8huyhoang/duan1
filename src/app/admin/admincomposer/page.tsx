@@ -79,7 +79,8 @@ export default function AdminComposer() {
                                 <input type="checkbox" />
                             </th>
                             <th>ID</th>
-                            <th>Tên nghệ sĩ</th>
+                            {/* <th>Hình ảnh</th> */}
+                            <th>Tên nhạc sĩ</th>
                             <th>Ngày tạo</th>
                             <th>Tính năng</th>
                         </tr>

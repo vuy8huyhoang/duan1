@@ -139,6 +139,44 @@
   .playButton:hover {
     background-color: #e15e21;
   }
+  // ... existing styles ...
+
+.followButton {
+  background-color: #ff6f61; // A nice color for the button
+  color: white;
+  border: none;
+  margin-left: 180px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  margin-bottom: 10px; // Space between the follow and play buttons
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+      background-color: #ff4c3b; // Darker shade on hover
+  }
+}
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px; // Space between the button and the icon
+}
+
+.heartIcon {
+  color: #eae0df; // Color for the heart icon
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 24px;
+  transition: color 0.3s ease;
+
+  &:hover {
+      color: #ff4c3b; // Darker shade on hover
+  }
+}
+
+// ... existing styles ...
   
   /* Responsive design */
   @media (max-width: 768px) {

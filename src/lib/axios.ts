@@ -43,7 +43,7 @@ axios.interceptors.response.use(
       console.error("Error Headers:", error.response.headers);
     } else if (error.request) {
       // Yêu cầu đã được gửi nhưng không nhận được phản hồi từ server
-      console.error("No Response Received:", error.request);
+      console.error("No Response Received:", error);
     } else {
       // Một lỗi khác xảy ra trong quá trình thiết lập yêu cầu
       console.error("Error Message:", error.message);

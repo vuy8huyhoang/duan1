@@ -43,16 +43,16 @@ export default function AdminArtist() {
             });
     }, []);
 
-    const handleDeleteArtist = async (id_artist: string) => {
+    const handleDeleteArtist = async (id_artist: string, url: string) => {
         try {
             await axios.delete(`/artist/${id_artist}`);
             setArtists(artists.filter((artist) => artist.id_artist !== id_artist));
+            await axios.delete(`/upload-image?url=${url}` )
         } catch (error) {
             console.error("Lỗi xóa ca sĩ:", error);
         }
     };
 
-    // Tính toán chỉ số
     const indexOfLastArtist = currentPage * artistsPerPage;
     const indexOfFirstArtist = indexOfLastArtist - artistsPerPage;
     const currentArtists = artists.slice(indexOfFirstArtist, indexOfLastArtist);
@@ -114,7 +114,7 @@ export default function AdminArtist() {
                                                 <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
                                             </Link>
                                         </button>
-                                        <button className={styles.deleteButton} onClick={() => handleDeleteArtist(artist.id_artist)}>
+                                        <button className={styles.deleteButton} onClick={() => handleDeleteArtist(artist.id_artist, artist.url_cover)}>
                                             <ReactSVG className={styles.csvg} src="/Rectangle 79.svg" />
                                         </button>
                                     </td>

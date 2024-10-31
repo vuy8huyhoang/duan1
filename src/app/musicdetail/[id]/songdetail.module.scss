@@ -1,80 +1,101 @@
-.contentwrapper {
-    align-items: center;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .modalContent {
-    display: flex;
-    border-radius: 10px;
-    padding: 20px;
-    max-width: 900px;
-    width: 100%;
-    color: #fff;
-  }
-  
-  /* Right side for the cover image and basic song info */
-  .modalContentRight {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 40%; // Adjust to make enough room for left and right
-    margin-right: 20px; // Space between columns
-  }
-  
-  .coverImage {
-    border-radius: 10px;
-    width: 100%; 
-    height: auto;
-    margin-bottom: 20px;
-  }
-  
-  .modalContentRight h2 {
-    margin-bottom: 10px;
-    font-size: 24px;
-  }
-  
-  /* Left side for detailed song information */
-  .modalContentLeft {
-   
-    width: 60%;
-  }
-  
-  .songHeader {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #2a2a2a;
-    border-radius: 5px;
-  }
-  
-  .songHeader span {
-    color: #ccc;
-    font-weight: bold;
-  }
-  
-  .songNumber {
-    width: 10%;
-    text-align: left;
-  }
+/* songdetail.module.scss */
 
-  .modalContentLeft p {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #2a2a2a;
-    border-radius: 5px;
-    color: #fff;
+.contentwrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  color: #fff;
+  padding: 20px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+  border-radius: 10px;
+  padding: 20px;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modalContentRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+}
+
+.coverImage {
+  border-radius: 10px;
+  width: 100%; 
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.modalContentRight h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.modalContentRight p {
+  font-size: 16px;
+  color: #ccc;
+  text-align: center;
+}
+
+.modalContentLeft {
+  width: 60%;
+}
+
+.songContent {
+  padding: 15px;
+
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.songTitle, .songArtist, .songDuration {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+.songContent p strong {
+  color: #ff4081;
+}
+
+.audioPlayer {
+  width: 100%;
+  margin-top: 15px;
+}
+// ... existing styles ...
+
+.playButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+      background-color: #0056b3;
   }
-  
-  .modalContentLeft p strong {
-    color: #ff4081; // Highlight color for labels
+}
+
+// ... existing styles ...
+.heartIcon {
+  margin-left: 10px; /* Adjust spacing as needed */
+  cursor: pointer; /* Optional: change cursor to pointer */
+  font-size: 20px; /* Adjust size as needed */
+  &:hover{
+    color: red;
   }
-  
-  .modalContentLeft audio {
-    margin-top: 20px;
-    width: 70%;
-  }
-  
+}

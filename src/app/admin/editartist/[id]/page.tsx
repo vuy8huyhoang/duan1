@@ -17,6 +17,9 @@ interface Artist {
 export default function EditArtist({ params }: { params: { id: string } }) {
     const [artist, setArtist] = useState<Artist | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [file, setFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [message, setMessage] = useState<string>("");
 
     useEffect(() => {
         if (params.id) {
@@ -25,7 +28,8 @@ export default function EditArtist({ params }: { params: { id: string } }) {
                 .then((response: any) => {
                     console.log("Full API response for artist:", response);
                     if (response?.result?.data) {
-                        setArtist(response.result.data); 
+                        setArtist(response.result.data);
+                        setPreviewUrl(response.result.data.url_cover || null);
                     } else {
                         console.error("Không tìm thấy nghệ sĩ:", response);
                         setArtist(null);
@@ -48,15 +52,42 @@ export default function EditArtist({ params }: { params: { id: string } }) {
         }
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+            const fileUrl = URL.createObjectURL(e.target.files[0]);
+            setPreviewUrl(fileUrl);
+        }
+    };
+
     const handleSubmit = async () => {
         if (!artist) return;
 
         setLoading(true);
 
-        const slug = artist.name.toLowerCase().replace(/\s+/g, '-');
-        const artistData = { ...artist, slug };
-
         try {
+            let imageUrl = artist.url_cover;
+
+            // If a new file is selected, upload it first
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const uploadResponse: any = await axios.post("/upload-image", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+
+                if (uploadResponse?.result?.url) {
+                    imageUrl = uploadResponse.result.url;
+                } else {
+                    setMessage("Dữ liệu trả về không đúng định dạng.");
+                    return;
+                }
+            }
+
+            const slug = artist.name.toLowerCase().replace(/\s+/g, '-');
+            const artistData = { ...artist, slug, url_cover: imageUrl };
+
             const response = await axios.patch(`/artist/${artist.id_artist}`, artistData, {
                 headers: { "Content-Type": "application/json" },
             });
@@ -89,17 +120,29 @@ export default function EditArtist({ params }: { params: { id: string } }) {
                     value={artist.name}
                     onChange={handleChange}
                 />
+
+                {previewUrl && (
+                    <div className={styles.preview}>
+                        <img src={previewUrl} alt="Xem trước hình ảnh" />
+                    </div>
+                )}
+                <label htmlFor="file-upload" className={styles.customFileUpload}>
+                    Chọn ảnh
+                </label>
                 <input
-                    type="text"
-                    name="url_cover"
-                    placeholder="URL hình ảnh"
-                    value={artist.url_cover || ""}
-                    onChange={handleChange}
+                    id="file-upload"
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
                 />
+
+                
+
                 <button onClick={handleSubmit} disabled={loading}>
                     {loading ? "Đang gửi..." : "Cập nhật nghệ sĩ"}
                 </button>
             </div>
+            {message && <p>{message}</p>}
         </div>
     );
 }

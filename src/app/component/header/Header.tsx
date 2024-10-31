@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Header.module.scss';
 import Login from '../auth';
+import Link from 'next/link';
 import Search from '../search';
 
 const Header: React.FC = () => {
@@ -20,7 +21,9 @@ const Header: React.FC = () => {
       setShowDropdown((prev) => !prev);
     }
   };
-
+  const closeDropdown=()=>{
+    setShowDropdown(false);
+  }
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     setIsLoggedIn(false);
@@ -62,7 +65,9 @@ const Header: React.FC = () => {
               {showDropdown && (
                 <div className={styles.dropdownMenu}>
                   <ul>
+                  <li onClick={closeDropdown}><Link href="/profile">Tài Khoản</Link></li>
                     <li onClick={handleLogout}>Đăng xuất</li>
+                    
                   </ul>
                 </div>
               )}

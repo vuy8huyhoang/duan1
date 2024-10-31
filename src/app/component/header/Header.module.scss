@@ -78,8 +78,14 @@
           cursor: pointer;
           transition: background-color 0.3s ease;
           color: #333;
+          border-radius: 5px;
+          a{
+            text-decoration: none;
+            color: #333;
+          }
           &:hover {
-            background-color: #f0f0f0;
+            background-color: #b3b2b2;
+            border-radius: 5px;
           }
         }
       }

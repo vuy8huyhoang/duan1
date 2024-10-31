@@ -1,10 +1,18 @@
-    "use client";
-    import { useEffect, useState } from "react";
-    import axios from "@/lib/axios"; 
-    import styles from "./AdminMusic.module.scss";
-    import { ReactSVG } from "react-svg";
-    import Link from 'next/link';
+"use client";
+import { useEffect, useState } from "react";
+import axios from "@/lib/axios"; 
+import styles from "./AdminMusic.module.scss";
+import { ReactSVG } from "react-svg";
+import Link from 'next/link';
+    
+    interface Artist {
+        id_artist: string;
+        name: string;
+        slug: string;
+        url_cover: string;
 
+
+}
     interface Song {
         id_music: string;
         name: string;
@@ -13,12 +21,17 @@
         created_at: string;
         producer: string;
         url_cover: string;
-    }
+        url_path: string;
+        artists: {
+            artist: Artist; 
+        }[];    }
 
     export default function AdminMusic() {
         const [songs, setSongs] = useState<Song[]>([]);
+        const [artists, setArtists] = useState<Artist[]>([]);
         const [loading, setLoading] = useState<boolean>(true);
         const [currentPage, setCurrentPage] = useState<number>(1);
+        
         const songsPerPage = 10;
 
         useEffect(() => {
@@ -42,10 +55,12 @@
                 });
         }, []);
 
-        const handleDeleteSong = async (id_music: string) => {
+        const handleDeleteSong = async (id_music: string,url:string) => {
             try {
                 await axios.delete(`/music/${id_music}`);
                 setSongs(songs.filter((song) => song.id_music !== id_music));
+                await axios.delete(`/upload-image?url=${url}`);
+                await axios.delete(`/upload-audio?url=${url}`);
             } catch (error) {
                 console.error("Lỗi xóa bài hát:", error);
             }
@@ -97,7 +112,16 @@
                                         <td>#{song.id_music}</td>
                                         <td><img src={song.url_cover} alt="" /></td>
                                         <td>{song.name}</td>
-                                        <td>{song.composer}</td>
+                                        <td>
+                                            {song.artists
+                                                .map((artistWrapper) => artistWrapper.artist.name) 
+                                                .join(', ')}
+                                        </td>
+
+
+
+
+
                                         <td>{new Date(song.created_at).toLocaleString('vi-VN', {
                                             year: 'numeric',
                                             month: '2-digit',
@@ -111,7 +135,7 @@
                                                     <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
                                                 </Link>
                                             </button>
-                                            <button className={styles.deleteButton} onClick={() => handleDeleteSong(song.id_music)}>
+                                            <button className={styles.deleteButton} onClick={() => handleDeleteSong(song.id_music, song.url_cover||song.url_path)}>
                                                 <ReactSVG className={styles.csvg} src="/Rectangle 79.svg" />
                                             </button>
                                         </td>

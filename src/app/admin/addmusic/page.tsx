@@ -8,15 +8,6 @@ interface Artist {
     name: string;
     slug: string;
     url_cover: string;
-
-
-}
-interface Lyrics {
-    id_lyrics: string;
-    id_music: string;
-    lyrics: string;
-    start_time: number;
-    end_time: number;
 }
 
 interface Type {
@@ -27,12 +18,19 @@ interface Type {
     is_show: number;
 }
 
+interface Composer {
+    id_composer: string;
+    name: string;
+    created_at: string;
+    last_update: string;
+}
+
 interface Song {
     id_music: string;
     name: string;
     slug: string;
-    url_path: string;
-    url_cover: string;
+    url_path: string; // URL for audio file
+    url_cover: string; // URL for cover image
     total_duration: string | null;
     producer: string;
     composer: string | null;
@@ -44,13 +42,9 @@ interface Song {
     favorite: number;
     artists: string[];
     types: string[];
+    composers: string[];
 }
-interface Composer{
-    id_composer: string;
-    name: string;
-    created_at: string;
-    last_update: string;
-}
+
 export default function AddMusic() {
     const [song, setSong] = useState<Song>({
         id_music: "",
@@ -69,52 +63,37 @@ export default function AddMusic() {
         favorite: 0,
         artists: [],
         types: [],
+        composers: []
     });
-    
+
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
     const [composers, setComposers] = useState<Composer[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    // State for handling image upload
+    const [file, setFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+    // State for handling audio upload
+    const [audioFile, setAudioFile] = useState<File | null>(null);
+    const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
+
+    const [message, setMessage] = useState<string>("");
 
     useEffect(() => {
-        axios
-            .get("/artist")
-            .then((response: any) => {
-                console.log("Full API response for artists:", response);
-                if (response && response.result && response.result.data) {
-                    setArtists(response.result.data);
-                } else {
-                    console.error("Response data for artists is undefined or empty:", response);
-                    setArtists([]);
-                }
-            })
-            .catch((error: any) => {
-                console.error("Lỗi fetch nghệ sĩ:", error);
-                setArtists([]);
-            });
+        axios.get("/artist").then((response: any) => {
+            setArtists(response?.result?.data || []);
+        }).catch(() => setArtists([]));
+
+        axios.get("/type").then((response: any) => {
+            setTypes(response?.result?.data || []);
+        }).catch(() => setTypes([]));
+
+        axios.get("/composer").then((response: any) => {
+            setComposers(response?.result?.data || []);
+        }).catch(() => setComposers([]));
     }, []);
-
-
-
-
-    useEffect(() => {
-        axios
-            .get("/type")
-            .then((response: any) => {
-                console.log("Full API response for types:", response);
-                if (response && response.result && response.result.data) {
-                    setTypes(response.result.data);
-                } else {
-                    console.error("Response data for types is undefined or empty:", response);
-                    setTypes([]);
-                }
-            })
-            .catch((error: any) => {
-                console.error("Lỗi fetch thể loại:", error);
-                setTypes([]);
-            });
-    }, []);
-
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -122,28 +101,104 @@ export default function AddMusic() {
     };
 
     const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedArtists = Array.from(e.target.selectedOptions, option => option.value);  // Chỉ lấy ID nghệ sĩ
+        const selectedArtists = Array.from(e.target.selectedOptions, option => option.value);
         setSong({ ...song, artists: selectedArtists });
     };
 
     const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedTypes = Array.from(e.target.selectedOptions, option => option.value);  // Chỉ lấy ID thể loại
+        const selectedTypes = Array.from(e.target.selectedOptions, option => option.value);
         setSong({ ...song, types: selectedTypes });
     };
 
+    const handleComposerSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedComposers = Array.from(e.target.selectedOptions, option => option.value);
+        setSong({ ...song, composers: selectedComposers });
+    };
 
+    // Handle file change for image upload
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
 
-    const handleSubmit = async () => {
+            const fileUrl = URL.createObjectURL(e.target.files[0]);
+            setPreviewUrl(fileUrl);
+        }
+    };
+
+    const handleAudioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setAudioFile(e.target.files[0]);
+
+            const audioUrl = URL.createObjectURL(e.target.files[0]);
+            setAudioPreviewUrl(audioUrl);
+        }
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        if (!file || !audioFile) {
+            setMessage("Vui lòng chọn cả tệp ảnh và tệp âm thanh.");
+            return;
+        }
+
         setLoading(true);
-        const slug = song.name.toLowerCase().replace(/\s+/g, '-');
-        const songData = { ...song, slug };
 
-        console.log("Submitting song data:", songData);  // Log dữ liệu trước khi gửi request
+        const songData = { ...song };
+        const slug = song.name.toLowerCase().replace(/\s+/g, '-');
+        songData.slug = slug;
+
+        const imageFormData = new FormData();
+        imageFormData.append("file", file);
 
         try {
+            console.log("Đang tải lên ảnh...");
+            const imageUploadResponse: any = await axios.post("/upload-image", imageFormData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            console.log("Phản hồi từ API (upload ảnh):", imageUploadResponse);
+
+            const imageUrl = imageUploadResponse?.result?.url; 
+            const audioFormData = new FormData();
+            console.log(imageUrl);
+
+            audioFormData.append("file", audioFile);
+
+            console.log("Đang tải lên âm thanh...");
+            const audioUploadResponse: any = await axios.post("/upload-audio", audioFormData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            console.log("Phản hồi từ API (upload audio):", audioUploadResponse);
+            const audioUrl = audioUploadResponse?.result?.url;
+
+            if (audioUrl) {
+                songData.url_path = audioUrl;
+
+                
+            } else {
+                console.log("Không tìm thấy URL âm thanh trong phản hồi:", audioUploadResponse);
+                setMessage("Lỗi khi tải tệp âm thanh lên.");
+            }
+            if (imageUrl) {
+                songData.url_cover = imageUrl; 
+                console.log("Tải lên ảnh thành công, URL:", imageUrl);
+
+                
+            } else {
+                console.log("Không tìm thấy URL ảnh trong phản hồi:", imageUploadResponse.data);
+                setMessage("Lỗi khi tải ảnh lên.");
+            }
             const response = await axios.post("/music", songData, {
                 headers: { "Content-Type": "application/json" },
             });
+
+            console.log("Phản hồi từ API (thêm bài hát):", response);
 
             if (response.status === 200 || response.status === 201) {
                 alert("Bài hát đã được thêm thành công!");
@@ -151,13 +206,26 @@ export default function AddMusic() {
             } else {
                 alert("Thêm bài hát không thành công.");
             }
-        } catch (error) {
-            console.error("Error submitting song data:", error);
-            alert("Đã xảy ra lỗi khi gửi dữ liệu.");
+        } catch (error: any) {
+            console.error("Lỗi khi gửi dữ liệu:", error);
+
+            setMessage("Đã xảy ra lỗi khi gửi dữ liệu.");
         } finally {
             setLoading(false);
         }
     };
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -174,65 +242,69 @@ export default function AddMusic() {
                 />
                 <input
                     type="text"
-                    name="url_path"
-                    placeholder="URL video"
-                    value={song.url_path}
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
-                    name="url_cover"
-                    placeholder="URL ảnh bìa"
-                    value={song.url_cover}
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
                     name="producer"
                     placeholder="Nhà sản xuất"
                     value={song.producer}
                     onChange={handleChange}
                 />
-                {/* <input
-                    type="text"
-                    name="composer"
-                    placeholder="Người sáng tác"
-                    value={song.composer}
-                    onChange={handleChange}
-                /> */}
 
-                <select onChange={handleArtistSelect}>
+                <select onChange={handleArtistSelect} >
                     <option value="">Chọn nghệ sĩ</option>
-                    {artists && artists.length > 0 ? (
-                        artists.map(artist => (
-                            <option key={artist.id_artist} value={artist.id_artist}>
-                                {artist.name}
-                            </option>
-                        ))
-                    ) : (
-                        <option>Đang tải nghệ sĩ...</option>
-                    )}
+                    {artists.map(artist => (
+                        <option key={artist.id_artist} value={artist.id_artist}>
+                            {artist.name}
+                        </option>
+                    ))}
                 </select>
 
-                <select onChange={handleTypeSelect}>
+                <select onChange={handleTypeSelect} >
                     <option value="">Chọn thể loại</option>
-                    {types && types.length > 0 ? (
-                        types.map(type => (
-                            <option key={type.id_type} value={type.id_type}>
-                                {type.name}
-                            </option>
-                        ))
-                    ) : (
-                        <option>Đang tải thể loại...</option>
-                    )}
+                    {types.map(type => (
+                        <option key={type.id_type} value={type.id_type}>
+                            {type.name}
+                        </option>
+                    ))}
                 </select>
 
+                
 
+                {previewUrl && (
+                    <div className={styles.preview}>
+                        <img src={previewUrl} alt="Xem trước ảnh bìa" />
+                    </div>
+                )}
+                <label htmlFor="file-upload" className={styles.customFileUpload}>
+                    Chọn ảnh bìa
+                </label>
+                <input
+                    id="file-upload"
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                />
+
+                {audioPreviewUrl && (
+                    <div className={styles.preview}>
+                        <audio controls src={audioPreviewUrl}>
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                        </audio>
+                    </div>
+                )}
+                <label htmlFor="audio-upload" className={styles.customFileUpload}>
+                    Chọn tệp âm thanh
+                </label>
+                <input
+                    id="audio-upload"
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={handleAudioChange}
+                />
+
+                <button onClick={handleSubmit} disabled={loading}>
+                    {loading ? "Đang gửi..." : "Thêm bài hát"}
+                </button>
+                {message && <div className={styles.message}>{message}</div>}
             </div>
-
-            <button onClick={handleSubmit} disabled={loading}>
-                {loading ? "Đang gửi..." : "Thêm bài hát"}
-            </button>
         </div>
     );
 }

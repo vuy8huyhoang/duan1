@@ -19,12 +19,17 @@ interface Type {
     is_show: number;
 }
 
+interface Composer {
+    id_composer: string;
+    name: string;
+}
+
 interface Song {
     id_music: string;
     name: string;
     slug: string;
-    url_path: string;
-    url_cover: string;
+    url_path: string; 
+    url_cover: string; 
     total_duration: string | null;
     producer: string;
     composer: string | null;
@@ -36,14 +41,22 @@ interface Song {
     favorite: number;
     artists: { id_artist: string; name: string }[];
     types: { id_type: string; name: string }[];
+    composers: { id_composer: string; name: string }[];
 }
 
 export default function EditMusic({ params }: { params: { id: string } }) {
     const [song, setSong] = useState<Song | null>(null);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
+    const [composers, setComposers] = useState<Composer[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [formattedDate, setFormattedDate] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
+
+    const [file, setFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+    const [audioFile, setAudioFile] = useState<File | null>(null);
+    const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
 
     useEffect(() => {
         axios.get("/artist").then((response: any) => {
@@ -56,7 +69,13 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 setTypes(response.result.data);
             }
         });
+        axios.get("/composer").then((response: any) => {
+            if (response?.result?.data) {
+                setComposers(response.result.data);
+            }
+        });
     }, []);
+
     useEffect(() => {
         if (params.id) {
             axios
@@ -64,7 +83,15 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 .then((response: any) => {
                     if (response?.result?.data) {
                         const songData = response.result.data;
-                        setSong(songData); 
+                        setSong(songData);
+
+                        if (songData.url_cover) {
+                            setPreviewUrl(songData.url_cover);
+                        }
+                        if (songData.url_path) {
+                            setAudioPreviewUrl(songData.url_path);
+                        }
+
                         console.log("Song data fetched:", songData);
                     }
                 })
@@ -77,49 +104,22 @@ export default function EditMusic({ params }: { params: { id: string } }) {
         }
     }, [params.id]);
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
 
-    console.log("params.id:", params.id);
-    if (loading) return <p>Đang tải...</p>;
-    if (!song) {
-        console.log("Song is null or undefined", song);
-        return <p>Không tìm thấy bài hát.</p>;
-    }
-    console.log("Song data to display: ", song);
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setSong({ ...song, [name]: value } as Song);
+            const fileUrl = URL.createObjectURL(e.target.files[0]);
+            setPreviewUrl(fileUrl); 
+        }
     };
 
-    const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedArtistId = e.target.value;
+    const handleAudioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setAudioFile(e.target.files[0]);
 
-        setSong((prevSong) => {
-            if (prevSong) {
-                const existingArtists = prevSong.artists.map(artist => artist.id_artist);
-                if (!existingArtists.includes(selectedArtistId)) {
-                    return {
-                        ...prevSong,
-                        artists: [...prevSong.artists, { id_artist: selectedArtistId, name: "" }],
-                    };
-                }
-            }
-            return prevSong;
-        });
-    };
-
-
-    const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedTypeId = e.target.value;
-
-        setSong((prevSong) => {
-            if (prevSong) {
-                return {
-                    ...prevSong,
-                    types: [{ id_type: selectedTypeId, name: prevSong.types.find(type => type.id_type === selectedTypeId)?.name || "" }],
-                };
-            }
-            return prevSong;
-        });
+            const audioUrl = URL.createObjectURL(e.target.files[0]);
+            setAudioPreviewUrl(audioUrl); 
+        }
     };
 
     const handleSubmit = async () => {
@@ -136,17 +136,48 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             composer: song?.composer || null,
             release_date: song?.release_date || null,
             last_update: new Date().toISOString(),
-            artists: song?.artists.map(artist => artist.id_artist),  
-            types: song?.types.map(type => type.id_type), 
+            artists: song?.artists.map(artist => artist.id_artist),
+            types: song?.types.map(type => type.id_type),
+            composers: song?.composers.map(composer => composer.id_composer),
         };
 
-        console.log("Data to be sent:", songData);
+        console.log("Data being sent:", songData); 
 
         try {
+            if (file) {
+                const imageFormData = new FormData();
+                imageFormData.append("file", file);
+                const imageUploadResponse: any = await axios.post("/upload-image", imageFormData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+                const imageUrl = imageUploadResponse?.result?.url;
+                if (imageUrl) {
+                    songData.url_cover = imageUrl;
+                } else {
+                    setMessage("Lỗi khi tải ảnh lên.");
+                    return;
+                }
+            }
+
+            if (audioFile) {
+                const audioFormData = new FormData();
+                audioFormData.append("file", audioFile);
+                const audioUploadResponse: any = await axios.post("/upload-audio", audioFormData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+                const audioUrl = audioUploadResponse?.result?.url;
+                if (audioUrl) {
+                    songData.url_path = audioUrl;
+                } else {
+                    setMessage("Lỗi khi tải tệp âm thanh lên.");
+                    return;
+                }
+            }
+
+            console.log("Sending updated song data:", songData); // Check the final song data
+
             const response = await axios.patch(`/music/${params.id}`, songData, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
             });
 
             if (response.status === 200 || response.status === 204) {
@@ -164,8 +195,8 @@ export default function EditMusic({ params }: { params: { id: string } }) {
     };
 
 
-
-
+    if (loading) return <p>Đang tải...</p>;
+    if (!song) return <p>Không tìm thấy bài hát.</p>;
 
     return (
         <div className={styles.container}>
@@ -176,37 +207,29 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     name="name"
                     placeholder="Tên bài hát"
                     value={song?.name || ""}
-                    onChange={handleChange}
+                    onChange={(e) => setSong({ ...song, name: e.target.value } as Song)}
                 />
-                <input
-                    type="text"
-                    name="url_path"
-                    placeholder="URL video"
-                    value={song?.url_path || ""}
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
-                    name="url_cover"
-                    placeholder="URL ảnh bìa"
-                    value={song?.url_cover || ""}
-                    onChange={handleChange}
-                />
+
                 <input
                     type="text"
                     name="producer"
                     placeholder="Nhà sản xuất"
                     value={song?.producer || ""}
-                    onChange={handleChange}
+                    onChange={(e) => setSong({ ...song, producer: e.target.value } as Song)}
                 />
-                
 
                 <select
-                    value={song?.artists && song.artists.length > 0 ? song.artists[0].id_artist : ""}
-                    onChange={handleArtistSelect}
+                    value={song?.artists.length > 0 ? song.artists[0].id_artist : ""}
+                    onChange={(e) => {
+                        const selectedArtistId = e.target.value;
+                        setSong((prevSong) => ({
+                            ...prevSong,
+                            artists: [{ id_artist: selectedArtistId, name: "" }],
+                        }));
+                    }}
                 >
                     <option value="">Chọn nghệ sĩ</option>
-                    {artists.map(artist => (
+                    {artists.map((artist) => (
                         <option key={artist.id_artist} value={artist.id_artist}>
                             {artist.name}
                         </option>
@@ -214,22 +237,62 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 </select>
 
                 <select
-                    value={song?.types && song.types.length > 0 ? song.types[0].id_type : ""}
-                    onChange={handleTypeSelect}
+                    value={song?.types.length > 0 ? song.types[0].id_type : ""}
+                    onChange={(e) => {
+                        const selectedTypeId = e.target.value;
+                        setSong((prevSong) => ({
+                            ...prevSong,
+                            types: [{ id_type: selectedTypeId, name: "" }],
+                        }));
+                    }}
                 >
                     <option value="">Chọn thể loại</option>
-                    {types.map(type => (
+                    {types.map((type) => (
                         <option key={type.id_type} value={type.id_type}>
                             {type.name}
                         </option>
                     ))}
                 </select>
 
+                
 
+                {previewUrl && (
+                    <div className={styles.preview}>
+                        <img src={previewUrl} alt="Xem trước ảnh bìa" />
+                    </div>
+                )}
+                <label htmlFor="file-upload" className={styles.customFileUpload}>
+                    Chọn ảnh bìa
+                </label>
+                <input
+                    id="file-upload"
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                />
+
+                {audioPreviewUrl && (
+                    <div className={styles.preview}>
+                        <audio controls src={audioPreviewUrl}>
+                            Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                        </audio>
+                    </div>
+                )}
+                <label htmlFor="audio-upload" className={styles.customFileUpload}>
+                    Chọn tệp âm thanh
+                </label>
+                <input
+                    id="audio-upload"
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleAudioChange}
+                />
             </div>
+
             <button onClick={handleSubmit} disabled={loading}>
                 {loading ? "Đang cập nhật..." : "Cập nhật bài hát"}
             </button>
+            {message && <div className={styles.message}>{message}</div>}
         </div>
     );
 }
