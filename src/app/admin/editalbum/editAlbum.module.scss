@@ -95,7 +95,36 @@
     }
     
 }
-.submit{
-    text-align: center;
+.submit {
+    display: flex;
+    justify-content: center;
+   
+    margin-top: 20px;
+}
+
+.submit button {
+    padding: 10px 20px;
+    font-size: 16px;
     width: 100%;
+    font-weight: bold;
+    color: #fff;
+    background-color: #45a049; /* Màu nền chính */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submit button:hover {
+    background-color: #3b1f75; /* Màu khi hover */
+}
+
+.submit button:active {
+    transform: scale(0.95); /* Hiệu ứng khi nhấn */
+}
+
+.submit button:disabled {
+    background-color: #bbb; /* Màu khi disable */
+    cursor: not-allowed;
+    opacity: 0.7;
 }

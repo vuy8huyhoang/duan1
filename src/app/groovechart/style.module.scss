@@ -1,69 +1,163 @@
 .contentwrapper {
-    // position: relative;
+    flex-direction: column;
     align-items: center;
     padding: 2rem;
-    color: #ffffff;  /* Màu chữ trắng */
+    color: #ffffff;
     border-radius: 10px;
 }
 
 .title {
-    // position: absolute;
-    padding-left: 45px;
     font-size: 2.5rem;
-    color: #ffffff;
+    color: transparent; /* Đặt màu chữ thành trong suốt */
     margin-bottom: 1rem;
     font-weight: bold;
-    left: 150px ;
+    text-align: left;
+    width: 100%;
+    padding-left: 45px;
+    background: linear-gradient(150deg, #d1abe4, #716d5c); 
+    background-clip: text;
+   
 }
+
 
 .musicList {
-    width: 100% ;
-    // position: absolute;
-    
-    gap: 1.5rem; /* Khoảng cách giữa các bài hát */
-    padding-top: 50x;
-    padding-left: 150px;
-}
-.musicList h5{
-    text-align:left;
-}
-.musicList p{
-    text-align:left;
-    font-size: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 20px;
+    padding-left: 90px;
 }
 
-.musicCard {
-    display: grid;
-    grid-template-columns: 100px 200px 300px auto;
-    align-items: center; /* Căn giữa nội dung theo chiều dọc */
-    gap: 10px;
-    padding: 1rem;
+.songCard {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
     border-radius: 10px;
-    transition: transform 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     
     &:hover {
-        transform: scale(1.02); /* Hiệu ứng phóng to nhẹ khi hover */
+        background-color: #333333;
+        transform: scale(1.02);
     }
 }
-.image{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+.image {
     position: relative;
-}
-.musicCover {
-    width: 90px;  /* Kích thước ảnh nhỏ hơn cho vừa với dòng */
+    width: 90px;
     height: 90px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-right: 1rem;  /* Khoảng cách giữa ảnh và tên bài hát */
 }
 
-.card-title {
-    font-size: 1.2rem;
-    color: #ffcc00; /* Màu vàng nổi bật */
+.musicCover {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    .playButton {
+        background-color: #ffffff;
+        border: none;
+        border-radius: 50%;
+        padding: 10px;
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.songCard:hover .overlay {
+    opacity: 1;
+}
+
+.Titles {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia thành 2 cột: một cho tên bài hát, một cho tên nhạc sĩ */
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+.title {
+    font-family: 'Arial', sans-serif; /* Thay đổi font-family nếu cần */
+    font-weight: bold; /* Đậm */
+    font-size: 48px; /* Kích thước chữ lớn */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Đổ bóng để tạo hiệu ứng nổi */
+    margin: 20px 0; /* Khoảng cách trên và dưới */
+   
+}
+
+.musicName {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #f5f5f5;
     margin: 0;
+    text-align: left; /* Canh trái */
+}
+
+.musicArtist {
+    font-size: 0.9rem;
+    color: #b3b3b3;
+    margin: 0;
+    text-align: left; /* Canh trái */
+}
+
+
+.songControls {
+    display: flex;
+    position: absolute;
+    top: 53px;
+    right: 50px;
+    gap: 10px;
+    font-size: 1rem;
+    color: #f4eaea;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    i {
+        cursor: pointer;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: #ffffff;
+        }
+    }
+}
+
+.songCard:hover .songControls {
+    opacity: 1;
+}
+
+.moreOptions {
+    margin-left: auto;
+    color: #999999;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #ffffff;
+    }
 }
 .index {
     width: 60px;
@@ -77,203 +171,4 @@
     color: rgba(74,144,226,0);
     font-family: "Roboto",sans-serif;
     white-space: nowrap;
-}
-.moreOptions {  
-    margin-left: 10px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #ffffff;  /* Màu trắng cho dấu chấm */
-
-}
-.Titles{
-    flex-direction: column;
-}
-.musicList h2{
-    padding-left: 100px;
-    text-align:left;
-}
-.playButton{
-    position: absolute;
-    top: 0;
-    left: -110px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: 2px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    flex-grow: 1;
-    opacity: 0;
-}
-.musicCard:hover{
-    .image{
-        .playButton{
-            opacity: 1;
-        }
-    }
-}
-.playButton svg {
-    width: 20px;
-    height: 30px;
-    stroke: #FFFFFF;
-    fill: none !important;
-}
-
-.chartInAreaMusicTotal {
-    width: 100%;
-    margin-left: 70px;
-    background-color: #201335e6;  
-    border-radius: 16px;
-    padding: 20px;
-
-}
-
-.chartInAreaMusicHeader {
-    margin-bottom: 30px;
-}
-
-.chartInAreaMusicText {
-    font-size: 24px;
-    font-weight: 700;
-    color: #fff;
-}
-
-.chartInAreaMusicList {
-    display: flex;
-    justify-content: space-between;
-}
-
-.itemChartArea {
-    width: 40%;
-    padding: 0 10px;
-}
-
-.itemChartAreaMain {
-    background-color: #2d1a4c;
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-}
-
-.chartHeader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.chartHeaderText {
-    font-size: 18px;
-    font-weight: 600;
-    color: #fff;
-}
-
-.chartHeaderImg {
-    width: 24px;
-    height: 24px;
-    margin-left: 10px;
-}
-
-.chartSongItem {
-    margin-top: 20px;
-}
-
-.infoItemChart {
-    display: flex;
-    justify-content: space-between;
-}
-
-.media {
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.mediaLeft {
-    display: flex;
-    align-items: center;
-    width: 100%;    
-}
-
-.songPrefix {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-}
-
-.number {
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-}
-
-.sort {
-    margin-left: 5px;
-    font-size: 12px;
-    color: #ccc;
-}
-
-.songThumb {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.songThumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.cardInfo {
-    margin-left: 10px;
-    text-align: left;
-}
-
-.nameSong {
-
-    font-size: 16px;
-    font-weight: 600;
-    color: #fff;
-}
-
-.nameSinger {
-    font-size: 14px;
-    color: #ccc;
-}
-
-.mediaRight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 10%;
-}
-
-.timeSongItem {
-    font-size: 12px;
-    color: #fff;
-}
-
-.buttonWatch100 {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.watch100Btn {
-    border-radius: 999px;
-    border: 1px solid #fff;
-    font-size: 14px;
-    font-weight: 500;
-    color: #fff;
-    background-color: transparent;
-    padding: 8px 25px;
-    cursor: pointer;
-}
-
-.watch100Btn:hover {
-    background-color: #ffffff1a;
 }

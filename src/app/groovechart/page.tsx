@@ -1,10 +1,15 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from '@/lib/axios';
 import styles from './style.module.scss';
 import { ReactSVG } from 'react-svg';
 import Bxh from '../component/bxh';
 import ListType from '../component/listtype';
+import ListAlbum from '../component/listalbum';
+import ListMusic from '../component/listmusic';
+import ListMusicTop from '../component/listmusictop';
+import AlbumHot from '../component/albumhot';
+
 interface Music {
     id_music: string;
     name: string;
@@ -13,11 +18,16 @@ interface Music {
     types: {
         name: string;
     }[];
+    url_path: string;
 }
 
 export default function GrooveChartPage() {
     const [musicData, setMusicData] = useState<Music[]>([]);
     const [loading, setLoading] = useState(true);
+    const [hoveredSong, setHoveredSong] = useState<string | null>(null);
+    const [currentSong, setCurrentSong] = useState<Music | null>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         const fetchMusicData = async () => {
@@ -25,7 +35,7 @@ export default function GrooveChartPage() {
                 axios.get("music")
                 .then((res:any)=> 
                     {console.log(res); 
-                    setMusicData(res.result.data.slice(0,8))})
+                    setMusicData(res.result.data.slice(0,10))})
 
             } catch (error) {
                 console.error('Lỗi fetch music', error);
@@ -36,47 +46,57 @@ export default function GrooveChartPage() {
         fetchMusicData();
     }, []);
 
+    const playSong = (music: Music) => {
+        if (audioRef.current) {
+            if (currentSong?.id_music === music.id_music && isPlaying) {
+                audioRef.current.pause();
+                setIsPlaying(false);
+            } else {
+                setCurrentSong(music);
+                audioRef.current.src = music.url_path; 
+                audioRef.current.play();
+                setIsPlaying(true);
+            }
+        }
+    };
+
     return (
         <div className={styles.contentwrapper}>
-
             <h1 className={styles.title}>#Groovechart</h1>
-            <div>
-                <img src="" alt="" />
-            </div>
             <div className={styles.musicList}>
-                {musicData.map((music,index) => (
-                    
-                    <div key={music.id_music} className={styles.musicCard}>
+                {musicData.map((music, index) => (
+                    <div
+                        key={music.id_music}
+                        className={`${styles.songCard} ${hoveredSong === music.id_music ? styles.hovered : ''}`}
+                        onMouseEnter={() => setHoveredSong(music.id_music)}
+                        onMouseLeave={() => setHoveredSong(null)}
+                    >
                         <span className={styles.index}>{index + 1}.</span>
                         <div className={styles.image}>
-                        <img src={music.url_cover} alt={music.name} className={styles.musicCover} />
-                       
-                        <button className={styles.playButton}>
-                                        <ReactSVG src="/play.svg" />
-                        </button>
+                            <img src={music.url_cover} alt={music.name} className={styles.musicCover} />
+                            <div className={styles.overlay}>
+                                <button
+                                    className={styles.playButton}
+                                    onClick={() => playSong(music)}
+                                >
+                                    <i className={`fas ${currentSong?.id_music === music.id_music && isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                                </button>
+                            </div>
                         </div>
-                       
                         <div className={styles.Titles}>
-                        <h5 className={styles.musicName}>{music.name} <br /></h5>
-                        <p className={styles.musicArtist}>{music.composer}</p>
-                        </div>      
+                            <h5 className={styles.musicName}>{music.name}</h5>
+                            <p className={styles.musicArtist}>{music.composer}</p>
+                        </div>
+                        <div className={styles.songControls}>
+                            <i className="fas fa-heart"></i>
+                        </div>
                         <div className={styles.moreOptions}>...</div>
                     </div>
                 ))}
             </div>
-            
-            {/* <div className={styles.musicList}>
-                {musicData.map((music,index) => (
-                    <div key={music.id_music} className={styles.musicCard}> 
-                        <h2 className={styles.typeName}>{music.types.map(type => type.name).join(", ")} <br /></h2>
-                    </div>
-                ))}
-            </div> */}
-
-
-
-            
+            <audio ref={audioRef} />
+            <ListMusicTop />
+            <ListType />
         </div>
-        
     );
 }

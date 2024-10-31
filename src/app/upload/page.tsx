@@ -34,7 +34,7 @@ const UploadForm = () => {
       console.log(response);
 
       const artistResponse: any = await axios.post("/artist", {
-name, url_cover: response.result.url
+            name, url_cover: response.result.url
       })
       
     } catch (error:any) {
