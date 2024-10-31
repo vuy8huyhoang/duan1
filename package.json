@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@types/axios": "^0.14.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/uuid": "^10.0.0",
