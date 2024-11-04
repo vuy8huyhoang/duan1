@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import style from "./FavoriteMusic.module.scss";
+import Link from "next/link";
 
 interface FavoriteMusic {
   id_music: string;
@@ -38,7 +39,7 @@ const FavoriteMusicPage = () => {
         {favoriteMusic.map((music) => (
           <div key={music.id_music} className={style.musicItem}>
             <img src={music.url_cover || "/default-cover.png"} alt={music.name} />
-            <p>{music.name}</p>
+            <Link href={`/musicdetail/${music.id_music}`}>{music.name}</Link>
           </div>
         ))}
       </div>

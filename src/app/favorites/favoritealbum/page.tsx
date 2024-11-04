@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import style from "./FavoriteAlbum.module.scss";
+import Link from "next/link";
 
 interface FavoriteAlbum {
   id_album: string;
@@ -33,7 +34,7 @@ const FavoriteAlbumPage = () => {
         {favoriteAlbums.map((album) => (
           <div key={album.id_album} className={style.albumItem}>
             <img src={album.url_cover || "/default-cover.png"} alt={album.name} />
-            <p>{album.name}</p>
+            <Link href={`/albumdetail/${album.id_album}`}>{album.name}</Link>
           </div>
         ))}
       </div>
