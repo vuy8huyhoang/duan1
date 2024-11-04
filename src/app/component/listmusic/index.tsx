@@ -51,9 +51,15 @@ const ListMusic: React.FC = () => {
         });
 
         try {
-            await axios.post(`/favorite-music/me`, { id_music, favorite: !isFavorite });
+            if (isFavorite) {
+                // Nếu đã là yêu thích, xóa khỏi yêu thích
+                await axios.delete(`/favorite-music/me`, { data: { id_music } });
+            } else {
+                // Nếu chưa yêu thích, thêm vào yêu thích
+                await axios.post(`/favorite-music/me`, { id_music, favorite: true });
+            }
         } catch (error) {
-            console.error('Error updating favorite status:', error);
+            console.error('Lỗi khi cập nhật trạng thái yêu thích:', error);
         }
     };
 
