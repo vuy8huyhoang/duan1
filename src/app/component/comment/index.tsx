@@ -51,7 +51,7 @@ const Comment: React.FC<CommentProps> = ({ id_music }) => {
                 setNewComment('');
             }
         } catch (err) {
-            setError('Failed to post comment');
+            alert("Hãy đăng nhập để bình luận.");
         }
     };
 
@@ -60,8 +60,7 @@ const Comment: React.FC<CommentProps> = ({ id_music }) => {
             await axios.delete(`/comment/${id_comment}`); 
             setComments((prevComments) => prevComments.filter((comment) => comment.id_comment !== id_comment));
         } catch (err) {
-            setError('Failed to delete comment');
-            window.location.reload();
+            alert("Không xóa được bình luận của người dùng khác.");
         }
     };
 
