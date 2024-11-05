@@ -29,7 +29,7 @@ interface Artist {
     url_cover: string;
 }
 
-const SongDetailPage: React.FC = ({params}) => {
+const SongDetailPage: React.FC = ({ params}) => {
     const id = params.id;
     const [musicdetail, setMusic] = useState<Music | null>(null);
     const [artistdetail, setArtist] = useState<Artist | null>(null);
