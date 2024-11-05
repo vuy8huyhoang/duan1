@@ -51,10 +51,10 @@ const HistoryMusicPage = () => {
             <Link href={`/musicdetail/${history.music.id_music}`}>
               {history.music.name}
             </Link>
-          
+         
             <p >Thời gian phát: {history.play_duration} giây</p>
             <p>Đã nghe vào: {new Date(history.created_at).toLocaleString()}</p>
-        
+ 
           </div>
         ))}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '@/lib/axios';
 import Link from 'next/link';
 import style from './type.module.scss';
 import ListMusicTop from '../component/listmusictop';
@@ -21,9 +21,9 @@ const TypePage = () => {
 
   const fetchTypeList = async () => {
     try {
-      const response = await axios.get('https://api-groove.vercel.app/type');
-      console.log(response.data);
-      setTypeList(response.data.data || []); 
+      const response :any = await axios.get('/type');
+      console.log(response.result);
+      setTypeList(response.result.data || []); 
     } catch (err) {
       console.error("Error fetching type list:", err);
       setError("Có lỗi xảy ra khi tải danh sách thể loại.");
