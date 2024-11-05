@@ -19,7 +19,7 @@ const FavoriteMusicPage = () => {
     const fetchFavoriteMusic = async () => {
       try {
         const response:any = await axios.get("/favorite-music/me");
-        console.log('Favorite Music Data:', response.result); // Kiểm tra dữ liệu API trả về
+        console.log('Favorite Music Data:', response.result); 
         setFavoriteMusic(response.result.data);
       } catch (error) {
         console.error("Failed to fetch favorite music", error);

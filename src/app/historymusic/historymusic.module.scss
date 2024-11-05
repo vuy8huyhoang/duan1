@@ -1,0 +1,64 @@
+.historyPage {
+    padding: 20px 40px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.musicGrid {
+    display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 40px;
+}
+
+.musicItem {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+ 
+    gap: 15px;
+}
+
+.musicItem:hover {
+    background-color: #2b2b2b;
+}
+
+.musicItem img {
+    position: relative;
+  
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.musicItem a {
+   
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+}
+
+.musicItem a:hover {
+    color: #6c63ff;
+}
+
+.musicItem p {
+    color: #b3b3b3;
+    font-size: 14px;
+    margin: 5px 0;
+
+}
