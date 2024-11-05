@@ -22,6 +22,7 @@ interface Mussic {
 
 const ListMusic: React.FC = () => {
     const [albums, setAlbums] = useState<Mussic[]>([]);
+    const [favoriteMusic, setFavoriteMusic] = useState<Set<number>>(new Set());
     const [currentSong, setCurrentSong] = useState<Mussic | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [hoveredSong, setHoveredSong] = useState<number | null>(null);
@@ -39,6 +40,29 @@ const ListMusic: React.FC = () => {
             })
             .catch((error: any) => console.error('Error fetching albums:', error));
     }, []);
+
+
+    const toggleFavorite = async (id_music: number) => {
+        const isFavorite = favoriteMusic.has(id_music);
+        setFavoriteMusic((prev) => {
+            const updated = new Set(prev);
+            isFavorite ? updated.delete(id_music) : updated.add(id_music);
+            return updated;
+        });
+
+        try {
+            if (isFavorite) {
+                // Nếu đã là yêu thích, xóa khỏi yêu thích
+                await axios.delete(`/favorite-music/me`, { data: { id_music } });
+            } else {
+                // Nếu chưa yêu thích, thêm vào yêu thích
+                await axios.post(`/favorite-music/me`, { id_music, favorite: true });
+            }
+        } catch (error) {
+            console.error('Lỗi khi cập nhật trạng thái yêu thích:', error);
+        }
+    };
+
 
     useEffect(() => {
         if (audioRef.current && currentSong) {
@@ -120,7 +144,10 @@ const ListMusic: React.FC = () => {
                                     <div className={style.composerName}><Link href={`/musicdetail/${album.id_music}`}>{album.composer}</Link></div>
                                 </div>
                                 <div className={style.songControls}>
-                                    <i className="fas fa-heart"></i>
+                                    <i 
+                                        className={`fas fa-heart ${favoriteMusic.has(album.id_music) ? style.activeHeart : ''}`}
+                                        onClick={() => toggleFavorite(album.id_music)}
+                                ></i>
                                     <i className="fas fa-ellipsis-h"></i>
                                 </div>
                             </div>

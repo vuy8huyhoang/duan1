@@ -5,6 +5,8 @@ import axios from '@/lib/axios';
 import style from './songdetail.module.scss';   
 import AlbumHot from '@/app/component/albumhot';
 import MusicPartner from '@/app/component/musicpartner';
+import Comment from '@/app/component/comment';
+
 interface Music {
     id_music: number;
     name: string;
@@ -117,7 +119,8 @@ const SongDetailPage: React.FC = ({params}) => {
                     <audio ref={audioRef} src={musicdetail.url_path} />
                 </div>
             </div>
-        </div>
+            </div>
+        <Comment id_music={id} />
         <AlbumHot />
         <MusicPartner />
        
