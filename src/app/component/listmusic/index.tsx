@@ -112,7 +112,6 @@ const ListMusic: React.FC = () => {
 
             <div className={style.albumList}>
                 {filteredAlbums.map((album) => {
-                    console.log(album)
                     return (
                         (
                     

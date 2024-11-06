@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from '@/lib/axios';
-import style from './FavoriteAlbum.module.scss';
+
+"use client";
+
+import React, { useEffect, useState } from "react";
+import axios from "@/lib/axios";
+import style from "./FavoriteAlbum.module.scss";
+import Link from "next/link";
+
 
 interface FavoriteAlbum {
     id_album: number;
@@ -16,6 +21,7 @@ const FavoriteAlbumPage = () => {
             try {
                 const response: any = await axios.get("/favorite-album/me");
                 console.log('Favorite Album Data:', response.result.data);
+
 
                 const albums = response.data.map((album: any) => ({
                   ...album,
@@ -42,6 +48,7 @@ const FavoriteAlbumPage = () => {
             </div>
         </div>
     );
+
 };
 
 export default FavoriteAlbumPage;

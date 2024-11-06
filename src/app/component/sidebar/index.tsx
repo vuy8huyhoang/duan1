@@ -67,7 +67,7 @@ export default function Sidebar() {
                 <li
 
                 >
-                    <Link href="/history" className={clsx(styles.menuItem, { [styles.active]: pathname === "/history" })}>
+                    <Link href="/historymusic" className={clsx(styles.menuItem, { [styles.active]: pathname === "/historymusic" })}>
 
                         <ReactSVG className={styles.csvg} src="/Frame 10.svg" />
                         <span>Nghe gần đây</span>

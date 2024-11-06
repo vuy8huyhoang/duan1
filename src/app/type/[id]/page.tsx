@@ -72,7 +72,7 @@ const TypeDetailPage = ({ params }) => {
   return (
     <>
     <div>
-      <h1 className={styles.title}>Danh Sách Nhạc Thể Loại:</h1>
+      <h1 className={styles.title}>Danh Sách Nhạc Thể Loại: {idType}</h1>
       <div className={styles.albumList}>
         {Array.isArray(musicList) && musicList.length > 0 ? (
           musicList.map((music) => (
@@ -99,7 +99,7 @@ const TypeDetailPage = ({ params }) => {
                 <div className={styles.composerName}>
                   <a href={`/musicdetail/${music.id_music}`}>{music.composer}</a>
                 </div>
-              </div>
+              </div> 
               <div className={styles.songControls}>
                 <i className="fas fa-heart"></i>
                 <i className="fas fa-ellipsis-h"></i>
