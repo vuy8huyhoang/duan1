@@ -108,6 +108,16 @@
     font-size: 16px;
     color: #bbb; /* Slight grey for numbers */
   }
+  .songIng {
+    width: 18%; // Fixed width for image
+    padding: 10px;
+    img {
+        width: 100%; // Make image responsive
+        height: auto; // Maintain aspect ratio
+        border-radius: 10px; // Optional: add rounded corners
+        margin-left: -10px;
+    }
+}
   
   .songTitle {
     font-size: 16px;
@@ -123,58 +133,62 @@
   }
   
  
-  /* Play button styling (if needed) */
-  .albumDetailright .playButton {
-    background-color: #5d40dc;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-weight: bold;
-    margin-top: 20px;
-    cursor: pointer;
-    align-items:center;
-    margin-left: 150px;
-  }
-  
-  .playButton:hover {
-    background-color: #e15e21;
-  }
-  // ... existing styles ...
-
-.followButton {
-  background-color: #ff6f61; // A nice color for the button
-  color: white;
-  border: none;
-  margin-left: 180px;
-  margin-top: 20px;
-  padding: 10px 20px;
-  margin-bottom: 10px; // Space between the follow and play buttons
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-      background-color: #ff4c3b; // Darker shade on hover
-  }
-}
+  /* Button Group Styling */
 .buttonGroup {
   display: flex;
   align-items: center;
-  gap: 10px; // Space between the button and the icon
+  justify-content: center;
+  gap: 15px; /* Khoảng cách giữa các nút */
+  margin-top: 20px;
+  margin-left: 50px;
 }
 
-.heartIcon {
-  color: #eae0df; // Color for the heart icon
+/* Phát Ngẫu Nhiên Button Styling */
+.playButton {
+  background-color: #5d40dc;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px; /* Cạnh tròn lớn hơn */
+  font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
-  font-size: 24px;
-  transition: color 0.3s ease;
-
-  &:hover {
-      color: #ff4c3b; // Darker shade on hover
-  }
+  border: none;
+  transition: background-color 0.3s ease;
 }
+
+.playButton:hover {
+  background-color: #e15e21;
+}
+
+/* Theo Dõi Button Styling */
+.followButton {
+  background: transparent;
+  border: 3px solid white;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.followButton:hover {
+  background-color: #ff4c3b;
+}
+
+/* Heart Icon Styling */
+.heartIcon {
+  color: #eae0df;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.heartIcon:hover,
+.heartIcon_active {
+  color: #ff4c3b; /* Highlight màu đỏ khi hoạt động */
+}
+
 
 // ... existing styles ...
   
@@ -188,4 +202,5 @@
       width: 100%;
     }
   }
+  
   
