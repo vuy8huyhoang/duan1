@@ -33,10 +33,10 @@ interface AlbumDetail {
     musics: Music[];
 }
 
-
 export default function AlbumDetail({ params }) {
     const id = params.id; // Get id from URL
     const [albumDetail, setAlbumDetail] = useState<AlbumDetail | null>(null);
+  
     const [currentSong, setCurrentSong] = useState<Music | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
@@ -44,11 +44,13 @@ export default function AlbumDetail({ params }) {
     const [time, setTime] = useState([]);
     const [isFollowed, setIsFollowed] = useState<boolean>(false);
     const [heart,setHeart]= useState(false);
+    const [hoveredSong, setHoveredSong] = useState<string | null>(null);
     useEffect(() => {
         axios.get(`/album/${id}`)
             .then((response: any) => {
                 if (response && response.result.data) {
                     setAlbumDetail(response.result.data);
+                   
 
                 } else {
                     console.error('Response data is undefined or null', response);
@@ -193,7 +195,19 @@ export default function AlbumDetail({ params }) {
         audioRef.current?.pause();
         setIsPlaying(false);
     };
-
+    const playSong = (music: Music) => {
+        if (audioRef.current) {
+            if (currentSong?.id_music === music.id_music && isPlaying) {
+                audioRef.current.pause();
+                setIsPlaying(false);
+            } else {
+                setCurrentSong(music);
+                audioRef.current.src = music.url_path; 
+                audioRef.current.play();
+                setIsPlaying(true);
+            }
+        }
+    };
     // const handlePlayPause = useCallback((album: Music) => {
     //     if (currentSong?.id_music === album.id_music && isPlaying) {
     //         audioRef.current?.pause();
@@ -256,10 +270,25 @@ export default function AlbumDetail({ params }) {
                         {albumDetail.musics.length > 0 ? (
                             albumDetail.musics.map((track, index) => (
                                 <li key={index} className={style.songItem}>
-                                    <span className={style.songNumber}>{index + 1}</span>
-                                    <span className={style.songIng}>
-                                        {track.url_cover ? <img src={track.url_cover} alt={track.name} className={style.trackCover} /> : 'No Cover'}
-                                    </span>
+                                    <span className={style.songNumber}>{index + 1}.</span>
+<div
+    key={albumDetail.id_album}
+    className={`${style.songCard} ${hoveredSong === albumDetail.id_album ? style.hovered : ''}`}
+    onMouseEnter={() => setHoveredSong(albumDetail.id_album)}
+    onMouseLeave={() => setHoveredSong(null)}
+>
+    <div className={style.image}>
+        <img src={track.url_cover} alt={albumDetail.name} className={style.musicCover} />
+        <div className={style.overlay}>
+            <button
+                className={style.playButton1}
+                onClick={() => playSong(track)}
+            >
+                <i className={`fas ${currentSong?.id_music === albumDetail.id_album && isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+            </button>
+        </div>
+    </div>
+</div>
                                     <span className={style.songTitle}>
                                         {track.name ? track.name : 'Chưa có tên bài hát'}
                                     </span>

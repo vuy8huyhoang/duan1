@@ -153,16 +153,16 @@
   cursor: pointer;
   border: none;
   transition: background-color 0.3s ease;
-}
+} 
 
 .playButton:hover {
-  background-color: #e15e21;
+  background-color: #4421e165;
 }
 
 /* Theo Dõi Button Styling */
 .followButton {
   background: transparent;
-  border: 3px solid white;
+  border: 1x solid white;
   color: white;
   padding: 10px 20px;
   border-radius: 25px;
@@ -173,7 +173,7 @@
 }
 
 .followButton:hover {
-  background-color: #ff4c3b;
+  background-color: #e8dfdd67;
 }
 
 /* Heart Icon Styling */
@@ -204,3 +204,70 @@
   }
   
   
+.musicList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.songCard {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+      background-color: #333333;
+      transform: scale(1.02);
+  }
+}
+
+.image {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.musicCover {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  .playButton1 {
+      background-color: #ffffff;
+      border: none;
+      border-radius: 50%;
+      padding: 5px;
+      font-size: 10px;
+      color: #333;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+
+      &:hover {
+          transform: scale(1.1);
+      }
+  }
+}
+
+.songCard:hover .overlay {
+  opacity: 1;
+}
