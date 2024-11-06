@@ -27,11 +27,12 @@ export default function ChangePasswordPage() {
                 oldPassword,
                 newPassword,
             });
-            setMessage(response.data.message);
+            
+            // setMessage(response.data.message);
             console.log('Đổi mật khẩu thành công:', response.data.message);
         } catch (error: any) {
             // Kiểm tra sự tồn tại của error.response trước khi truy cập
-            const errorMessage = error.response?.data?.message ?? 'Lỗi khi đổi mật khẩu';
+            const errorMessage = error.response ;
             setMessage(errorMessage);
             console.log('Lỗi khi đổi mật khẩu:', errorMessage);
             console.error('Chi tiết lỗi:', error); // Log chi tiết lỗi

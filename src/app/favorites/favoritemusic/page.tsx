@@ -33,7 +33,7 @@ const FavoriteMusicPage = () => {
 
   return (
     <div className={style.favoritePage}>
-      <h1 className={style.title}>Music yêu thích</h1>
+      
       <div className={style.musicGrid}>
         {favoriteMusic.map((music) => (
           <div key={music.id_music} className={style.musicItem}>

@@ -3,17 +3,19 @@ import axios from '@/lib/axios';
 import style from './albumhot.module.scss';
 import { ReactSVG } from 'react-svg';
 import Link from 'next/link';
+
 interface Album {
-    id_album: string;
+    id_album: number;
     name: string;
     url_cover: string;
     artist: {
         name: string;
     };
 }
+
 export default function AlbumHot() {
     const [albumData, setAlbumData] = useState<Album[]>([]);
-    const [favoriteAlbum, setFavoriteAlbum] = useState<Set<string>>(new Set());
+    const [favoriteAlbum, setFavoriteAlbum] = useState<Set<number>>(new Set());
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -34,7 +36,7 @@ export default function AlbumHot() {
             });
     }, []);
 
-    const toggleFavorite = async (id_album: string) => {
+    const toggleFavorite = async (id_album: number) => {
         const isFavorite = favoriteAlbum.has(id_album);
         setFavoriteAlbum((prev) => {
             const updated = new Set(prev);
@@ -44,10 +46,10 @@ export default function AlbumHot() {
     
         try {
             if (isFavorite) {
-                // Nếu đã là yêu thích, xóa khỏi yêu thích
+                // Xóa khỏi yêu thích
                 await axios.delete(`/favorite-album/me`, { data: { id_album } });
             } else {
-                // Nếu chưa yêu thích, thêm vào yêu thích
+                // Thêm vào yêu thích
                 await axios.post(`/favorite-album/me`, { id_album, favorite: true });
             }
         } catch (error) {
@@ -55,9 +57,8 @@ export default function AlbumHot() {
         }
     };
 
-
     return (
-        <>
+        <div>
             <div className={style.headerSection}>
                 <h2>Mới phát hành</h2>
                 <div className={style.all}>
@@ -75,10 +76,8 @@ export default function AlbumHot() {
                             <div className={style.albumWrapper}>
                                 <img src={album.url_cover} alt={album.name} className={style.albumCover} />
                                 <div className={style.overlay}>
-                                <button className={style.likeButton} onClick={() => toggleFavorite(album.id_album)}>
-                                    <ReactSVG src="/heart.svg" className={favoriteAlbum.has(album.id_album) ? style.activeHeart : ''} 
-                                    style={{ fill: favoriteAlbum.has(album.id_album) ? 'red' : 'initial' }}
-                                    />
+                                <button onClick={() => toggleFavorite(album.id_album)}>
+                                    <ReactSVG src="/heart.svg" className={favoriteAlbum.has(album.id_album) ? style.activeHeart : ''} />
                                 </button>
                                     <button className={style.playButton}>
                                         <ReactSVG src="/play.svg" />
@@ -88,12 +87,12 @@ export default function AlbumHot() {
                                     </button>
                                 </div>
                             </div>
-                            <Link href={`/albumdetail/${album.id_album}`}  className={style.albumTitle}>{album.name}</Link>
+                            <Link href={`/albumdetail/${album.id_album}`} className={style.albumTitle}>{album.name}</Link>
                             <Link href={`/albumdetail/${album.id_album}`} className={style.artistName}>{album.artist.name}</Link>
                         </div>
                     ))
                 )}
             </div>
-        </>
+        </div>
     );
 }

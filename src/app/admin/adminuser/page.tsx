@@ -22,9 +22,9 @@ export default function AdminUser() {
     const usersPerPage = 10;
 
     useEffect(() => {
-        axios.get("/auth/user")
+        axios.get("/user")
             .then((response: any) => {
-                setCurrentUserRole(response.data.role);
+                setCurrentUserRole(response.result.data);
             })
             .catch((error: any) => {
                 console.error("Lỗi lấy thông tin người dùng:", error);
@@ -60,6 +60,34 @@ export default function AdminUser() {
         }
     };
 
+    const handleStatusChange = (e, userId) => {
+        const newStatus = e.target.value === 'active' ? 0 : 1; // 0 cho "Hoạt động", 1 cho "Bị khóa"
+        
+        // Gọi API để cập nhật trạng thái người dùng
+        updateUserStatus(userId, newStatus);
+    };
+    
+    // Ví dụ về hàm cập nhật trạng thái người dùng qua API
+    const updateUserStatus = (id_user, status) => {
+        fetch(`/user/${id_user}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            // Thực hiện các thao tác khi cập nhật thành công
+            console.log(data);
+        })
+        .catch((error) => {
+            console.error('Lỗi khi cập nhật trạng thái:', error);
+        });
+    };
+    
+
+
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
@@ -69,74 +97,98 @@ export default function AdminUser() {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <h1>Quản lý user</h1>
-            </div>
+    <div className={styles.header}>
+        <h1>Quản lý user</h1>
+        {/* <Link href="/admin/adduser" passHref>
+            <button className={styles.addButton}>
+                <ReactSVG className={styles.csvg} src="/plus.svg" />
+                <div className={styles.addText}>Tạo user mới</div>
+            </button>
+        </Link> */}
+    </div>
 
-            <div className={styles.tableContainer}>
-                <table className={styles.userTable}>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Avatar</th>
-                            <th>Tên đầy đủ</th>
-                            <th>Email</th>
-                            <th>Vai trò</th>
-                            <th>Trạng thái</th>
-                            {currentUserRole === 'admin' && <th>Tính năng</th>}
+    <div className={styles.tableContainer}>
+        <table className={styles.userTable}>
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" />
+                    </th>
+                    <th>ID</th>
+                    <th>Avatar</th>
+                    <th>Tên đầy đủ</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái</th>
+                    {currentUserRole === 'admin' && <th>Tính năng</th>}
+                </tr>
+            </thead>
+            <tbody>
+                {loading ? (
+                    <tr>
+                        <td colSpan={7} className={styles.loading}>
+                            Đang tải...
+                        </td>
+                    </tr>
+                ) : (
+                    currentUsers.map((user) => (
+                        <tr key={user.id_user}>
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            <td>#{user.id_user}</td>
+                            <td><img src={user.url_avatar || "/default-avatar.png"} alt="Avatar" /></td>
+                            <td>{user.fullname}</td>
+                            <td>{user.email}</td>
+                            <td>{user.role}</td>
+                            <td>
+                                {/* Select dropdown để thay đổi trạng thái */}
+                                <select
+                                    value={user.is_banned ? 'banned' : 'active'}
+                                    onChange={(e) => handleStatusChange(e, user.id_user)}
+                                >
+                                    <option value="active">Hoạt động</option>
+                                    <option value="banned">Bị khóa</option>
+                                </select>
+                            </td>
+                            {currentUserRole === 'admin' && (
+                                <td className={styles.actions}>
+                                    <button className={styles.editButton}>
+                                        <Link href={`/admin/edituser/${user.id_user}`} passHref>
+                                            <ReactSVG className={styles.csvg} src="/Rectangle 80.svg" />
+                                        </Link>
+                                    </button>
+                                    <button
+                                        className={styles.deleteButton}
+                                        onClick={() => handleBanUser(user.id_user, user.is_banned)}
+                                    >
+                                        <ReactSVG
+                                            className={styles.csvg}
+                                            src={user.is_banned ? "/unlock-icon.svg" : "/lock-icon.svg"}
+                                        />
+                                        {user.is_banned ? "Mở khóa" : "Khóa"}
+                                    </button>
+                                </td>
+                            )}
                         </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr>
-                                <td colSpan={7} className={styles.loading}>Đang tải...</td>
-                            </tr>
-                        ) : (
-                            currentUsers.map((user) => (
-                                <tr key={user.id_user}>
-                                    <td>#{user.id_user}</td>
-                                    <td><img src={user.url_avatar || "/default-avatar.png"} alt="Avatar" /></td>
-                                    <td>{user.fullname}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.role}</td>
-                                    <td>{user.is_banned ? "Bị khóa" : "Hoạt động"}</td>
-                                    {currentUserRole === 'admin' && (
-                                        <td className={styles.actions}>
-                                            <button className={styles.editButton}>
-                                                <Link href={`/admin/edituser/${user.id_user}`} passHref>
-                                                    <ReactSVG className={styles.csvg} src="/edit-icon.svg" />
-                                                </Link>
-                                            </button>
-                                            <button
-                                                className={styles.banButton}
-                                                onClick={() => handleBanUser(user.id_user, user.is_banned)}
-                                            >
-                                                <ReactSVG
-                                                    className={styles.csvg}
-                                                    src={user.is_banned ? "/unlock-icon.svg" : "/lock-icon.svg"}
-                                                />
-                                                {user.is_banned ? "Mở khóa" : "Khóa"}
-                                            </button>
-                                        </td>
-                                    )}
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                    ))
+                )}
+            </tbody>
+        </table>
+    </div>
 
-            <div className={styles.pagination}>
-                {[...Array(totalPages)].map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => paginate(index + 1)}
-                        className={currentPage === index + 1 ? styles.activePage : ''}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-            </div>
-        </div>
+    <div className={styles.pagination}>
+        {[...Array(totalPages)].map((_, index) => (
+            <button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={currentPage === index + 1 ? styles.activePage : ''}
+            >
+                {index + 1}
+            </button>
+        ))}
+    </div>
+</div>
+
     );
 }
