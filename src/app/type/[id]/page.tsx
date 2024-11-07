@@ -1,5 +1,4 @@
-"use client"; // Đánh dấu đây là một Client Component
-
+"use client"; 
 import React, { useEffect, useState, useRef } from 'react';
 import axios from '@/lib/axios';
 import styles from './ct.module.scss';

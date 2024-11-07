@@ -18,7 +18,6 @@ const Search: React.FC = () => {
 
   return (
     <input
-    
       type="text"
       value={query}
       onChange={handleSearch}

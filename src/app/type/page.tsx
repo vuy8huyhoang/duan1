@@ -18,7 +18,6 @@ const TypePage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showAll, setShowAll] = useState<boolean>(false); 
-
   const fetchTypeList = async () => {
     try {
       const response :any = await axios.get('/type');
@@ -50,9 +49,6 @@ const TypePage = () => {
 
   return (
     <>
-    {/* <div className={style.banner}>
-        <img src="https://photo-zmp3.zmdcdn.me/cover/3/f/4/1/3f41f32d1ca9baeb2206137e5f2eab5c.jpg" alt="Banner" className={style.bannerImage} />
-      </div> */}
       <SlideShow/>
       <div className={style.container}>
         <h1 className={style.title}>Danh Sách Thể Loại</h1>
