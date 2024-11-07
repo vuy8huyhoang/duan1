@@ -6,16 +6,13 @@ import style from './songdetail.module.scss';
 import AlbumHot from '@/app/component/albumhot';
 import MusicPartner from '@/app/component/musicpartner';
 import Comment from '@/app/component/comment';
-
+import clsx from 'clsx';
 interface Music {
     id_music: number;
     name: string;
     url_cover: string;
     url_path: string;
-
-    types:{
-        name:string;
-    }[];
+    types: { name: string }[];
     producer: string;
     release_date: string;
     composer: string;
@@ -29,26 +26,25 @@ interface Artist {
     url_cover: string;
 }
 
-const SongDetailPage: React.FC = ({ params}) => {
+const SongDetailPage: React.FC = ({ params }) => {
     const id = params.id;
     const [musicdetail, setMusic] = useState<Music | null>(null);
     const [artistdetail, setArtist] = useState<Artist | null>(null);
     const [loading, setLoading] = useState(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-
-    function formatDate(isoString) {
-        // Chuyển đổi chuỗi ISO thành đối tượng Date
+    const [currentSong, setCurrentSong] = useState<Music | null>(null);
+    const [hoveredSong, setHoveredSong] = useState<number | null>(null);
+    const [time, setTime] = useState([]);
+    const [heart,setHeart]= useState(false);
+    function formatDate(isoString: string) {
         const date = new Date(isoString);
-      
-        // Lấy ngày, tháng và năm
         const day = date.getUTCDate().toString().padStart(2, '0');
-        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Tháng bắt đầu từ 0
+        const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
         const year = date.getUTCFullYear();
-      
-        // Trả về chuỗi theo định dạng ngày/tháng/năm
         return `${day}/${month}/${year}`;
-      }
+    }
+
     useEffect(() => {
         axios.get(`/music/${id}`)
             .then((response: any) => {
@@ -59,14 +55,27 @@ const SongDetailPage: React.FC = ({ params}) => {
                 } else {
                     console.error('Response data is undefined or null', response);
                 }
+                response.result.data.musics.map((musicData) => {
+                    const audio = new Audio(musicData.url_path)
+                    audio.onloadedmetadata = () => {
+                        console.log(`Thời lượng: ${audio.duration} giây`);
+                        setTime(prev => {
+                            return [
+                                ...prev,
+                                audio.duration
+                            ];
+
+                        })
+                    };
+                })
             })
+            
             .catch((error: any) => {
                 console.error('Error fetching album details', error);
             })
-            .finally(() => {
-                setLoading(false);
-            });
+            .finally(() => setLoading(false));
     }, [id]);
+
     const handlePlayPause = () => {
         if (audioRef.current) {
             if (isPlaying) {
@@ -77,55 +86,114 @@ const SongDetailPage: React.FC = ({ params}) => {
             setIsPlaying(!isPlaying);
         }
     };
-    const handleHeartClick = async () => {
-        try {
-            const response = await axios.post("favorite-music/me");
-            if (response.status === 200) {
-                console.log('Song liked successfully');
-                // Optionally update UI or state here
-            }
-        } catch (error) {
-            console.error('Error liking the song', error);
+    function formatTime(seconds) {
+        seconds = Math.ceil(seconds)
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+    const handleHeartClick = (id_music) => {
+        if(heart==true){
+            axios.delete(`favorite-music/me?id_music=${id_music}`)
+            .then((response: any) => {
+                console.log('Album unliked successfully', response);
+                setHeart(false);
+            })
+            .catch((error: any) => {
+                console.error('Error unliking album', error);
+            });
+        }
+        else{
+            axios.post(`favorite-music/me`, { id_music })
+            .then((response: any) => {
+                console.log('Album liked successfully', response);
+                setHeart(true);
+            })
+            .catch((error: any) => {
+                console.error('Error liking album', error);
+            });
         }
     };
+
+    const playSong = (music: Music) => {
+        if (audioRef.current) {
+            if (currentSong?.id_music === music.id_music && isPlaying) {
+                audioRef.current.pause();
+                setIsPlaying(false);
+            } else {
+                setCurrentSong(music);
+                audioRef.current.src = music.url_path;
+                audioRef.current.play();
+                setIsPlaying(true);
+            }
+        }
+    };
+
     if (loading) {
         return <p>Đang tải chi tiết bài hát...</p>;
     }
 
-    if (!musicdetail && artistdetail) {
+    if (!musicdetail && artistdetail ) {
         return <p>Không tìm thấy music</p>;
     }
+
     return (
         <div className={style.contentwrapper}>
-        <div className={style.modalContent}>
-            <div className={style.modalContentRight}>
-                 <img src={musicdetail.url_cover} alt={musicdetail.name} className={style.coverImage} />
-                <h2>{musicdetail.name}</h2>
-                <p className={style.songTitle}>Ca sĩ: {artistdetail.name}</p>
+            <div className={style.banner}>
+                <img src="https://adtima-media.zascdn.me/2024/05/28/1e75f3b2-dd19-46c6-ae1a-84611017eaf9.jpg" alt="" className={style.bannerImage}/>
             </div>
-            <div className={style.modalContentLeft}>
-                <p>Bài Hát</p>
-                <div className={style.songContent}>
-                    <p className={style.songTitle}> Tên Bài Hát: {musicdetail.name}</p>
-                    <p className={style.songTitle}> Nhà sản xuất: {musicdetail.producer}</p>
-                     <p className={style.songArtist}> Ngày phát hành: {formatDate(musicdetail.release_date)}</p>
-                    <p className={style.songDuration}> Nhạc sĩ: {musicdetail.composer}</p>
+            <div className={style.modalContent}>
+                <div className={style.modalContentRight}>
+                    <img src={musicdetail.url_cover} alt={musicdetail.name} className={style.coverImage} />
+                    <h2>{musicdetail.name}</h2>
+                    <p className={style.songDuration}>Ca sĩ: {musicdetail.composer}</p>
+                    <div className={style.audioPlayer}>
+                        <button onClick={handlePlayPause} className={style.playButton}>
+                            {isPlaying ? 'Dừng Bài Hát' : 'Phát Bài Hát'}
+                        </button>
+                        <span className={clsx(style.heartIcon,{[style.heartIcon_active]:heart})} 
+                                    onClick={() => handleHeartClick(musicdetail.id_music)}>♥</span>
+                        <audio ref={audioRef} src={musicdetail.url_path} />
+                    </div>
                 </div>
-                <div className={style.audioPlayer}>
-                    <button onClick={handlePlayPause} className={style.playButton}>
-                        {isPlaying ? 'Pause' : 'Play'}
-                    </button>
-                    <span className={style.heartIcon} onClick={handleHeartClick}>&#9829;</span>
-                    <audio ref={audioRef} src={musicdetail.url_path} />
+
+                <div className={style.modalContentLeft}>
+                    <p>Bài Hát</p>
+                    <div
+                        key={musicdetail.id_music}
+                        className={`${style.songCard} ${hoveredSong === musicdetail.id_music ? style.hovered : ''}`}
+                        onMouseEnter={() => setHoveredSong(musicdetail.id_music)}
+                        onMouseLeave={() => setHoveredSong(null)}
+                    >
+                        <div className={style.image}>
+                            <img src={musicdetail.url_cover} alt={musicdetail.name} className={style.musicCover} />
+                            <div className={style.overlay}>
+                                <button
+                                    className={style.playButton1}
+                                    onClick={() => playSong(musicdetail)}
+                                >
+                                    <i className={`fas ${currentSong?.id_music === musicdetail.id_music && isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div className={style.Titles}>
+                            <h5 className={style.musicName}>{musicdetail.name}</h5>
+                            <p className={style.musicArtist}>{musicdetail.composer}</p>
+                        </div>
+                        <span className={style.songDuration}>
+                        {musicdetail.total_duration && time[Number(musicdetail.total_duration)] ? formatTime(time[Number(musicdetail.total_duration)]) : 'Chưa có thời lượng'}
+                        </span>
+                    </div>
+                    <h2>Thông Tin</h2>
+                    <p className={style.songTitle}>Nhà sản xuất: {musicdetail.producer}</p>
+                    <p className={style.songArtist}>Ngày phát hành: {formatDate(musicdetail.release_date)}</p>
                 </div>
             </div>
-            </div>
-        <Comment id_music={id} />
-        <AlbumHot />
-        <MusicPartner />
-       
-    </div>
-        
+            <Comment id_music={id} />
+            <AlbumHot />
+            <MusicPartner />
+        </div>
     );
 };
 

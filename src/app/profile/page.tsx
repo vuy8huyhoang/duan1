@@ -23,10 +23,13 @@ export default function Profile() {
     const [editingField, setEditingField] = useState<string | null>(null);
     const [editValue, setEditValue] = useState<string>('');
     const [src, setSrc]= useState<string>('');
-
+    const [file, setFile] = useState(null); // Lưu trữ file người dùng chọn
+    const [message, setMessage] = useState(""); // Thông báo kết quả
     useEffect(() => {
         axios.get("profile")
             .then((response: any) => {
+                console.log(response);
+                
                 if (response && response.result.data) {
                     setProfileData(response.result.data);
                 } else {
@@ -45,7 +48,48 @@ export default function Profile() {
         setEditingField(field);
         setEditValue(currentValue);
     };
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        
+        return `${day}-${month}-${year}`;
+    }
 
+
+     // Xử lý sự kiện khi người dùng chọn file
+  const handleFileChange = (event:any) => {
+    setFile(event.target.files[0]);
+  };
+// Xử lý sự kiện submit form
+const handleSubmit = async (event:any) => {
+    event.preventDefault();
+    
+    if (!file) {
+      setMessage("Vui lòng chọn một file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response: any = await axios.post("/upload-image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      
+
+      const profileResponse: any = await axios.patch("/update-infor", {
+             url_avatar: response.result.url
+      })
+      
+    } catch (error:any) {
+      setMessage("Tải lên thất bại: " + error);
+    }
+  };
     
     
     const handleSaveClick = () => {
@@ -53,9 +97,11 @@ export default function Profile() {
             const updatedProfile = { ...profileData, [editingField]: editValue };
             setProfileData(updatedProfile);
             setEditingField(null);
+
             axios.patch("/update-infor", updatedProfile)
                 .then(response => {
                     console.log('Profile updated successfully', response);
+                    console.log(updatedProfile);
                 })
                 .catch(error => {
                     console.error('Error updating profile', error);
@@ -77,12 +123,20 @@ export default function Profile() {
                         src={profileData?.url_avatar} alt=""
                     />
                 </div>
-                
+                <div>
+                        <h2>Upload Image</h2>
+                        <form onSubmit={handleSubmit}>
+                            <input type="file" onChange={handleFileChange} />
+                            <button type="submit">Upload</button>
+                        </form>
+                        {message && <p>{message}</p>}
+                </div>
                 {/* <input type="file" multiple /> */}
                 <div className={style.info}>
                     <div className={style.infoItem}>
                         <p><strong>Email:</strong> {profileData?.email}</p>
                     </div>
+                    
                     {['phone', 'birthday', 'gender', 'country'].map((field) => (
                         <div className={style.infoItem} key={field}>
                             <p>
@@ -90,7 +144,7 @@ export default function Profile() {
                                 {editingField === field ? (
                                     <input 
                                         type="text" 
-                                        value={editValue} 
+                                        value={field ==='birthday'?formatDate(editValue):editValue} 
                                         onChange={(e) => setEditValue(e.target.value)} 
                                     />
                                 ) : (
