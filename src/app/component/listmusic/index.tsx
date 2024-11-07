@@ -18,7 +18,10 @@ interface Mussic {
        id_music: string
     }
 }
-
+interface MusicHistory {
+    id_music: string;
+    created_at: string;
+  }
 
 const ListMusic: React.FC = () => {
     const [albums, setAlbums] = useState<Mussic[]>([]);
@@ -27,6 +30,9 @@ const ListMusic: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [hoveredSong, setHoveredSong] = useState<number | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>('Tất cả');
+    const [musicHistory, setMusicHistory] = useState<MusicHistory[]>([]);
+    const [viewCounts, setViewCounts] = useState<{ [key: number]: number }>({});
+    const [menuVisible, setMenuVisible] = useState<number | null>(null); // State mới cho menu
     const audioRef = useRef<HTMLAudioElement | null>(null);
     
       
@@ -39,7 +45,23 @@ const ListMusic: React.FC = () => {
                 }
             })
             .catch((error: any) => console.error('Error fetching albums:', error));
-    }, []);
+
+            axios
+      .get('/music-history/me')
+      .then((response: any) => {
+        setMusicHistory(response.result.data);
+      })
+      .catch((error: any) => console.error('Error fetching music history:', error));
+  }, []);
+  useEffect(() => {
+    // Tính toán lượt xem dựa trên music history
+    const counts: { [key: number]: number } = {};
+    musicHistory.forEach((history) => {
+      const musicId = parseInt(history.id_music); // Convert id_music to number if needed
+      counts[musicId] = (counts[musicId] || 0) + 1;
+    });
+    setViewCounts(counts);
+  }, [musicHistory]);
 
 
     const toggleFavorite = async (id_music: number) => {
@@ -149,6 +171,9 @@ const ListMusic: React.FC = () => {
                                 ></i>
                                     <i className="fas fa-ellipsis-h"></i>
                                 </div>
+                                <div className={style.viewCount}>
+                                    Lượt xem: {viewCounts[album.id_music] || 0}
+                                    </div>
                             </div>
                         )
                     )
