@@ -61,7 +61,7 @@ const PlaylistPage = () => {
       // Kiểm tra và log phản hồi
       console.log("API Response:", response);
   
-      if (response && response.result) {
+      if (response && response.result && response.result.data) {
         const { success , message } = response.result;
   
         if (success) {
@@ -82,7 +82,7 @@ const PlaylistPage = () => {
       // Xử lý lỗi mạng hoặc các lỗi khác
       if (axios(error)) {
         console.error("Axios Error:", error);  // Log lỗi Axios
-        setError(error.response?.data?.message || error.message || "An error occurred while creating playlist");
+        setError(error.response?.result?.message || error.message || "An error occurred while creating playlist");
       } else {
         console.error("Unknown Error:", error);  // Log lỗi không phải từ Axios
         setError("An unknown error occurred");
