@@ -19,10 +19,7 @@ interface Type {
     is_show: number;
 }
 
-interface Composer {
-    id_composer: string;
-    name: string;
-}
+
 
 interface Song {
     id_music: string;
@@ -41,14 +38,12 @@ interface Song {
     favorite: number;
     artists: { id_artist: string; name: string }[];
     types: { id_type: string; name: string }[];
-    composers: { id_composer: string; name: string }[];
 }
 
 export default function EditMusic({ params }: { params: { id: string } }) {
     const [song, setSong] = useState<Song | null>(null);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
-    const [composers, setComposers] = useState<Composer[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [message, setMessage] = useState<string>("");
 
@@ -69,11 +64,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 setTypes(response.result.data);
             }
         });
-        axios.get("/composer").then((response: any) => {
-            if (response?.result?.data) {
-                setComposers(response.result.data);
-            }
-        });
+        
     }, []);
 
     useEffect(() => {
@@ -133,12 +124,10 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             url_path: song?.url_path || "",
             url_cover: song?.url_cover || "",
             producer: song?.producer || "",
-            composer: song?.composer || null,
             release_date: song?.release_date || null,
             last_update: new Date().toISOString(),
             artists: song?.artists.map(artist => artist.id_artist),
             types: song?.types.map(type => type.id_type),
-            composers: song?.composers.map(composer => composer.id_composer),
         };
 
         console.log("Data being sent:", songData); 
