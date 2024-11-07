@@ -11,14 +11,6 @@ interface Artist {
     url_cover: string;
 }
 
-interface Type {
-    id_type: string;
-    name: string;
-    slug: string;
-    created_at: string;
-    is_show: number;
-}
-
 interface Song {
     id_music: string;
     name: string;
@@ -46,24 +38,20 @@ interface Album {
     is_show: number;
     artists: string[];
     types: { id_type: string; name: string }[];
-    musics: Song[]; // Danh sách bài hát
+    musics: Song[]; 
 }
 
 export default function EditAlbum({ params }: { params: { id: string } }) {
-    const [musics, setMusics] = useState<Music[]>([]); // Danh sách các bài hát
+    const [musics, setMusics] = useState<Music[]>([]); 
     const [album, setAlbum] = useState<Album | null>(null);
     const [artists, setArtists] = useState<Artist[]>([]);
-    const [types, setTypes] = useState<Type[]>([]);
+
     const [loading, setLoading] = useState<boolean>(true);
-    const [selectedSongs, setSelectedSongs] = useState<string[]>([]); // Trạng thái cho bài hát đã chọn
+    const [selectedSongs, setSelectedSongs] = useState<string[]>([]); 
 
 
     useEffect(() => {
-        axios.get("/type").then((response: any) => {
-            if (response?.result?.data) {
-                setTypes(response.result.data);
-            }
-        });
+
         axios.get("/music").then((response: any) => {
             if (response?.result?.data) {
                 setMusics(response.result.data);
@@ -120,23 +108,6 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
     const handleArtistSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedArtists = Array.from(e.target.selectedOptions, option => option.value);
         setAlbum({ ...album, artists: selectedArtists });
-    };
-
-    const handleTypeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const selectedTypeId = e.target.value;
-
-        setAlbum((prevAlbum) => {
-            if (prevAlbum) {
-                return {
-                    ...prevAlbum,
-                    types: [{
-                        id_type: selectedTypeId,
-                        name: prevAlbum.types?.find(type => type.id_type === selectedTypeId)?.name || ""
-                    }],
-                };
-            }
-            return prevAlbum;
-        });
     };
 
     const handleSongSelect = (songId: string) => {
@@ -228,17 +199,7 @@ export default function EditAlbum({ params }: { params: { id: string } }) {
                         )}
                     </select>
 
-                    <select
-                        value={album && album.types && album.types.length ? album.types[0].id_type : ""}
-                        onChange={handleTypeSelect}
-                    >
-                        <option value="">Chọn thể loại</option>
-                        {types.map(type => (
-                            <option key={type.id_type} value={type.id_type}>
-                                {type.name}
-                            </option>
-                        ))}
-                    </select>
+
                 </div>
                 <h3>Chọn bài hát</h3>
                 <select onChange={handleMusicSelect} multiple>

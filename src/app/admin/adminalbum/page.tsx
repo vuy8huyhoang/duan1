@@ -24,33 +24,31 @@ interface Album {
     is_show: number;
     url_cover: string;
     artist: Artist;
-    musics: Music[]; 
+    musics: Music[];
 }
 
 export default function AdminAlbum() {
     const [albums, setAlbums] = useState<Album[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const albumsPerPage = 10; 
+    const albumsPerPage = 10;
 
     useEffect(() => {
-        axios
-            .get("/album")
-            .then((response: any) => {
-                console.log("Full API response:", response);
-                if (response && response.result && response.result.data) {
-                    setAlbums(response.result.data);
-                } else {
-                    console.error("Response data is undefined or empty:", response);
-                    setAlbums([]); 
-                }
-            })
+        axios.get("/album").then((response: any) => {
+            console.log("Full API response:", response);
+            if (response && response.result && response.result.data) {
+                setAlbums(response.result.data);
+            } else {
+                console.error("Response data is undefined or empty:", response);
+                setAlbums([]);
+            }
+        })
             .catch((error: any) => {
                 console.error("Lỗi fetch album:", error);
-                setAlbums([]); 
+                setAlbums([]);
             })
             .finally(() => {
-                setLoading(false); 
+                setLoading(false);
             });
     }, []);
 
@@ -95,14 +93,14 @@ export default function AdminAlbum() {
                             <th>Tên album</th>
                             <th>Nghệ sĩ</th>
                             <th>Ngày phát hành</th>
-                            <th>Bài hát</th> {/* Thêm cột bài hát */}
+                            <th>Bài hát</th>
                             <th>Tính năng</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={8} className={styles.loading}> {/* Cập nhật colspan */}
+                                <td colSpan={8} className={styles.loading}>
                                     Đang tải...
                                 </td>
                             </tr>
@@ -122,7 +120,7 @@ export default function AdminAlbum() {
                                         day: '2-digit'
                                     })}</td>
                                     <td>
-                                        <ul className={styles.songList}> {/* Thêm className vào đây */}
+                                        <ul className={styles.songList}>
                                             {album.musics.map((music) => (
                                                 <li key={music.id_music}>
                                                     <a href={music.url_path} target="_blank" rel="noopener noreferrer">
