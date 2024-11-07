@@ -43,7 +43,7 @@ export const initialState = {
     ],
 
     volume: 0.5,
-    isPlaying: true,
+    isPlaying: false,
 };
 
 // Reducer
