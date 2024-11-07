@@ -66,6 +66,7 @@ const Header: React.FC = () => {
                 <div className={styles.dropdownMenu}>
                   <ul>
                   <li onClick={closeDropdown}><Link href="/profile">Tài Khoản</Link></li>
+                  <li onClick={closeDropdown}><Link href="/change-password">Đổi mật khẩu</Link></li>
                     <li onClick={handleLogout}>Đăng xuất</li>
                     
                   </ul>

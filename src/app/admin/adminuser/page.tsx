@@ -60,32 +60,25 @@ export default function AdminUser() {
         }
     };
 
-    const handleStatusChange = (e, userId) => {
+    const handleStatusChange = (e, id_user) => {
         const newStatus = e.target.value === 'active' ? 0 : 1; // 0 cho "Hoạt động", 1 cho "Bị khóa"
         
         // Gọi API để cập nhật trạng thái người dùng
-        updateUserStatus(userId, newStatus);
+        updateUserStatus(id_user, newStatus);
     };
     
     // Ví dụ về hàm cập nhật trạng thái người dùng qua API
-    const updateUserStatus = (id_user, status) => {
-        fetch(`/user/${id_user}`, {
-            method: 'PATCH',
-            body: JSON.stringify({ status }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then((response) => response.json())
-        .then((data) => {
+    const updateUserStatus = async (id_user, status) => {
+        try {
+            const response = await axios.patch(`/user/${id_user}`, { status });
+            
             // Thực hiện các thao tác khi cập nhật thành công
-            console.log(data);
-        })
-        .catch((error) => {
+            console.log(response);
+        } catch (error) {
             console.error('Lỗi khi cập nhật trạng thái:', error);
-        });
+        }
     };
-    
+
 
 
     const indexOfLastUser = currentPage * usersPerPage;

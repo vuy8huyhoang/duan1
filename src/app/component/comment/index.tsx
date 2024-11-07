@@ -90,7 +90,7 @@ const Comment: React.FC<CommentProps> = ({ id_music }) => {
                         )
                     ))
                 ) : (
-                    <p>No comments available.</p>
+                    <p>Không có bình luận.</p>
                 )}
             </div>
             <div className={style.commentForm}>

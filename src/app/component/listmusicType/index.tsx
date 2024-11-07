@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/lib/axios';
 import style from './listmusicType.module.scss';
-import { ReactSVG } from 'react-svg';
 import Link from 'next/link';
 
 interface Mussic {
@@ -68,7 +67,6 @@ const ListMusic: React.FC = () => {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-
     const totalItems = filteredAlbums.length; 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 

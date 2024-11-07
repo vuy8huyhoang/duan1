@@ -29,7 +29,7 @@ export default function ChangePasswordPage() {
             });
             
             // setMessage(response.data.message);
-            console.log('Đổi mật khẩu thành công:', response.data.message);
+            console.log('Đổi mật khẩu thành công:', response.result.message);
         } catch (error: any) {
             // Kiểm tra sự tồn tại của error.response trước khi truy cập
             const errorMessage = error.response ;
