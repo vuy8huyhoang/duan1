@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import style from "./FavoriteAlbum.module.scss";
 import Link from "next/link";
+import FavoritePage from "../page";
 
 
 interface FavoriteAlbum {
@@ -20,13 +21,15 @@ const FavoriteAlbumPage = () => {
         const fetchFavoriteAlbums = async () => {
             try {
                 const response: any = await axios.get("/favorite-album/me");
-                console.log('Favorite Album Data:', response.result.data);
+                console.log('Favorite Album Data:', response.result);
 
 
-                const albums = response.data.map((album: any) => ({
+                const albums = Array.isArray(response.result)
+                    ?response.data.map((album: any) => ({
                   ...album,
                   id_album: Number(album.id_album),  // Chuyển id_album từ string sang number
-              }));
+              }))
+              :[];
 
               setFavoriteAlbums(albums);
             } catch (error:any) {
