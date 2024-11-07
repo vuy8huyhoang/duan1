@@ -18,7 +18,10 @@ interface Mussic {
        id_music: string
     }
 }
-
+interface MusicHistory {
+    id_music: string;
+    created_at: string;
+  }
 
 const ListMusic: React.FC = () => {
     const [albums, setAlbums] = useState<Mussic[]>([]);
@@ -27,6 +30,10 @@ const ListMusic: React.FC = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [hoveredSong, setHoveredSong] = useState<number | null>(null);
     const [activeFilter, setActiveFilter] = useState<string>('Tất cả');
+    const [musicHistory, setMusicHistory] = useState<MusicHistory[]>([]);
+    const [viewCounts, setViewCounts] = useState<{ [key: number]: number }>({});
+    const [menuVisible, setMenuVisible] = useState<number | null>(null); // State mới cho menu
+    const [playlists, setPlaylists] = useState<{ id_playlist: number, name: string }[]>([]); // Dữ liệu playlist
     const audioRef = useRef<HTMLAudioElement | null>(null);
     
       
@@ -39,7 +46,33 @@ const ListMusic: React.FC = () => {
                 }
             })
             .catch((error: any) => console.error('Error fetching albums:', error));
-    }, []);
+
+            axios
+      .get('/music-history/me')
+      .then((response: any) => {
+        setMusicHistory(response.result.data);
+      })
+      .catch((error: any) => console.error('Error fetching music history:', error));
+
+       // Lấy danh sách playlist từ API
+       axios.get('/playlists/me')
+       .then((response: any) => {
+           setPlaylists(response.result.data);
+       })
+       .catch((error: any) => console.error('Error fetching playlists:', error));
+
+  }, []);
+
+  
+  useEffect(() => {
+    // Tính toán lượt xem dựa trên music history
+    const counts: { [key: number]: number } = {};
+    musicHistory.forEach((history) => {
+      const musicId = parseInt(history.id_music); // Convert id_music to number if needed
+      counts[musicId] = (counts[musicId] || 0) + 1;
+    });
+    setViewCounts(counts);
+  }, [musicHistory]);
 
 
     const toggleFavorite = async (id_music: number) => {
@@ -87,6 +120,14 @@ const ListMusic: React.FC = () => {
     const filteredAlbums = activeFilter === 'Tất cả'
         ? albums
         : albums.filter(album => album.genre === activeFilter);
+
+        const toggleMenu = (id: number) => {
+            setMenuVisible((prev) => (prev === id ? null : id));
+        };
+        const handleAddToPlaylist = (album: Mussic, playlistId: number) => {
+            // Thực hiện logic thêm nhạc vào playlist
+            console.log(`Thêm album ${album.name} vào playlist ${playlistId}`);
+        };
 
     return (
         <>
@@ -147,8 +188,20 @@ const ListMusic: React.FC = () => {
                                         className={`fas fa-heart ${favoriteMusic.has(album.id_music) ? style.activeHeart : ''}`}
                                         onClick={() => toggleFavorite(album.id_music)}
                                 ></i>
-                                    <i className="fas fa-ellipsis-h"></i>
+                                    <i className="fas fa-ellipsis-h"
+                                    onClick={() => toggleMenu(album.id_music)} // Thêm hàm toggle menu
+                                    ></i>
                                 </div>
+                                {menuVisible === album.id_music && (
+                            <div className={style.menu}>
+                                <button onClick={() => console.log('Thêm vào playlist')}>Thêm vào playlist</button>
+                                <button onClick={() => console.log('Chia sẻ')}>Chia sẻ</button>
+                                <button onClick={() => console.log('Tải về')}>Tải về</button>
+                            </div>
+                                )}
+                                <div className={style.viewCount}>
+                                    Lượt xem: {viewCounts[album.id_music] || 0}
+                                    </div>
                             </div>
                         )
                     )

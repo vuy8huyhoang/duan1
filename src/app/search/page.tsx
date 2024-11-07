@@ -45,27 +45,23 @@ const SearchResultsPage: React.FC = () => {
         (currentMusicPage - 1) * itemsPerPage,
         currentMusicPage * itemsPerPage
     );
-
     const totalMusicPages = Math.ceil(musicList.length / itemsPerPage);
 
     const paginatedArtists = artistList.slice(
         (currentArtistPage - 1) * itemsPerPage0,
         currentArtistPage * itemsPerPage0
     );
-
     const totalArtistPages = Math.ceil(artistList.length / itemsPerPage0);
 
     const paginatedAlbums = albumList.slice(
         (currentAlbumPage - 1) * itemsPerPage1,
         currentAlbumPage * itemsPerPage1
     );
-
     const totalAlbumPages = Math.ceil(albumList.length / itemsPerPage1);
 
     return (
         <div className={styles.searchResultsContainer}>
             <h1>Kết quả tìm kiếm: {query}</h1>
-
             {musicList.length > 0 && (
                 <section>
                     <h2>Bài hát</h2>

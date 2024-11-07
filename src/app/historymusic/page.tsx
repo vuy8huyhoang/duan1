@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import style from "./historymusic.module.scss";
@@ -20,13 +19,24 @@ interface MusicHistory {
 const HistoryMusicPage = () => {
   const [musicHistory, setMusicHistory] = useState<MusicHistory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [viewCounts, setViewCounts] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const fetchMusicHistory = async () => {
       try {
+
         const response: any = await axios.get("/music-history/me"); 
         console.log('Music History Data:', response.result); 
-        setMusicHistory(response.result.data);
+        const historyData: MusicHistory[] = response.result.data;
+        setMusicHistory(historyData);
+
+        const counts: { [key: string]: number } = {};
+        historyData.forEach((history) => {
+          counts[history.id_music] = (counts[history.id_music] || 0) + 1;
+        });
+        setViewCounts(counts);
+
+
       } catch (error) {
         console.error("Failed to fetch music history", error);
       } finally {
@@ -51,10 +61,11 @@ const HistoryMusicPage = () => {
             <Link href={`/musicdetail/${history.music.id_music}`}>
               {history.music.name}
             </Link>
-         
+
             <p >Thời gian phát: {history.play_duration} giây</p>
             <p>Đã nghe vào: {new Date(history.created_at).toLocaleString()}</p>
- 
+            <p>Lượt xem: {viewCounts[history.id_music] || 0}</p>
+
           </div>
         ))}
       </div>

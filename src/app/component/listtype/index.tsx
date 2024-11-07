@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from '@/lib/axios';
-import style from './listtype.module.scss'; // Import file CSS module
+import style from './listtype.module.scss'; 
 import Link from 'next/link';
 interface Type {
     id_type: string;
@@ -18,12 +18,8 @@ export default function ListType() {
             .then((response: any) => {
                 if (response && response.result && response.result.data) {
                     const data = response.result.data;
-    
-                    // Trộn dữ liệu ngẫu nhiên
-                    const shuffledData = data.sort(() => 0.5 - Math.random());
-    
-                    // Lấy 3 phần tử đầu tiên từ danh sách đã trộn
-                    setAlbumData(shuffledData.slice(0, 3)); 
+                    const ngaunhien = data.sort(() => 0.5 - Math.random());
+                    setAlbumData(ngaunhien.slice(0, 3)); 
                 } else {
                     console.error('Response data is undefined or null:', response);
                     setAlbumData([]); 
@@ -37,10 +33,6 @@ export default function ListType() {
                 setLoading(false); 
             });
     }, []);
-    
-
-
-
     return (
         <>
             <div className={style.albumGrid}>

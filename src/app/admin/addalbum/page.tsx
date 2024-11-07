@@ -29,7 +29,7 @@ interface Album {
     last_update: string;
     is_show: number;
     artists: string[];  
-    musics: Music[]; // Sửa lại từ songs thành musics
+    musics: Music[]; 
 }
 
 export default function AddAlbum() {
@@ -43,7 +43,7 @@ export default function AddAlbum() {
         last_update: new Date().toISOString(),
         is_show: 1,
         artists: [],
-        musics: [], // Sửa lại từ songs thành musics
+        musics: [],
     });
 
     const [musics, setMusics] = useState<Music[]>([]); 
@@ -51,9 +51,7 @@ export default function AddAlbum() {
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        // Fetch nghệ sĩ
-        axios.get("/artist")
-            .then((response: any) => {
+        axios.get("/artist").then((response: any) => {
                 if (response && response.result && response.result.data) {
                     setArtists(response.result.data);
                 } else {
@@ -65,9 +63,8 @@ export default function AddAlbum() {
                 setArtists([]);
             });
 
-        // Fetch danh sách bài hát
-        axios.get("/music") // Đường dẫn API để lấy danh sách bài hát
-            .then((response: any) => {
+  
+        axios.get("/music").then((response: any) => {
                 if (response && response.result && response.result.data) {
                     setMusics(response.result.data);
                 } else {
@@ -94,7 +91,7 @@ export default function AddAlbum() {
         const selectedMusics = Array.from(e.target.selectedOptions, option => option.value);
         console.log(selectedMusics);
         console.log({...album, musics: musics.filter(music => selectedMusics.includes(music.id_music))});
-        setAlbum({ ...album, musics: musics.filter(music => selectedMusics.includes(music.id_music)) }); // Cập nhật danh sách bài hát đã chọn
+        setAlbum({ ...album, musics: musics.filter(music => selectedMusics.includes(music.id_music)) }); 
     };
 
     const handleSubmit = async () => {

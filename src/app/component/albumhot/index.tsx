@@ -40,22 +40,27 @@ export default function AlbumHot() {
         const isFavorite = favoriteAlbum.has(id_album);
         setFavoriteAlbum((prev) => {
             const updated = new Set(prev);
-            isFavorite ? updated.delete(id_album) : updated.add(id_album);
+            if (isFavorite) {
+                updated.delete(id_album);
+            } else {
+                updated.add(id_album);
+            }
             return updated;
         });
     
         try {
+            console.log(isFavorite ? "Xóa album khỏi yêu thích" : "Thêm album vào yêu thích");
             if (isFavorite) {
-                // Xóa khỏi yêu thích
                 await axios.delete(`/favorite-album/me`, { data: { id_album } });
             } else {
-                // Thêm vào yêu thích
                 await axios.post(`/favorite-album/me`, { id_album, favorite: true });
             }
         } catch (error) {
             console.error('Lỗi khi cập nhật trạng thái yêu thích:', error);
+            // Thông báo lỗi cho người dùng nếu cần
         }
     };
+    
 
     return (
         <div>

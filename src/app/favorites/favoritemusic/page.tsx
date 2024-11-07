@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import style from "./FavoriteMusic.module.scss";
 import Link from "next/link";
+import FavoritePage from '../page';
 
 interface FavoriteMusic {
   id_music: string;
@@ -38,8 +39,16 @@ const FavoriteMusicPage = () => {
       <div className={style.musicGrid}>
         {favoriteMusic.map((music) => (
           <div key={music.id_music} className={style.musicItem}>
-            <img src={music.url_cover || "/default-cover.png"} alt={music.name} />
-            <Link href={`/musicdetail/${music.id_music}`}>{music.name}</Link>
+            <img
+              src={music.url_cover || "/default-cover.png"}
+              alt={music.name}
+            />
+            <Link href={`/musicdetail/${music.id_music}`}>
+              {music.name}
+            </Link>
+         
+            
+            {/* <p>Lượt xem: {viewCounts[history.id_music] || 0}</p> */}
           </div>
         ))}
       </div>
