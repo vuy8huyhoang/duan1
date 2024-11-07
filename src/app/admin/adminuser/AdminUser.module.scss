@@ -1,11 +1,7 @@
 .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    min-height: 100vh;
 }
 
 .header {
@@ -13,112 +9,161 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    
+
     h1 {
+        margin: 0;
         font-size: 24px;
-        font-weight: 600;
         color: #333;
+    }
+
+    .addButton {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        .csvg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .addText {
+            font-size: 14px;
+        }
+
+        &:hover {
+            background-color: #218838;
+        }
     }
 }
 
 .tableContainer {
     overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
 .userTable {
     width: 100%;
     border-collapse: collapse;
+    font-size: 16px;
 
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #e0e0e0;
+    thead {
+        background-color: #343a40;
+        color: white;
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+        }
     }
 
-    th {
-        background-color: #f5f5f5;
-        font-weight: 600;
-        color: #555;
+    tbody {
+        tr {
+            &:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editButton, .deleteButton {
+            border: none;
+            background: none;
+            padding: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .editButton:hover, .deleteButton:hover {
+            transform: scale(1.1);
+        }
     }
 
-    td img {
+    img {
         width: 50px;
         height: 50px;
-        border-radius: 50%;
+        border-radius: 8px;
         object-fit: cover;
     }
+}
 
-    .actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .banButton, .editButton {
-        display: flex;
-        align-items: center;
-        padding: 8px 12px;
-        font-size: 14px;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-
-        .csvg {
-            margin-right: 8px;
-            width: 18px;
-            height: 18px;
-            fill: #fff;
-        }
-    }
-
-    .banButton {
-        background-color: #e74c3c;
-
-        &:hover {
-            background-color: #c0392b;
-        }
-    }
-
-    .editButton {
-        background-color: #3498db;
-
-        &:hover {
-            background-color: #2980b9;
-        }
-    }
+.csvg {
+    width: 20px;
+    height: 20px;
 }
 
 .pagination {
     display: flex;
     justify-content: center;
+    gap: 8px;
     margin-top: 20px;
-
-    button {
-        padding: 8px 12px;
-        margin: 0 5px;
-        border: 1px solid #ddd;
-        background-color: #fff;
-        color: #333;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-
-        &.activePage {
-            background-color: #3498db;
-            color: #fff;
-            border-color: #3498db;
-        }
-
-        &:hover {
-            background-color: #e0e0e0;
-        }
-    }
 }
 
-.loading {
-    text-align: center;
+.pagination button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    color: #333;
     font-size: 16px;
-    color: #555;
-    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.pagination button:hover {
+    background-color: #e2e2e2;
+}
+
+.pagination button:focus {
+    outline: none;
+}
+
+.pagination .activePage {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+    font-weight: bold;
+}
+
+.pagination button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.userTable select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.userTable select:hover {
+    background-color: #e2e2e2;
+}
+
+.userTable select:focus {
+    outline: none;
+    border-color: #007bff;
 }
