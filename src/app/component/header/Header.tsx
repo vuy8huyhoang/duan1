@@ -9,6 +9,7 @@ const Header: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const profileData = JSON.parse(localStorage.getItem("profileData"));
 
   const toggleLoginPopup = () => {
     if (!isLoggedIn) {
@@ -26,6 +27,7 @@ const Header: React.FC = () => {
   }
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("profileData");
     setIsLoggedIn(false);
     setShowDropdown(false);
   };
@@ -57,7 +59,8 @@ const Header: React.FC = () => {
           {isLoggedIn ? (
             <>
               <img
-                src="/Setting.svg"
+                src={profileData?.url_avatar ? profileData.url_avatar : "/Setting.svg"}
+                className={styles.avt}
                 alt="Settings"
                 onClick={toggleDropdown}
                 style={{ cursor: 'pointer' }}
