@@ -1,14 +1,27 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "@/lib/axios";
 import styles from "./login.module.scss";
 import { ReactSVG } from "react-svg";
 import Link from "next/link";
+interface Profile {
+  birthday: string;
+  country: string;
+  created_at: string;
+  email: string;
+  fullname: string;
+  gender: string;
+  last_update: string;
+  phone: string;
+  role: string;
+  url_avatar: string;
+}
 
 const Login = ({ closePopup }: { closePopup: () => void }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [profileData, setProfileData] = useState<Profile | null>(null);
 
   const [user, setUser] = useState({
     email: "",
@@ -37,7 +50,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value });
-    setErrors({ ...errors, [name]: "" }); 
+    setErrors({ ...errors, [name]: "" });
   };
 
   const validateEmail = (email: string): boolean => {
@@ -85,7 +98,9 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     return isValid;
   };
 
-  const handleLogin = async (): Promise<void> => {
+  const handleLogin = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+
     if (!validateEmail(user.email) || !validatePassword(user.password)) {
       return;
     }
@@ -103,9 +118,29 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       if (result && result.accessToken) {
         const { accessToken } = result;
         localStorage.setItem("accessToken", accessToken);
-        alert("Đăng nhập thành công!");
 
-        closePopup();
+        const profileResponse:any = await axios.get("/profile", {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+
+        const profileData = profileResponse?.result?.data;
+        console.log(profileData);
+        if (profileData) {
+          setProfileData(profileData);
+          
+          localStorage.setItem("profileData", JSON.stringify(profileData)); 
+          if (profileData.role === "admin") {
+            window.location.href="/admin";
+          } else {
+            window.location.href="/user";
+          }
+
+          alert("Đăng nhập thành công!");
+          closePopup();
+        } else {
+          console.error("Phản hồi không như mong đợi:", profileResponse);
+          alert("Đăng nhập không thành công: Phản hồi không như mong đợi.");
+        }
       } else {
         console.error("Phản hồi không như mong đợi:", data);
         alert("Đăng nhập không thành công: Phản hồi không như mong đợi.");
@@ -125,7 +160,10 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     }
   };
 
-  const handleRegister = async (): Promise<void> => {
+
+  const handleRegister = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+
     if (!validateRegisterForm()) return;
 
     setLoading(true);
@@ -136,7 +174,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
 
       if (response.status === 200 || response.status === 201) {
         alert("Đăng ký thành công!");
-        setIsLogin(true); 
+        setIsLogin(true);
       } else {
         alert("Đăng ký không thành công.");
       }
@@ -163,9 +201,9 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
         email: emailInput,
       });
 
-        alert("Đã gửi yêu cầu khôi phục mật khẩu. Vui lòng kiểm tra email của bạn.");
+      alert("Đã gửi yêu cầu khôi phục mật khẩu. Vui lòng kiểm tra email của bạn.");
 
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Lỗi khi yêu cầu khôi phục mật khẩu:", error);
 
       if (error.response) {
@@ -182,15 +220,13 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
     }
   };
 
-
-
   return (
     <div className={styles.popupOverlay}>
       <div className={styles.popupContent}>
         {!isForgotPassword ? (
           <>
             <h2>{isLogin ? "Đăng nhập vào Groove" : "Đăng ký vào Groove"}</h2>
-            <form>
+            <form onSubmit={isLogin ? handleLogin : handleRegister}>
               {isLogin ? (
                 <>
                   <div className={styles.formGroup}>
@@ -220,9 +256,8 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                     {errors.password && <p className={styles.errorText}>{errors.password}</p>}
                   </div>
                   <button
-                    type="button"
+                    type="submit"
                     className={styles.loginBtn}
-                    onClick={handleLogin}
                     disabled={loading}
                   >
                     {loading ? "Đang đăng nhập..." : "Đăng nhập"}
@@ -270,9 +305,8 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
                     {errors.password && <p className={styles.errorText}>{errors.password}</p>}
                   </div>
                   <button
-                    type="button"
+                    type="submit"
                     className={styles.loginBtn}
-                    onClick={handleRegister}
                     disabled={loading}
                   >
                     {loading ? "Đang gửi..." : "Đăng ký"}

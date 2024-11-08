@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from '@/lib/axios';
 import style from './listmusictop.module.scss';
 import { ReactSVG } from 'react-svg';
+import Link from 'next/link';
 
 interface Album {
-    id: number;
+    id_music: number;
     name: string;
     url_cover: string;
     artist: string;
@@ -74,7 +75,7 @@ const ListMusicTop: React.FC = () => {
                         <div style={{ color: 'white' }}>Đang tải...</div>
                     ) : (
                         albums.slice(currentIndex, currentIndex + 3).map((album, index) => ( 
-                            <div className={style.songCard} key={album.id}>
+                            <div className={style.songCard} key={album.id_music}>
                                 <h1 className={style.rank}>{`#${currentIndex + index + 1}`}</h1> 
                                 <div className={style.albumCoverWrapper}>
                                     <img src={album.url_cover} alt={album.name} className={style.albumCover} />
@@ -83,8 +84,8 @@ const ListMusicTop: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className={style.songInfo}>
-                                    <div className={style.songName}>{album.name}</div>
-                                    <div className={style.composerName}>{album.composer}</div>
+                                    <div className={style.songName}><Link href={`/musicdetail/${album.id_music}`}>{album.name}</Link></div>
+                                    <div className={style.composerName}><Link href={`/musicdetail/${album.id_music}`}>{album.composer}</Link></div>
                                 </div>
                             </div>
                         ))
