@@ -7,6 +7,8 @@ import { usePathname } from 'next/navigation';
 const AdminSidebar: React.FC = () => {
     const [activeItem, setActiveItem] = useState<string>('Bảng điều khiển'); 
     const pathname = usePathname();
+    const profileData = JSON.parse(localStorage.getItem("profileData"));
+    console.log(profileData)
     const handleMenuClick = (item: string) => {
         setActiveItem(item);
         if (typeof window !== 'undefined') {
@@ -26,9 +28,14 @@ const AdminSidebar: React.FC = () => {
     return (
         <div className={styles.sidebar}>
             <div className={styles.user}>
-                <img className={styles.avatar} src="/Group 66.svg" alt="User Avatar" />
+                <img
+                    className={styles.avatar}
+                    src={profileData?.url_avatar ? profileData.url_avatar : "/Group 66.svg"}
+                    alt="User Avatar"
+                />
+
                 <div className={styles.userInfo}>
-                    <p className={styles.userName}><b>Bùi Huy Vũ</b></p>
+                    <p className={styles.userName}><b>{profileData.fullname}</b></p>
                     <p className={styles.userWelcome}>Chào mừng bạn trở lại</p>
                 </div>
             </div>
