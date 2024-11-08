@@ -163,7 +163,7 @@ const handleSubmit = async (event:any) => {
                             style={{ display: 'none' }}
                         />
                         <div>
-                        <button type="submit">Upload</button>
+                        <button type="submit">Lưu ảnh</button>
                         {message && <p className={style.message}>{message}</p>}
                         </div>
                         
