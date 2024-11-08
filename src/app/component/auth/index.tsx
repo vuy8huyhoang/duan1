@@ -132,7 +132,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
           if (profileData.role === "admin") {
             window.location.href="/admin";
           } else {
-            window.location.href="/user";
+            window.location.href="/";
           }
 
           alert("Đăng nhập thành công!");
