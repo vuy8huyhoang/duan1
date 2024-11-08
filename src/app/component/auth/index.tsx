@@ -115,28 +115,27 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       const data = response?.data || response;
       const result = data.result || {};
 
-      if (result && result.accessToken) {
+      if (result.accessToken) {
         const { accessToken } = result;
         localStorage.setItem("accessToken", accessToken);
 
         const profileResponse:any = await axios.get("/profile", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
+        console.log("Profile Response:", profileResponse);
 
-        const profileData = profileResponse?.result?.data;
-        console.log(profileData);
-        if (profileData) {
-          setProfileData(profileData);
-          
-          localStorage.setItem("profileData", JSON.stringify(profileData)); 
-          if (profileData.role === "admin") {
-            window.location.href="/admin";
-          } else {
-            window.location.href="/";
-          }
-
+        const fetchedProfileData = profileResponse?.result?.data;
+        if (fetchedProfileData) {
+          setProfileData(fetchedProfileData);
+          console.log("Profile Data Set:", fetchedProfileData);
           alert("Đăng nhập thành công!");
           closePopup();
+
+          if (fetchedProfileData.role === "admin") {
+            window.location.href = "/admin";
+          } else {
+            window.location.href = "/";
+          }
         } else {
           console.error("Phản hồi không như mong đợi:", profileResponse);
           alert("Đăng nhập không thành công: Phản hồi không như mong đợi.");
@@ -159,6 +158,8 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
       setLoading(false);
     }
   };
+  
+
 
 
   const handleRegister = async (e: React.FormEvent): Promise<void> => {
