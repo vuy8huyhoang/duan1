@@ -70,10 +70,12 @@ export default function AdminUser() {
     // Ví dụ về hàm cập nhật trạng thái người dùng qua API
     const updateUserStatus = async (id_user, status) => {
         try {
-            const response = await axios.patch(`/user/${id_user}`, { status });
+
+            const response:any = await axios.patch(`/user/${id_user}`, { status });
+            
 
             // Thực hiện các thao tác khi cập nhật thành công
-            console.log(response);
+            console.log(response.result);
         } catch (error) {
             console.error('Lỗi khi cập nhật trạng thái:', error);
         }
