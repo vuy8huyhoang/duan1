@@ -19,17 +19,20 @@ interface Type {
     is_show: number;
 }
 
-
+interface Composer {
+    id_composer: string;
+    name: string;
+}
 
 interface Song {
     id_music: string;
     name: string;
     slug: string;
-    url_path: string; 
-    url_cover: string; 
+    url_path: string;
+    url_cover: string;
     total_duration: string | null;
     producer: string;
-    composer: string | null;
+    composer: Composer[]; 
     release_date: string | null;
     created_at: string;
     last_update: string;
@@ -38,12 +41,14 @@ interface Song {
     favorite: number;
     artists: { id_artist: string; name: string }[];
     types: { id_type: string; name: string }[];
+    composers: { id_composer: string; name: string }[];
 }
 
 export default function EditMusic({ params }: { params: { id: string } }) {
     const [song, setSong] = useState<Song | null>(null);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
+    const [composers, setComposers] = useState<Composer[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [message, setMessage] = useState<string>("");
 
@@ -64,7 +69,11 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 setTypes(response.result.data);
             }
         });
-        
+        axios.get("/composer").then((response: any) => {
+            if (response?.result?.data) {
+                setComposers(response.result.data);
+            }
+        });
     }, []);
 
     useEffect(() => {
@@ -75,6 +84,15 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     if (response?.result?.data) {
                         const songData = response.result.data;
                         setSong(songData);
+
+                        if (songData.composer && !Array.isArray(songData.composer)) {
+                            songData.composer = [songData.composer];
+                        }
+
+                        setSong((prevSong) => ({
+                            ...prevSong,
+                            composer: songData.composer || [],
+                        }));
 
                         if (songData.url_cover) {
                             setPreviewUrl(songData.url_cover);
@@ -98,20 +116,36 @@ export default function EditMusic({ params }: { params: { id: string } }) {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
-
             const fileUrl = URL.createObjectURL(e.target.files[0]);
-            setPreviewUrl(fileUrl); 
+            setPreviewUrl(fileUrl);
         }
     };
 
     const handleAudioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setAudioFile(e.target.files[0]);
-
             const audioUrl = URL.createObjectURL(e.target.files[0]);
-            setAudioPreviewUrl(audioUrl); 
+            setAudioPreviewUrl(audioUrl);
         }
     };
+    const handleVisibilityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (song) {
+            setSong({
+                ...song,
+                is_show: parseInt(e.target.value, 10),
+            });
+        }
+    };
+    const handleComposerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedComposerId = e.target.value;  
+
+        setSong((prevSong) => ({
+            ...prevSong,  
+            composer: composers.filter((composer) => composer.id_composer === selectedComposerId), 
+        }));
+    };
+
+
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -126,11 +160,13 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             producer: song?.producer || "",
             release_date: song?.release_date || null,
             last_update: new Date().toISOString(),
-            artists: song?.artists.map(artist => artist.id_artist),
-            types: song?.types.map(type => type.id_type),
+            artists: song?.artists.map((artist) => artist.id_artist),
+            types: song?.types.map((type) => type.id_type),
+            composers: song?.composer.length > 0 ? song?.composer[0].id_composer : "",
+            is_show: song?.is_show,
         };
 
-        console.log("Data being sent:", songData); 
+        console.log("Dữ liệu gửi của composer:", songData);
 
         try {
             if (file) {
@@ -163,7 +199,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 }
             }
 
-            console.log("Sending updated song data:", songData); // Check the final song data
+            console.log("Dữ liệu đang được gửi của nhạc sĩ:", songData); 
 
             const response = await axios.patch(`/music/${params.id}`, songData, {
                 headers: { "Content-Type": "application/json" },
@@ -182,7 +218,6 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             setLoading(false);
         }
     };
-
 
     if (loading) return <p>Đang tải...</p>;
     if (!song) return <p>Không tìm thấy bài hát.</p>;
@@ -208,42 +243,97 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 />
 
                 <select
-                    value={song?.artists.length > 0 ? song.artists[0].id_artist : ""}
+                    value={song?.artists.map((artist) => artist.id_artist)}
                     onChange={(e) => {
-                        const selectedArtistId = e.target.value;
+                        const selectedArtistIds = Array.from(e.target.selectedOptions, (option) => option.value);
                         setSong((prevSong) => ({
                             ...prevSong,
-                            artists: [{ id_artist: selectedArtistId, name: "" }],
+                            artists: artists.filter((artist) =>
+                                selectedArtistIds.includes(artist.id_artist)
+                            ),
                         }));
                     }}
+                    multiple
                 >
                     <option value="">Chọn nghệ sĩ</option>
                     {artists.map((artist) => (
-                        <option key={artist.id_artist} value={artist.id_artist}>
+                        <option
+                            key={artist.id_artist}
+                            value={artist.id_artist}
+                            style={{
+                                backgroundColor: song?.artists.some((a) => a.id_artist === artist.id_artist) ? 'lightgreen' : '',
+                            }}
+                        >
                             {artist.name}
                         </option>
                     ))}
                 </select>
 
                 <select
-                    value={song?.types.length > 0 ? song.types[0].id_type : ""}
+                    value={song?.types.map((type) => type.id_type)}
                     onChange={(e) => {
-                        const selectedTypeId = e.target.value;
+                        const selectedTypeIds = Array.from(e.target.selectedOptions, (option) => option.value);
                         setSong((prevSong) => ({
                             ...prevSong,
-                            types: [{ id_type: selectedTypeId, name: "" }],
+                            types: types.filter((type) =>
+                                selectedTypeIds.includes(type.id_type)
+                            ),
                         }));
                     }}
+                    multiple
                 >
                     <option value="">Chọn thể loại</option>
                     {types.map((type) => (
-                        <option key={type.id_type} value={type.id_type}>
+                        <option
+                            key={type.id_type}
+                            value={type.id_type}
+                            style={{
+                                backgroundColor: song?.types.some((t) => t.id_type === type.id_type) ? 'lightgreen' : '',
+                            }}
+                        >
                             {type.name}
                         </option>
                     ))}
                 </select>
 
-                
+                <select
+                    value={song?.composer.length > 0 ? song?.composer[0].id_composer : ""}
+                    onChange={handleComposerChange}
+                >
+                    <option value="">Chọn nhạc sĩ</option>
+                    {composers.map((composer) => (
+                        <option key={composer.id_composer} value={composer.id_composer}>
+                            {composer.name}
+                        </option>
+                    ))}
+                </select>
+
+
+
+
+                <div className={styles.visibilityRadioButtons}>
+                    <div className={styles.hien}>
+                        <label>Hiện</label>
+                        <input
+                            type="radio"
+                            name="is_show"
+                            value="1"
+                            checked={song.is_show === 1}
+                            onChange={handleVisibilityChange}
+                        />
+                    </div>
+                    <div className={styles.an}>
+                        <label>Ẩn</label>
+                        <input
+                            type="radio"
+                            name="is_show"
+                            value="0"
+                            checked={song.is_show === 0}
+                            onChange={handleVisibilityChange}
+                        />
+                    </div>
+                </div>
+
 
                 {previewUrl && (
                     <div className={styles.preview}>

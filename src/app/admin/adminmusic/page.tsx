@@ -22,6 +22,8 @@ import Link from 'next/link';
         producer: string;
         url_cover: string;
         url_path: string;
+        is_show: number,
+
         artists: {
             artist: Artist; 
         }[];    }
@@ -97,6 +99,7 @@ import Link from 'next/link';
                                 <th>Ca sĩ</th>
                                 <th>Ngày tạo</th>
                                 <th>Nhà sản xuất</th>
+                                <th>Ẩn hiện</th>
                                 <th>Tính năng</th>
                             </tr>
                         </thead>
@@ -129,6 +132,8 @@ import Link from 'next/link';
                                             hour12: false
                                         })}</td>
                                         <td>{song.producer}</td>
+                                        <td>{song.is_show==1?"Hiện":"Ẩn"}</td>
+
                                         <td className={styles.actions}>
                                             <button className={styles.editButton}>
                                                 <Link href={`/admin/editmusic/${song.id_music}`} passHref>
