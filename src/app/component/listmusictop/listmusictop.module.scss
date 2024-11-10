@@ -128,10 +128,18 @@
 .songName {
     font-weight: bold;
     color: white;
+    a{
+        text-decoration: none;
+        color: #ffffff;
+    }
 }
 
 .composerName {
     color: #aaa;
+    a {
+            text-decoration: none;
+            color: #ffffff;
+        }
 }
 
 .releaseDate {

@@ -4,9 +4,25 @@ import Link from 'next/link';
 import { ReactSVG } from 'react-svg';
 import { clsx } from 'clsx';
 import { usePathname } from 'next/navigation';
+import axios from '@/lib/axios';
+
+interface Profile {
+    birthday: string;
+    country: string;
+    created_at: string;
+    email: string;
+    fullname: string;
+    gender: string;
+    last_update: string;
+    phone: string;
+    role: string;
+    url_avatar: string;
+}
 const AdminSidebar: React.FC = () => {
     const [activeItem, setActiveItem] = useState<string>('Bảng điều khiển'); 
     const pathname = usePathname();
+    const [profileData, setProfileData] = useState<Profile | null>(null);
+    const [loading, setLoading] = useState(true);    console.log(profileData)
     const handleMenuClick = (item: string) => {
         setActiveItem(item);
         if (typeof window !== 'undefined') {
@@ -22,13 +38,36 @@ const AdminSidebar: React.FC = () => {
             }
         }
     }, []); 
+    useEffect(() => {
+        axios.get("profile")
+            .then((response: any) => {
+                console.log(response);
 
+                if (response && response.result.data) {
+                    setProfileData(response.result.data);
+                    console.log(setProfileData);
+                } else {
+                    console.error('Response data is undefined or null', response);
+                }
+            })
+            .catch((error: any) => {
+                console.error('Error fetching profile details', error);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, []);
     return (
         <div className={styles.sidebar}>
             <div className={styles.user}>
-                <img className={styles.avatar} src="/Group 66.svg" alt="User Avatar" />
+                <img
+                    className={styles.avatar}
+                    src={profileData?.url_avatar ? profileData.url_avatar : "/Group 66.svg"}
+                    alt="User Avatar"
+                />
+
                 <div className={styles.userInfo}>
-                    <p className={styles.userName}><b>Bùi Huy Vũ</b></p>
+                    <p className={styles.userName}><b>{profileData?.fullname? profileData.fullname:""}</b></p>
                     <p className={styles.userWelcome}>Chào mừng bạn trở lại</p>
                 </div>
             </div>

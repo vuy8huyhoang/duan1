@@ -99,6 +99,7 @@ export default function AdminComposer() {
                                         <input type="checkbox" />
                                     </td>
                                     <td>#{composer.id_composer}</td>
+                                    {/* <td><img src={composer.url_cover} alt={composer.name} /></td> */}
                                     <td>{composer.name}</td>
                                     <td>{new Date(composer.created_at).toLocaleString('vi-VN', {
                                         year: 'numeric',
