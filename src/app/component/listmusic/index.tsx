@@ -55,7 +55,7 @@ const ListMusic: React.FC = () => {
       .catch((error: any) => console.error('Error fetching music history:', error));
 
        // Lấy danh sách playlist từ API
-       axios.get('/playlists/me')
+       axios.get('/playlist/me')
        .then((response: any) => {
            setPlaylists(response.result.data);
        })
