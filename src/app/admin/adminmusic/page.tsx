@@ -117,8 +117,12 @@ import Link from 'next/link';
                                         <td>{song.name}</td>
                                         <td>
                                             {song.artists
-                                                .map((artistWrapper) => artistWrapper.artist.name) 
-                                                .join(', ')}
+                                                .slice(0, 3) 
+                                                .map((artistWrapper) => artistWrapper.artist.name)
+                                                
+                                            }
+
+
                                         </td>
 
 

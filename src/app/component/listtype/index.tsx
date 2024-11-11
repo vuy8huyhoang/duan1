@@ -39,9 +39,9 @@ export default function ListType() {
                 {loading ? (
                     <p>Đang tải album...</p>
                 ) : (
-                    albumData.map((album) => (
+                    albumData.map((album,index) => (
                        
-                        <div className={style.albumCard}>
+                        <div key={album.id_type || index} className={style.albumCard}>
                           <Link href={`/type/${album.id_type}`} className={style.typeLink} >
                           {album.name}
                         </Link>
