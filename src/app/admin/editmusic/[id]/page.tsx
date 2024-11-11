@@ -169,7 +169,7 @@ export default function EditMusic({ params: initialParams }: { params: { id: str
             last_update: new Date().toISOString(),
             artists: song?.artists.map((artist) => artist.id_artist),
             types: song?.types.map((type) => type.id_type),
-            composer: song?.composer.length > 0 ? song?.composer[0].id_composer : "",
+            composer: song?.composer.length > 0 ? song?.composer[0].id_composer : "", //sửa lại
             is_show: song?.is_show,
         };
 
