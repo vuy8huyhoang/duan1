@@ -44,15 +44,7 @@ export default function Sidebar() {
                         <span>#groovechart</span>
                     </Link>
                 </li>
-                <li
-
-                >
-                    <Link href="/bxh" className={clsx(styles.menuItem, { [styles.active]: pathname === "/bxh" })}>
-
-                        <ReactSVG className={styles.csvg} src="/Vector (2).svg" />
-                        <span>BXH Nhạc Mới</span>
-                    </Link>
-                </li>
+                
                 <li
 
                 >

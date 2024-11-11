@@ -127,6 +127,7 @@ const Login = ({ closePopup }: { closePopup: () => void }) => {
         const fetchedProfileData = profileResponse?.result?.data;
         if (fetchedProfileData) {
           setProfileData(fetchedProfileData);
+          localStorage.setItem("profileData", JSON.stringify(fetchedProfileData));
           console.log("Profile Data Set:", fetchedProfileData);
           alert("Đăng nhập thành công!");
           closePopup();
