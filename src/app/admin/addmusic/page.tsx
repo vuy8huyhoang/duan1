@@ -21,8 +21,6 @@ interface Type {
 interface Composer {
     id_composer: string;
     name: string;
-    created_at: string;
-    last_update: string;
 }
 
 interface Song {

@@ -125,7 +125,6 @@ const ListMusic: React.FC = () => {
             setMenuVisible((prev) => (prev === id ? null : id));
         };
         const handleAddToPlaylist = (album: Mussic, playlistId: number) => {
-            // Thực hiện logic thêm nhạc vào playlist
             console.log(`Thêm album ${album.name} vào playlist ${playlistId}`);
         };
 
@@ -189,7 +188,7 @@ const ListMusic: React.FC = () => {
                                         onClick={() => toggleFavorite(album.id_music)}
                                 ></i>
                                     <i className="fas fa-ellipsis-h"
-                                    onClick={() => toggleMenu(album.id_music)} // Thêm hàm toggle menu
+                                    onClick={() => toggleMenu(album.id_music)} 
                                     ></i>
                                 </div>
                                 {menuVisible === album.id_music && (

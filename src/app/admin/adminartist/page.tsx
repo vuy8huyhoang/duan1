@@ -16,11 +16,17 @@ interface Artist {
     followers: number;
 }
 
+interface Music {
+    id_music: string;
+    name: string;
+}
+
 export default function AdminArtist() {
     const [artists, setArtists] = useState<Artist[]>([]);
+    const [musicByArtist, setMusicByArtist] = useState<{ [key: string]: Music[] }>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const artistsPerPage = 10; // Số lượng nghệ sĩ mỗi trang
+    const artistsPerPage = 10; // Number of artists per page
 
     useEffect(() => {
         axios
@@ -29,13 +35,14 @@ export default function AdminArtist() {
                 console.log("Full API response:", response);
                 if (response && response.result && response.result.data) {
                     setArtists(response.result.data);
+                    fetchMusicByArtists(response.result.data);
                 } else {
                     console.error("Response data is undefined or empty:", response);
                     setArtists([]);
                 }
             })
             .catch((error: any) => {
-                console.error("Lỗi fetch ca sĩ:", error);
+                console.error("Error fetching artists:", error);
                 setArtists([]);
             })
             .finally(() => {
@@ -43,13 +50,30 @@ export default function AdminArtist() {
             });
     }, []);
 
+    const fetchMusicByArtists = async (artists: Artist[]) => {
+        try {
+            const musicData: { [key: string]: Music[] } = {};
+            for (const artist of artists) {
+                const response:any = await axios.get(`/music?id_artist=${artist.id_artist}`);
+                if (response?.result?.data) {
+                    musicData[artist.id_artist] = response.result.data;
+                } else {
+                    musicData[artist.id_artist] = [];
+                }
+            }
+            setMusicByArtist(musicData);
+        } catch (error) {
+            console.error("Error fetching music by artist:", error);
+        }
+    };
+
     const handleDeleteArtist = async (id_artist: string, url: string) => {
         try {
             await axios.delete(`/artist/${id_artist}`);
             setArtists(artists.filter((artist) => artist.id_artist !== id_artist));
-            await axios.delete(`/upload-image?url=${url}` )
+            await axios.delete(`/upload-image?url=${url}`);
         } catch (error) {
-            console.error("Lỗi xóa ca sĩ:", error);
+            console.error("Error deleting artist:", error);
         }
     };
 
@@ -82,6 +106,7 @@ export default function AdminArtist() {
                             <th>ID</th>
                             <th>Hình ảnh</th>
                             <th>Tên ca sĩ</th>
+                            <th>Bài hát</th>
                             <th>Ngày tạo</th>
                             <th>Tính năng</th>
                         </tr>
@@ -89,7 +114,7 @@ export default function AdminArtist() {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={6} className={styles.loading}>
+                                <td colSpan={7} className={styles.loading}>
                                     Đang tải...
                                 </td>
                             </tr>
@@ -102,6 +127,17 @@ export default function AdminArtist() {
                                     <td>#{artist.id_artist}</td>
                                     <td><img src={artist.url_cover} alt={artist.name} /></td>
                                     <td>{artist.name}</td>
+                                    <td>
+                                        {musicByArtist[artist.id_artist]?.length > 0 ? (
+                                            <ul>
+                                                {musicByArtist[artist.id_artist].map((music) => (
+                                                    <li key={music.id_music}>{music.name}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            "Hiện chưa có bài hát nào"
+                                        )}
+                                    </td>
                                     <td>{new Date(artist.created_at).toLocaleString('vi-VN', {
                                         year: 'numeric',
                                         month: '2-digit',

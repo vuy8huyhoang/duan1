@@ -44,20 +44,27 @@ interface Song {
     composers: { id_composer: string; name: string }[];
 }
 
-export default function EditMusic({ params }: { params: { id: string } }) {
+export default function EditMusic({ params: initialParams }: { params: { id: string } | Promise<{ id: string }> }) {
     const [song, setSong] = useState<Song | null>(null);
     const [artists, setArtists] = useState<Artist[]>([]);
     const [types, setTypes] = useState<Type[]>([]);
     const [composers, setComposers] = useState<Composer[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [message, setMessage] = useState<string>("");
+    const [params, setParams] = useState<{ id: string } | null>(null);
 
     const [file, setFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const [audioFile, setAudioFile] = useState<File | null>(null);
     const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
-
+    useEffect(() => {
+        const resolveParams = async () => {
+            const resolvedParams = await initialParams;
+            setParams(resolvedParams);
+        };
+        resolveParams();
+    }, [initialParams]);
     useEffect(() => {
         axios.get("/artist").then((response: any) => {
             if (response && response.result && response.result.data) {
@@ -77,7 +84,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
     }, []);
 
     useEffect(() => {
-        if (params.id) {
+        if (params?.id) {
             axios
                 .get(`/music/${params.id}`)
                 .then((response: any) => {
@@ -101,7 +108,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                             setAudioPreviewUrl(songData.url_path);
                         }
 
-                        console.log("Song data fetched:", songData);
+                        console.log("Dữ liệu lấy về:", JSON.stringify(songData, null, 2));
                     }
                 })
                 .catch((error: any) => {
@@ -111,7 +118,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                     setLoading(false);
                 });
         }
-    }, [params.id]);
+    }, [params?.id]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -162,11 +169,11 @@ export default function EditMusic({ params }: { params: { id: string } }) {
             last_update: new Date().toISOString(),
             artists: song?.artists.map((artist) => artist.id_artist),
             types: song?.types.map((type) => type.id_type),
-            composers: song?.composer.length > 0 ? song?.composer[0].id_composer : "",
+            composer: song?.composer.length > 0 ? song?.composer[0].id_composer : "",
             is_show: song?.is_show,
         };
 
-        console.log("Dữ liệu gửi của composer:", songData);
+        console.log("Dữ liệu gửi của nhạc sĩ:", JSON.stringify(songData, null, 2));
 
         try {
             if (file) {
@@ -199,7 +206,7 @@ export default function EditMusic({ params }: { params: { id: string } }) {
                 }
             }
 
-            console.log("Dữ liệu đang được gửi của nhạc sĩ:", songData); 
+            console.log("Dữ liệu đang gửi của nhạc sĩ:", JSON.stringify(songData, null, 2));
 
             const response = await axios.patch(`/music/${params.id}`, songData, {
                 headers: { "Content-Type": "application/json" },
