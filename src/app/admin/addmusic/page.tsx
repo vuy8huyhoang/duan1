@@ -257,13 +257,13 @@ export default function AddMusic() {
 
         <select
           name="composer"
-          value={song.composer.name || ""}
+          value={song.composer || ""}
           onChange={handleComposerSelect}
         >
           <option value="">Chọn nhạc sĩ</option>
           {composers.map((composer) => (
             <option key={composer.id_composer} value={composer.id_composer}>
-              {composer.name}
+              {composer}
             </option>
           ))}
         </select>
